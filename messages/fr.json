@@ -84,7 +84,6 @@
     "title": "Détails de la séance",
     "close": "Fermer",
     "room": "Salle",
-    "teacher": "Enseignant",
     "status": "État",
     "wholeSection": "Toute la section",
     "sameSlot": "Autres séances, même horaire",
@@ -104,10 +103,6 @@
     "language": "Langue",
     "parcours": "Mon parcours",
     "edit": "Modifier",
-    "timetable": "Emploi du temps",
-    "lastUpdate": "Dernière mise à jour",
-    "checkNow": "Vérifier maintenant",
-    "officialPdf": "PDF officiel de la faculté",
     "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB. Version {version}"
   },
   "States": {
@@ -152,5 +147,8 @@
     "see": "Voir",
     "checkFailed": "Mise à jour impossible. Réessayez plus tard.",
     "upToDate": "Emploi du temps à jour"
+  },
+  "Legal": {
+    "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB."
   }
 }

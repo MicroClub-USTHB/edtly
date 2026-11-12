@@ -67,7 +67,6 @@ export function SessionSheet({
   const facts = focused
     ? [
         { label: t("room"), value: focused.room || "—" },
-        { label: t("teacher"), value: focused.teacher || "—" },
         ...(detail?.status && tone !== "other"
           ? [{ label: t("status"), value: timetable(detail.status) }]
           : []),
@@ -143,9 +142,7 @@ export function SessionSheet({
                       {session.module}
                     </span>
                     <span className="text-xs text-foreground-muted">
-                      {[labels.meta(session), session.teacher]
-                        .filter(Boolean)
-                        .join(" · ")}
+                      {labels.meta(session)}
                     </span>
                   </span>
 

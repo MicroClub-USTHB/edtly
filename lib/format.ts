@@ -22,11 +22,6 @@ export function formatWeekRange(start: Date, end: Date, locale: string) {
 export const formatShortDate = (date: Date, locale: string) =>
   formatter(locale, { day: "numeric", month: "short" }).format(date);
 
-export const formatFullDate = (date: Date, locale: string) =>
-  formatter(locale, { day: "numeric", month: "short", year: "numeric" }).format(
-    date,
-  );
-
 export const parseIsoDate = (iso: string) => {
   const [year, month, day] = iso.split("-").map(Number);
   return new Date(year, month - 1, day);

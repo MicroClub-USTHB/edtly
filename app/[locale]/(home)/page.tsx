@@ -3,6 +3,7 @@ import { locale as rootLocale } from "next/root-params";
 import { getTranslations } from "next-intl/server";
 import { Onboarding } from "@/components/academic/onboarding";
 import { Logo } from "@/components/brand/logo";
+import { Disclaimer } from "@/components/shared/disclaimer";
 import { JsonLd } from "@/components/shared/json-ld";
 import { resumeScript } from "@/lib/boot-script";
 import { alternatesFor } from "@/lib/seo";
@@ -76,6 +77,8 @@ export default async function HomePage() {
           <p className="mt-auto pt-8 text-center text-meta text-foreground-muted lg:mt-0 lg:pt-7 lg:text-left">
             {t("footnote")}
           </p>
+
+          <Disclaimer className="hidden pt-2 lg:block" />
         </main>
       </div>
     </>

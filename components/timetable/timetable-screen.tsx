@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { locale as rootLocale } from "next/root-params";
 import { getTranslations } from "next-intl/server";
 import { JsonLd } from "@/components/shared/json-ld";
-import { formatFullDate, formatShortDate, parseIsoDate } from "@/lib/format";
+import { formatShortDate, parseIsoDate } from "@/lib/format";
 import { site } from "@/lib/site";
 import {
   getCatalogue,
@@ -91,7 +91,6 @@ export async function TimetableScreen({
         catalogue={catalogue}
         programmeLabel={programmeLabel}
         updatedShort={updated ? formatShortDate(updated, locale) : ""}
-        updatedLong={updated ? formatFullDate(updated, locale) : ""}
         version={process.env.APP_RELEASE ?? ""}
       />
     </main>

@@ -4,6 +4,7 @@ import { ArrowUpRight, CircleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { useState } from "react";
+import { Disclaimer } from "@/components/shared/disclaimer";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { StateBlock } from "@/components/ui/state-block";
@@ -69,6 +70,8 @@ export function TimetableUnreadable({
           </Button>
         </StateBlock>
       </div>
+
+      <Disclaimer className="mt-auto px-gutter pt-8 pb-5" />
 
       <ParcoursSheet
         open={anchor !== null}

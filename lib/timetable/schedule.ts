@@ -133,7 +133,6 @@ export const sessionKey = (session: Session) =>
     session.type,
     session.module,
     session.room,
-    session.teacher,
     session.groups.join("+"),
   ].join("|");
 

@@ -84,7 +84,6 @@
     "title": "Session details",
     "close": "Close",
     "room": "Room",
-    "teacher": "Teacher",
     "status": "Status",
     "wholeSection": "Whole section",
     "sameSlot": "Other sessions, same time",
@@ -104,10 +103,6 @@
     "language": "Language",
     "parcours": "My programme",
     "edit": "Edit",
-    "timetable": "Timetable",
-    "lastUpdate": "Last update",
-    "checkNow": "Check now",
-    "officialPdf": "Official faculty PDF",
     "disclaimer": "Edtly is an independent project. It is not an official USTHB service. Version {version}"
   },
   "States": {
@@ -152,5 +147,8 @@
     "see": "See",
     "checkFailed": "Update failed. Try again later.",
     "upToDate": "Timetable is up to date"
+  },
+  "Legal": {
+    "disclaimer": "Edtly is an independent project. It is not an official USTHB service."
   }
 }

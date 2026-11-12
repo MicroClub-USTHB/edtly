@@ -45,9 +45,15 @@ function popoverStyle(anchor: SheetAnchor) {
       };
 }
 
-const showModal = (dialog: HTMLDialogElement | null) => {
-  if (dialog && !dialog.open) dialog.showModal();
-};
+function showModal(dialog: HTMLDialogElement | null) {
+  if (!dialog || dialog.open) return;
+  const { scrollX, scrollY } = window;
+  dialog.showModal();
+  dialog.scrollTop = 0;
+  if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
+    window.scrollTo(scrollX, scrollY);
+  }
+}
 
 export function Sheet({
   open,
@@ -87,7 +93,7 @@ export function Sheet({
             event.preventDefault();
             onClose();
           }}
-          className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-foreground outline-none backdrop:bg-transparent"
+          className="fixed inset-0 m-0 size-full max-h-none max-w-none overflow-clip border-0 bg-transparent p-0 text-foreground outline-none backdrop:bg-transparent"
         >
           <m.div
             aria-hidden="true"

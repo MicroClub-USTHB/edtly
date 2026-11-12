@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { useEffect, useState } from "react";
 import { StatusBanner } from "@/components/pwa/status-banner";
+import { Disclaimer } from "@/components/shared/disclaimer";
 import { SettingsPanel } from "@/components/settings/settings-panel";
 import { Button } from "@/components/ui/button";
 import type { SheetAnchor } from "@/components/ui/sheet";
@@ -55,7 +56,6 @@ type TimetableViewProps = {
   catalogue: CatalogueProgramme[];
   programmeLabel: string;
   updatedShort: string;
-  updatedLong: string;
   version: string;
 };
 
@@ -72,7 +72,6 @@ export function TimetableView({
   catalogue,
   programmeLabel,
   updatedShort,
-  updatedLong,
   version,
 }: TimetableViewProps) {
   const t = useTranslations("Timetable");
@@ -257,8 +256,6 @@ export function TimetableView({
           parcours={[programmeLabel, sectionLabel, groupLabel]
             .filter(Boolean)
             .join(" · ")}
-          updated={updatedLong}
-          pdfUrl={source.url}
           version={version}
           onEditParcours={setPickerAnchor}
         />
@@ -309,6 +306,8 @@ export function TimetableView({
             />
           </>
         )}
+
+        <Disclaimer className="mt-auto border-t border-divider pt-5" />
       </div>
 
       <SessionSheet
