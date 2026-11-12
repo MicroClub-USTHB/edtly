@@ -87,7 +87,6 @@ export async function TimetableScreen({
         key={sectionPath(params)}
         programme={programme}
         section={section}
-        urlGroup={urlGroup}
         catalogue={catalogue}
         programmeLabel={programmeLabel}
         updatedShort={updated ? formatShortDate(updated, locale) : ""}

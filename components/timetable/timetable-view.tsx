@@ -7,6 +7,7 @@ import { StatusBanner } from "@/components/pwa/status-banner";
 import { Disclaimer } from "@/components/shared/disclaimer";
 import { SettingsPanel } from "@/components/settings/settings-panel";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "@/i18n/navigation";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { StateBlock } from "@/components/ui/state-block";
 import { minutesNow } from "@/lib/dates";
@@ -18,7 +19,12 @@ import {
   saveParcours,
   useSavedParcours,
 } from "@/lib/stores/preferences";
-import { localized, parcoursPath, sectionPath } from "@/lib/timetable/paths";
+import {
+  groupSlug,
+  localized,
+  parcoursPath,
+  sectionPath,
+} from "@/lib/timetable/paths";
 import {
   daySlots,
   sessionKey,
@@ -52,7 +58,6 @@ import { WeekTitle } from "./week-title";
 type TimetableViewProps = {
   programme: ProgrammeInfo;
   section: Section;
-  urlGroup: string | null;
   catalogue: CatalogueProgramme[];
   programmeLabel: string;
   updatedShort: string;
@@ -68,7 +73,6 @@ type DetailRequest = Slot & {
 export function TimetableView({
   programme,
   section,
-  urlGroup,
   catalogue,
   programmeLabel,
   updatedShort,
@@ -84,7 +88,7 @@ export function TimetableView({
   const week = useWeek();
   const [weekOffset, setWeekOffset] = useState(0);
   const shiftedWeek = useWeek(weekOffset);
-  const [picked, setPicked] = useState<string | null>(null);
+  const pathname = usePathname();
   const [detail, setDetail] = useState<DetailRequest | null>(null);
   const [pickerAnchor, setPickerAnchor] = useState<SheetAnchor | null>(null);
 
@@ -97,7 +101,10 @@ export function TimetableView({
     savedHere?.group && groups.includes(savedHere.group)
       ? savedHere.group
       : null;
-  const group = picked ?? urlGroup ?? savedGroup ?? groups[0] ?? null;
+  const urlGroup =
+    groups.find((name) => pathname === `${basePath}/${groupSlug(name)}`) ??
+    null;
+  const group = urlGroup ?? savedGroup ?? groups[0] ?? null;
   const parcours: Parcours = { ...base, group };
   const empty = sessions.length === 0;
 
@@ -140,7 +147,6 @@ export function TimetableView({
 
   const selectGroup = (next: string) => {
     const nextParcours = { ...base, group: next };
-    setPicked(next);
     if (!saved || savedHere) saveParcours(nextParcours);
     window.history.replaceState(
       null,
