@@ -1,0 +1,49 @@
+{
+  "system": "lmd",
+  "level": "m2",
+  "speciality": {"id": "il", "name": "IL"},
+  "academicYear": "2026/2027",
+  "semester": 1,
+  "status": "published",
+  "source": {"title": "Emploi du temps M2 IL", "url": "https://finfo.usthb.dz/storage/disk/MnWCXkXvAbcp3RcF1aJDWrwbELIUcWfwUbUpxlq1.pdf", "updatedAt": "2026-11-05"},
+  "sections": [
+    {
+      "id": "a",
+      "name": "A",
+      "groups": ["G1", "G2", "G3"],
+      "sessions": [
+        {"day": "sat", "start": "08:00", "end": "09:30", "type": "td", "module": "Anglais", "room": "BM4-20", "teacher": "CHAIB", "groups": ["G1"]},
+        {"day": "sat", "start": "08:00", "end": "09:30", "type": "tp", "module": "MPDL", "room": "TP.C6", "teacher": "ABADINE", "groups": ["G1"]},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "tp", "module": "MPDL", "room": "TP.C6", "teacher": "ABADINE", "groups": ["G2"]},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "tp", "module": "CPT AVANC", "room": "TP.C7", "teacher": "SAADI", "groups": ["G3"]},
+        {"day": "sat", "start": "11:20", "end": "12:50", "type": "tp", "module": "MPDL", "room": "TP.C6", "teacher": "ABADINE", "groups": ["G3"]},
+        {"day": "sun", "start": "08:00", "end": "09:30", "type": "cours", "module": "CPT AVANC", "room": "E1", "teacher": "SAADI", "groups": []},
+        {"day": "sun", "start": "09:40", "end": "11:10", "type": "cours", "module": "ASS QUAL", "room": "E1", "teacher": "haddouche epse che", "groups": []},
+        {"day": "sun", "start": "11:20", "end": "12:50", "type": "tp", "module": "CPT AVANC", "room": "TP3-M", "teacher": "SAADI", "groups": ["G1"]},
+        {"day": "sun", "start": "13:00", "end": "14:30", "type": "tp", "module": "CPT AVANC", "room": "TP.C8", "teacher": "SAADI", "groups": ["G2"]},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "ASS QUAL", "room": "BM4-21", "teacher": "CHABOUNI", "groups": ["G1"]},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "REP CON", "room": "BM3-12", "teacher": "ISLI", "groups": ["G2"]},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "SIC", "room": "BM4-20", "teacher": "MAHDAOUI", "groups": ["G3"]},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "REP CON", "room": "BM3-12", "teacher": "ISLI", "groups": ["G1"]},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "SIC", "room": "BM4-20", "teacher": "MAHDAOUI", "groups": ["G2"]},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "ASS QUAL", "room": "BM4-21", "teacher": "CHABOUNI", "groups": ["G3"]},
+        {"day": "mon", "start": "11:20", "end": "12:50", "type": "cours", "module": "REP CON", "room": "E2", "teacher": "ISLI", "groups": []},
+        {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "REP CON", "room": "305", "teacher": "ISLI", "groups": ["G3"]},
+        {"day": "mon", "start": "13:00", "end": "14:30", "type": "tp", "module": "ASS QUAL", "room": "TP.C5", "teacher": "CHABOUNI", "groups": ["G2"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "tp", "module": "ASS QUAL", "room": "TP.C5", "teacher": "CHABOUNI", "groups": ["G3"]},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "tp", "module": "ASS QUAL", "room": "TP.C5", "teacher": "CHABOUNI", "groups": ["G1"]},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "tp", "module": "SDED : SYSTEME DECISIONEL ET ENTREPOTS", "room": "TP.C9", "teacher": "SELMOUNE", "groups": ["G2"]},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "td", "module": "SIC", "room": "BM4-23", "teacher": "MAHDAOUI", "groups": ["G1"]},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "td", "module": "ASS QUAL", "room": "BM4-19", "teacher": "CHABOUNI", "groups": ["G2"]},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "td", "module": "MPDL", "room": "C3", "teacher": "HACHEMI", "groups": ["G3"]},
+        {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "MPDL", "room": "158", "teacher": "HACHEMI", "groups": ["G2"]},
+        {"day": "tue", "start": "14:40", "end": "16:10", "type": "cours", "module": "SIC", "room": "E1", "teacher": "MAHDAOUI", "groups": []},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "cours", "module": "SDED : SYSTEME DECISIONEL ET ENTREPOTS", "room": "SC", "teacher": "SELMOUNE", "groups": []},
+        {"day": "thu", "start": "09:40", "end": "11:10", "type": "td", "module": "MPDL", "room": "BM3-3", "teacher": "HACHEMI", "groups": ["G1"]},
+        {"day": "thu", "start": "09:40", "end": "11:10", "type": "tp", "module": "SDED : SYSTEME DECISIONEL ET ENTREPOTS", "room": "TP128", "teacher": "SELMOUNE", "groups": ["G3"]},
+        {"day": "thu", "start": "11:20", "end": "12:50", "type": "tp", "module": "SDED : SYSTEME DECISIONEL ET ENTREPOTS", "room": "TP.C3B", "teacher": "SELMOUNE", "groups": ["G1"]},
+        {"day": "thu", "start": "13:00", "end": "14:30", "type": "cours", "module": "MPDL", "room": "E1", "teacher": "HACHEMI", "groups": []}
+      ]
+    }
+  ]
+}

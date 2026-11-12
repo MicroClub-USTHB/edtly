@@ -1,48 +1,56 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useTransition } from "react";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { SegmentedControl } from "@/components/ui/segmented-control";
+import { getPathname, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { LOCALE_KEY, VIEW_ONCE_KEY } from "@/lib/stores/storage-keys";
 
 const names = { en: "English", fr: "Français" } as const;
 
-export function LangToggle() {
+type Locale = (typeof routing.locales)[number];
+
+type LangToggleProps = {
+  id: string;
+  size: "md" | "icon";
+};
+
+export function LangToggle({ id, size }: LangToggleProps) {
   const t = useTranslations("Toggles");
   const locale = useLocale();
   const pathname = usePathname();
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
+
+  const change = (next: Locale) => {
+    if (next === locale) return;
+    try {
+      window.localStorage.setItem(LOCALE_KEY, next);
+      window.sessionStorage.setItem(
+        VIEW_ONCE_KEY,
+        document.documentElement.dataset.view ?? "day",
+      );
+    } catch {}
+    window.location.assign(
+      getPathname({ href: pathname, locale: next }) + window.location.hash,
+    );
+  };
 
   return (
-    <div
-      role="group"
-      aria-label={t("language")}
-      className="flex gap-1 rounded-full bg-muted p-1"
-    >
-      {routing.locales.map((l) => {
-        const active = l === locale;
-        return (
-          <button
-            key={l}
-            type="button"
-            lang={l}
-            aria-label={names[l]}
-            aria-pressed={active}
-            disabled={pending}
-            onClick={() =>
-              startTransition(() => router.replace(pathname, { locale: l }))
-            }
-            className={`h-9 min-w-11 rounded-full px-3 text-sm uppercase transition-colors duration-120 ease-out ${
-              active
-                ? "bg-tint text-tint-foreground"
-                : "text-foreground-secondary hover:bg-muted-hover"
-            }`}
-          >
-            {l}
-          </button>
-        );
-      })}
-    </div>
+    <SegmentedControl
+      id={id}
+      label={t("language")}
+      size={size}
+      value={locale as Locale}
+      onChange={change}
+      options={routing.locales.map((value) => ({
+        value,
+        ariaLabel: names[value],
+        label:
+          size === "icon" ? (
+            <span className="text-xs uppercase">{value}</span>
+          ) : (
+            names[value]
+          ),
+      }))}
+    />
   );
 }

@@ -1,29 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import type { ComponentProps } from "react";
+import { ThemeClassSync } from "./theme-class-sync";
 
 const scriptProps =
   typeof window === "undefined" ? undefined : { type: "application/json" };
 
-function ThemeClassSync() {
-  const { resolvedTheme } = useTheme();
-
-  React.useLayoutEffect(() => {
-    if (!resolvedTheme) return;
-    const root = document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(resolvedTheme);
-    root.style.colorScheme = resolvedTheme;
-  }, [resolvedTheme]);
-
-  return null;
-}
-
 export function ThemeProvider({
   children,
   ...props
-}: React.ComponentProps<typeof NextThemesProvider>) {
+}: ComponentProps<typeof NextThemesProvider>) {
   return (
     <NextThemesProvider scriptProps={scriptProps} {...props}>
       <ThemeClassSync />

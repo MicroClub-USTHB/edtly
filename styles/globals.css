@@ -3,7 +3,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Neutrals · warm white to warm ink */
   --background: #ffffff;
   --surface: #ffffff;
   --muted: #f7f3f2;
@@ -14,8 +13,8 @@
   --foreground: #1e1615;
   --foreground-secondary: #524b4a;
   --foreground-muted: #726c6a;
+  --backdrop: rgb(30 22 21 / 0.44);
 
-  /* Brand · Grenade */
   --primary: #d03232;
   --primary-hover: #b72728;
   --primary-active: #9c2021;
@@ -24,18 +23,23 @@
   --tint-strong: #ffd6d0;
   --tint-foreground: #6d1c1a;
 
-  /* Lectures · Cours blue */
   --cours: #4f83bd;
   --cours-tint: #e6f2ff;
+  --cours-tint-strong: #d0e5fd;
   --cours-foreground: #193860;
 
-  /* Functional */
   --success: #167645;
   --success-tint: #dff8e6;
   --warning: #865901;
   --warning-tint: #fdf0c7;
   --error: #9d1135;
   --error-tint: #feeaed;
+
+  --gutter: 20px;
+
+  @media (max-width: 359px) {
+    --gutter: 12px;
+  }
 }
 
 .dark {
@@ -49,24 +53,25 @@
   --foreground: #f3efee;
   --foreground-secondary: #bbb6b4;
   --foreground-muted: #96918f;
+  --backdrop: rgb(0 0 0 / 0.6);
 
   --primary: #f9746b;
+  --primary-hover: #fa8a82;
+  --primary-active: #fb9f98;
   --primary-foreground: #1d0c0a;
   --tint: #491f1c;
+  --tint-strong: #5c2723;
   --tint-foreground: #ffd0c9;
 
   --cours: #76a9e2;
   --cours-tint: #1e2f44;
+  --cours-tint-strong: #273d58;
   --cours-foreground: #c9e1fc;
 
-  /* Not specified in the canvas for dark — derived, adjust when the brand defines them. */
-  --primary-hover: #fa8a82;
-  --primary-active: #fb9f98;
-  --tint-strong: #5c2723;
-  --success: #6fd49a;
-  --success-tint: #12301f;
-  --warning: #e9b949;
-  --warning-tint: #33270a;
+  --success: #69c88e;
+  --success-tint: #173523;
+  --warning: #e8be62;
+  --warning-tint: #382c11;
   --error: #f7849a;
   --error-tint: #3d1420;
 }
@@ -82,6 +87,7 @@
   --color-foreground: var(--foreground);
   --color-foreground-secondary: var(--foreground-secondary);
   --color-foreground-muted: var(--foreground-muted);
+  --color-backdrop: var(--backdrop);
 
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
@@ -93,6 +99,7 @@
 
   --color-cours: var(--cours);
   --color-cours-tint: var(--cours-tint);
+  --color-cours-tint-strong: var(--cours-tint-strong);
   --color-cours-foreground: var(--cours-foreground);
 
   --color-success: var(--success);
@@ -102,34 +109,150 @@
   --color-error: var(--error);
   --color-error-tint: var(--error-tint);
 
-  /* Bpmf Huninn, with Varela Round for the French accents it lacks (ç â ê î ô û œ). */
   --font-sans:
     var(--font-bpmf-huninn), var(--font-varela-round), ui-rounded, system-ui,
     sans-serif;
 
-  /* Radius: 12 week cell · 14 banner · 20 session · 28 sheet · full for controls */
+  --text-display: 40px;
+  --text-display--line-height: 48px;
+  --text-display--letter-spacing: -0.01em;
+  --text-title: 28px;
+  --text-title--line-height: 34px;
+  --text-screen: 26px;
+  --text-screen--line-height: 32px;
+  --text-heading: 20px;
+  --text-heading--line-height: 26px;
+  --text-label: 15px;
+  --text-label--line-height: 20px;
+  --text-note: 13px;
+  --text-note--line-height: 18px;
+  --text-meta: 12px;
+  --text-meta--line-height: 16px;
+  --text-meta--letter-spacing: 0.01em;
+  --text-overline: 11px;
+  --text-overline--line-height: 16px;
+  --text-overline--letter-spacing: 0.08em;
+  --text-tab: 11px;
+  --text-tab--line-height: 14px;
+
   --radius-cell: 12px;
   --radius-banner: 14px;
+  --radius-chip: 18px;
   --radius-session: 20px;
   --radius-sheet: 28px;
 
-  /* Motion: ease-out, nothing longer than 280ms */
+  --spacing-gutter: var(--gutter);
+
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-skeleton: skeleton 1.2s ease-in-out infinite;
+
+  @keyframes skeleton {
+    50% {
+      opacity: 0.5;
+    }
+  }
 }
 
 @layer base {
   html {
-    /* One weight only (400): never let the browser fake bold or italic. */
     font-synthesis: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Focus: 2px ink ring, 2px offset, on each control. */
+  button,
+  a {
+    touch-action: manipulation;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+
   :focus-visible {
     outline: 2px solid var(--foreground);
     outline-offset: 2px;
   }
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+html[data-resuming] body {
+  visibility: hidden;
+}
+
+[data-view-panel] {
+  display: none;
+}
+
+html:not([data-view]) [data-view-panel~="day"],
+html[data-view="day"] [data-view-panel~="day"],
+html[data-view="week"] [data-view-panel~="week"],
+html[data-view="settings"] [data-view-panel~="settings"] {
+  display: flex;
+}
+
+html[data-day] [data-day-panel] {
+  display: none;
+}
+
+html[data-day="0"] [data-day-panel="0"],
+html[data-day="1"] [data-day-panel="1"],
+html[data-day="2"] [data-day-panel="2"],
+html[data-day="3"] [data-day-panel="3"],
+html[data-day="4"] [data-day-panel="4"],
+html[data-day="5"] [data-day-panel="5"] {
+  display: flex;
+}
+
+html:not([data-ready])[data-today="0"] [data-today-mark="0"],
+html:not([data-ready])[data-today="1"] [data-today-mark="1"],
+html:not([data-ready])[data-today="2"] [data-today-mark="2"],
+html:not([data-ready])[data-today="3"] [data-today-mark="3"],
+html:not([data-ready])[data-today="4"] [data-today-mark="4"],
+html:not([data-ready])[data-today="5"] [data-today-mark="5"] {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+
+  & * {
+    color: inherit;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ease-out);
+}
+
+html[data-theme-switch]::view-transition-old(root),
+html[data-theme-switch]::view-transition-new(root) {
+  animation-timing-function: linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+[data-day-title] {
+  display: none;
+}
+
+html[data-day="0"] [data-day-title="0"],
+html[data-day="1"] [data-day-title="1"],
+html[data-day="2"] [data-day-title="2"],
+html[data-day="3"] [data-day-title="3"],
+html[data-day="4"] [data-day-title="4"],
+html[data-day="5"] [data-day-title="5"] {
+  display: flex;
 }

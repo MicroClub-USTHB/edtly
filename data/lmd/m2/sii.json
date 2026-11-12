@@ -1,0 +1,47 @@
+{
+  "system": "lmd",
+  "level": "m2",
+  "speciality": {"id": "sii", "name": "SII"},
+  "academicYear": "2026/2027",
+  "semester": 1,
+  "status": "published",
+  "source": {"title": "Emploi du temps M2 SII", "url": "https://finfo.usthb.dz/storage/disk/lMCig82ltAzUhRC6GLNKVhm99LMifoqsVWPCAv0n.pdf", "updatedAt": "2026-11-05"},
+  "sections": [
+    {
+      "id": "a",
+      "name": "A",
+      "groups": ["G1", "G2", "G3"],
+      "sessions": [
+        {"day": "sun", "start": "08:00", "end": "09:30", "type": "tp", "module": "TAL", "room": "TP.C3B", "teacher": "KHENNAK", "groups": ["G2"]},
+        {"day": "sun", "start": "09:40", "end": "11:10", "type": "tp", "module": "TAL", "room": "TP130", "teacher": "KHENNAK", "groups": ["G1"]},
+        {"day": "sun", "start": "11:20", "end": "12:50", "type": "cours", "module": "TAL", "room": "E1", "teacher": "KHENNAK", "groups": []},
+        {"day": "sun", "start": "13:00", "end": "14:30", "type": "cours", "module": "VISION", "room": "E1", "teacher": "ABADA", "groups": []},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "cours", "module": "REP CON", "room": "E1", "teacher": "", "groups": []},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "cours", "module": "RI", "room": "E1", "teacher": "BIDA", "groups": []},
+        {"day": "mon", "start": "11:20", "end": "12:50", "type": "tp", "module": "D.MINING", "room": "TP.C5", "teacher": "HOUACINE", "groups": ["G1"]},
+        {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "D.MINING", "room": "BM3-4", "teacher": "REZAIGUIA", "groups": ["G3"]},
+        {"day": "mon", "start": "14:40", "end": "16:10", "type": "tp", "module": "D.MINING", "room": "TP.C5", "teacher": "HOUACINE", "groups": ["G3"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "D.MINING", "room": "BM4-20", "teacher": "HOUACINE", "groups": ["G1"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "P .CONTR", "room": "BM4-21", "teacher": "ISLI", "groups": ["G2"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "tp", "module": "TAL", "room": "TP.C7", "teacher": "KHENNAK", "groups": ["G3"]},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "td", "module": "D.MINING", "room": "BM4-21", "teacher": "HOUACINE", "groups": ["G2"]},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "td", "module": "P .CONTR", "room": "BM4-20", "teacher": "ISLI", "groups": ["G3"]},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "D.MINING", "room": "E1", "teacher": "HOUACINE", "groups": []},
+        {"day": "tue", "start": "13:00", "end": "14:30", "type": "cours", "module": "P .CONTR", "room": "E1", "teacher": "ISLI", "groups": []},
+        {"day": "tue", "start": "14:40", "end": "16:10", "type": "td", "module": "Anglais", "room": "CRI", "teacher": "ZENOUN", "groups": ["G3"]},
+        {"day": "tue", "start": "14:40", "end": "16:10", "type": "tp", "module": "P .CONTR", "room": "TP.C5", "teacher": "ISLI", "groups": ["G1"]},
+        {"day": "wed", "start": "08:00", "end": "09:30", "type": "td", "module": "P .CONTR", "room": "BM3-11", "teacher": "ISLI", "groups": ["G1"]},
+        {"day": "wed", "start": "08:00", "end": "09:30", "type": "tp", "module": "D.MINING", "room": "TP.C5", "teacher": "HOUACINE", "groups": ["G2"]},
+        {"day": "wed", "start": "08:00", "end": "09:30", "type": "tp", "module": "RI", "room": "TP.C6", "teacher": "SAHNOUNE", "groups": ["G3"]},
+        {"day": "wed", "start": "09:40", "end": "11:10", "type": "tp", "module": "VISION", "room": "TP.C5", "teacher": "ABADA", "groups": ["G1"]},
+        {"day": "wed", "start": "09:40", "end": "11:10", "type": "tp", "module": "RI", "room": "TP.C10", "teacher": "SAHNOUNE", "groups": ["G2"]},
+        {"day": "wed", "start": "09:40", "end": "11:10", "type": "tp", "module": "P .CONTR", "room": "TP131", "teacher": "ISLI", "groups": ["G3"]},
+        {"day": "wed", "start": "11:20", "end": "12:50", "type": "tp", "module": "P .CONTR", "room": "TP131", "teacher": "ISLI", "groups": ["G2"]},
+        {"day": "wed", "start": "13:00", "end": "14:30", "type": "tp", "module": "RI", "room": "TP131", "teacher": "SAHNOUNE", "groups": ["G1"]},
+        {"day": "wed", "start": "13:00", "end": "14:30", "type": "tp", "module": "VISION", "room": "TP128", "teacher": "ABADA", "groups": ["G2"]},
+        {"day": "wed", "start": "14:40", "end": "16:10", "type": "td", "module": "Anglais", "room": "CRI", "teacher": "ZENOUN", "groups": ["G1"]},
+        {"day": "wed", "start": "14:40", "end": "16:10", "type": "tp", "module": "VISION", "room": "TP128", "teacher": "ABADA", "groups": ["G3"]}
+      ]
+    }
+  ]
+}

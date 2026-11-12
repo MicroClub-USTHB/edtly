@@ -1,0 +1,51 @@
+{
+  "system": "ing",
+  "level": "ing3",
+  "speciality": {"id": "softeng", "name": "SoftEng"},
+  "academicYear": "2026/2027",
+  "semester": 1,
+  "status": "published",
+  "source": {"title": "Emploi du temps 3eme année ING Informatique_SoftEng", "url": "https://finfo.usthb.dz/storage/disk/adamXBdm90sQ2IOeJx0z7f6IqxyEqGtDe4q4qy1Z.pdf", "updatedAt": "2026-11-12"},
+  "sections": [
+    {
+      "id": "a",
+      "name": "A",
+      "groups": ["G1", "G2", "G3"],
+      "sessions": [
+        {"day": "sat", "start": "08:00", "end": "09:30", "type": "cours", "module": "Algorithmique et Complexité Avancées", "room": "103D", "teacher": "KALI ALI", "groups": []},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "td", "module": "Génie logiciel", "room": "BM4-21", "teacher": "ABDMEZIEM", "groups": ["G3"]},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "tp", "module": "Algorithmique et Complexité Avancées", "room": "TP.C3A", "teacher": "ANANE", "groups": ["G1"]},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "tp", "module": "Génie logiciel", "room": "TP.C3B", "teacher": "KHATI", "groups": ["G2"]},
+        {"day": "sat", "start": "11:20", "end": "12:50", "type": "td", "module": "Génie logiciel", "room": "136", "teacher": "ABDMEZIEM", "groups": ["G2"]},
+        {"day": "sat", "start": "11:20", "end": "12:50", "type": "tp", "module": "Génie logiciel", "room": "TP.C3B", "teacher": "KHATI", "groups": ["G1"]},
+        {"day": "sat", "start": "11:20", "end": "12:50", "type": "tp", "module": "Fondements de l’IA", "room": "TP.C8", "teacher": "CHAABANE", "groups": ["G3"]},
+        {"day": "sat", "start": "13:00", "end": "14:30", "type": "td", "module": "Génie logiciel", "room": "BM4-16", "teacher": "ABDMEZIEM", "groups": ["G1"]},
+        {"day": "sat", "start": "13:00", "end": "14:30", "type": "tp", "module": "Fondements de l’IA", "room": "TP.C7", "teacher": "CHAABANE", "groups": ["G2"]},
+        {"day": "sat", "start": "13:00", "end": "14:30", "type": "tp", "module": "Génie logiciel", "room": "TP.C3B", "teacher": "KHATI", "groups": ["G3"]},
+        {"day": "sat", "start": "14:40", "end": "16:10", "type": "tp", "module": "Fondements de l’IA", "room": "TP.C7", "teacher": "CHAABANE", "groups": ["G1"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "cours", "module": "Système d’Exploitation : Synchronisation", "room": "SC", "teacher": "BELKHIR", "groups": []},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "tp", "module": "Administration et Architecture", "room": "TP.C10", "teacher": "FRIHI", "groups": ["G2"]},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "tp", "module": "Algorithmique et Complexité Avancées", "room": "TP126", "teacher": "ANANE", "groups": ["G3"]},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "td", "module": "Système d’Exploitation : Synchronisation", "room": "BM3-6", "teacher": "", "groups": ["G1"]},
+        {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "Système d’Exploitation : Synchronisation", "room": "BM4-23", "teacher": "", "groups": ["G3"]},
+        {"day": "tue", "start": "14:40", "end": "16:10", "type": "cours", "module": "Génie logiciel", "room": "C204", "teacher": "HACHEMI", "groups": []},
+        {"day": "tue", "start": "16:20", "end": "17:50", "type": "td", "module": "Système d’Exploitation : Synchronisation", "room": "C204", "teacher": "", "groups": ["G3"]},
+        {"day": "wed", "start": "08:00", "end": "09:30", "type": "cours", "module": "Algorithmique et Complexité Avancées", "room": "326D", "teacher": "KALI ALI", "groups": []},
+        {"day": "wed", "start": "09:40", "end": "11:10", "type": "cours", "module": "Génie logiciel", "room": "322D", "teacher": "HACHEMI", "groups": []},
+        {"day": "wed", "start": "11:20", "end": "12:50", "type": "td", "module": "Techniques d’Optimisation", "room": "BM3-2", "teacher": "ZAIDI", "groups": ["G1"]},
+        {"day": "wed", "start": "13:00", "end": "14:30", "type": "cours", "module": "Techniques d’Optimisation", "room": "C206", "teacher": "ZAIDI", "groups": []},
+        {"day": "wed", "start": "14:40", "end": "16:10", "type": "cours", "module": "Fondements de l’IA", "room": "C203", "teacher": "AZZOUNE", "groups": []},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "td", "module": "Algorithmique et Complexité Avancées", "room": "362", "teacher": "KALI ALI", "groups": ["G1"]},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "tp", "module": "Algorithmique et Complexité Avancées", "room": "TP132", "teacher": "ANANE", "groups": ["G2"]},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "tp", "module": "Administration et Architecture", "room": "TP129", "teacher": "FRIHI", "groups": ["G3"]},
+        {"day": "thu", "start": "09:40", "end": "11:10", "type": "cours", "module": "Système d’Exploitation : Synchronisation", "room": "SC", "teacher": "BELKHIR", "groups": []},
+        {"day": "thu", "start": "11:20", "end": "12:50", "type": "td", "module": "Techniques d’Optimisation", "room": "348", "teacher": "ZAIDI", "groups": ["G2"]},
+        {"day": "thu", "start": "11:20", "end": "12:50", "type": "td", "module": "Algorithmique et Complexité Avancées", "room": "346", "teacher": "KALI ALI", "groups": ["G3"]},
+        {"day": "thu", "start": "11:20", "end": "12:50", "type": "tp", "module": "Administration et Architecture", "room": "TP.C4", "teacher": "FRIHI", "groups": ["G1"]},
+        {"day": "thu", "start": "13:00", "end": "14:30", "type": "td", "module": "Algorithmique et Complexité Avancées", "room": "346", "teacher": "KALI ALI", "groups": ["G2"]},
+        {"day": "thu", "start": "13:00", "end": "14:30", "type": "td", "module": "Techniques d’Optimisation", "room": "348", "teacher": "ZAIDI", "groups": ["G3"]},
+        {"day": "thu", "start": "14:40", "end": "16:10", "type": "cours", "module": "Administration et Architecture", "room": "221D", "teacher": "FRIHI", "groups": []}
+      ]
+    }
+  ]
+}

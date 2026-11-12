@@ -2,17 +2,134 @@
   "Metadata": {
     "title": "Edtly",
     "tagline": "Emploi du temps USTHB Informatique",
-    "description": "L'emploi du temps des étudiants d'Informatique de l'USTHB. Choisissez votre groupe, consultez vos séances, c'est tout.",
-    "ogImageAlt": "Logo Edtly"
+    "faculty": "Faculté d'Informatique, USTHB",
+    "description": "L'emploi du temps des étudiants de la Faculté d'Informatique de l'USTHB, LMD et Ingénieur. Choisissez votre groupe, consultez vos cours, TD et TP. Projet indépendant, non officiel.",
+    "ogImageAlt": "Logo Edtly",
+    "timetableTitle": "Emploi du temps {programme}",
+    "timetableSectionTitle": "Emploi du temps {programme} · Section {section}",
+    "timetableDescription": "Emploi du temps {programme} à la Faculté d'Informatique de l'USTHB : cours, TD et TP du semestre {semester}, année {year}. Consultation rapide et non officielle, d'après le PDF de la faculté."
   },
-  "HomePage": {
-    "title": "Rendre la vie universitaire un peu plus simple, chaque jour.",
-    "description": "L'emploi du temps des étudiants d'Informatique de l'USTHB. Choisissez votre groupe, consultez vos séances, c'est tout."
+  "Onboarding": {
+    "title": "Quel est votre parcours ?",
+    "description": "Edtly le garde en mémoire. Vous pouvez le changer à tout moment.",
+    "footnote": "Sans compte · Source : finfo.usthb.dz"
+  },
+  "Picker": {
+    "title": "Mon parcours",
+    "system": "Système",
+    "level": "Année",
+    "speciality": "Spécialité",
+    "section": "Section",
+    "group": "Groupe",
+    "submit": "Voir mon emploi du temps",
+    "apply": "Appliquer"
+  },
+  "Systems": {
+    "lmd": "LMD",
+    "ing": "Ingénieur"
+  },
+  "Days": {
+    "long": {
+      "sat": "Samedi",
+      "sun": "Dimanche",
+      "mon": "Lundi",
+      "tue": "Mardi",
+      "wed": "Mercredi",
+      "thu": "Jeudi"
+    },
+    "short": {
+      "sat": "Sam",
+      "sun": "Dim",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu"
+    }
+  },
+  "SessionTypes": {
+    "cours": "Cours",
+    "td": "TD",
+    "tp": "TP"
+  },
+  "Timetable": {
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "thisWeek": "Cette semaine",
+    "nextWeek": "Semaine prochaine",
+    "weekRange": "Du {start} au {end}",
+    "weekOf": "Semaine du {start} au {end}",
+    "previousWeek": "Semaine précédente",
+    "followingWeek": "Semaine suivante",
+    "days": "Jours de la semaine",
+    "changeParcours": "Changer de parcours",
+    "group": "Groupe",
+    "sectionLabel": "Section {name}",
+    "groupLabel": "Groupe {name}",
+    "now": "En cours",
+    "next": "Ensuite",
+    "free": "Libre",
+    "freeFor": "Libre pour {group}",
+    "room": "Salle {room}",
+    "seeAllGroups": "Voir tous les groupes",
+    "others": "autres",
+    "otherSessions": "{count, plural, one {# séance d'un autre groupe} other {# séances des autres groupes}}",
+    "legendMine": "Les séances de {group}",
+    "legendCours": "Cours de la section",
+    "legendOthers": "Autres groupes",
+    "legendOthersCount": "Autres groupes (+n)",
+    "updatedOn": "Mis à jour le {date}",
+    "officialPdf": "PDF officiel"
+  },
+  "Session": {
+    "title": "Détails de la séance",
+    "close": "Fermer",
+    "room": "Salle",
+    "teacher": "Enseignant",
+    "status": "État",
+    "wholeSection": "Toute la section",
+    "sameSlot": "Autres séances, même horaire",
+    "openPdf": "Ouvrir le PDF officiel"
+  },
+  "Tabs": {
+    "label": "Navigation",
+    "day": "Jour",
+    "week": "Semaine",
+    "settings": "Réglages"
+  },
+  "Settings": {
+    "title": "Réglages",
+    "appearance": "Apparence",
+    "startView": "Au démarrage",
+    "startViewLabel": "Vue au démarrage",
+    "language": "Langue",
+    "parcours": "Mon parcours",
+    "edit": "Modifier",
+    "timetable": "Emploi du temps",
+    "lastUpdate": "Dernière mise à jour",
+    "checkNow": "Vérifier maintenant",
+    "officialPdf": "PDF officiel de la faculté",
+    "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB. Version {version}"
+  },
+  "States": {
+    "today": "aujourd'hui",
+    "nothing": "Rien {when}",
+    "nothingFor": "Rien {when} pour {group}",
+    "nextClass": "Prochain cours : {day} à {time}, {details}.",
+    "seeDay": "Voir {day}",
+    "emptyTitle": "Aucune séance pour cette section",
+    "emptyBody": "Le fichier de la faculté ne contient pas de séance pour {programme}.",
+    "changeSection": "Changer de section",
+    "unreadableNotice": "Le fichier a changé de format",
+    "unreadableTitle": "Nous n'arrivons pas à lire cet emploi du temps",
+    "unreadableBody": "Le PDF officiel reste disponible.",
+    "openPdf": "Ouvrir le PDF officiel",
+    "retry": "Réessayer"
   },
   "NotFound": {
     "title": "Page introuvable",
-    "description": "La page que vous recherchez n'existe pas.",
-    "backHome": "Retour à l'accueil"
+    "description": "Cette page ou ce parcours n'existe pas, ou n'est plus publié.",
+    "backHome": "Choisir mon parcours",
+    "facultyPage": "Page de la faculté"
   },
   "Error": {
     "title": "Une erreur est survenue",
@@ -27,8 +144,13 @@
     "language": "Langue"
   },
   "Pwa": {
-    "updateReady": "Une nouvelle version d’Edtly est prête.",
-    "update": "Mettre à jour",
-    "offline": "Hors ligne · copie enregistrée affichée."
+    "offline": "Hors ligne · copie enregistrée",
+    "offlineCopy": "Hors ligne · copie du {date}",
+    "stale": "Cette copie date de {days} jours",
+    "check": "Vérifier",
+    "updated": "Emploi du temps mis à jour",
+    "see": "Voir",
+    "checkFailed": "Mise à jour impossible. Réessayez plus tard.",
+    "upToDate": "Emploi du temps à jour"
   }
 }

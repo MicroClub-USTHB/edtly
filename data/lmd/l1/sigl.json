@@ -1,0 +1,31 @@
+{
+  "system": "lmd",
+  "level": "l1",
+  "speciality": {"id": "sigl", "name": "SIGL (à distance)"},
+  "academicYear": "2026/2027",
+  "semester": 1,
+  "status": "published",
+  "source": {"title": "Emploi du temps L1 Informatique SIGL (à distance)", "url": "https://finfo.usthb.dz/storage/disk/fD2UJzaYh7gsQnwoUPpFTFdlxizMxx54dDb16Ur9.pdf", "updatedAt": "2026-10-15"},
+  "sections": [
+    {
+      "id": "a",
+      "name": "A",
+      "groups": ["G1"],
+      "sessions": [
+        {"day": "sat", "start": "08:00", "end": "09:30", "type": "cours", "module": "CRI", "room": "SIGL", "teacher": "OUAZAR", "groups": []},
+        {"day": "sat", "start": "09:40", "end": "11:10", "type": "td", "module": "CRI", "room": "SIGL", "teacher": "OUAZAR", "groups": ["G1"]},
+        {"day": "sun", "start": "08:00", "end": "09:30", "type": "cours", "module": "ALG01", "room": "SIGL", "teacher": "BOUCHEKIR", "groups": []},
+        {"day": "sun", "start": "09:40", "end": "11:10", "type": "td", "module": "ALG01", "room": "SIGL", "teacher": "BOUCHEKIR", "groups": ["G1"]},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "cours", "module": "ALGEB1", "room": "SIGL", "teacher": "SELMANE", "groups": []},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "ALGEB1", "room": "SIGL", "teacher": "SELMANE", "groups": ["G1"]},
+        {"day": "mon", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALG01", "room": "SIGL", "teacher": "BOUCHEKIR", "groups": ["G1"]},
+        {"day": "tue", "start": "08:00", "end": "09:30", "type": "cours", "module": "ANA1", "room": "SIGL", "teacher": "", "groups": []},
+        {"day": "tue", "start": "09:40", "end": "11:10", "type": "td", "module": "ANA1", "room": "SIGL", "teacher": "", "groups": ["G1"]},
+        {"day": "tue", "start": "16:20", "end": "17:50", "type": "cours", "module": "TIC", "room": "SIGL", "teacher": "BOUCHEKIR", "groups": []},
+        {"day": "wed", "start": "16:20", "end": "17:50", "type": "tp", "module": "TIC", "room": "SIGL", "teacher": "BOUCHEKIR", "groups": ["G1"]},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "cours", "module": "MP", "room": "SIGL", "teacher": "louna", "groups": []},
+        {"day": "thu", "start": "09:40", "end": "11:10", "type": "td", "module": "MP", "room": "SIGL", "teacher": "louna", "groups": ["G1"]}
+      ]
+    }
+  ]
+}

@@ -1,22 +1,18 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useEffect, useEffectEvent } from "react";
-import { toast } from "sonner";
+import { useEffect } from "react";
+import {
+  applyWaitingUpdate,
+  checkForUpdate,
+  markChecked,
+  markUpdateReady,
+  setRegistration,
+  updateRequested,
+} from "@/lib/pwa/update-store";
 
 const UPDATE_CHECK_INTERVAL = 30 * 60 * 1000;
 
 export function ServiceWorker() {
-  const t = useTranslations("Pwa");
-
-  const notifyUpdate = useEffectEvent((apply: () => void) => {
-    toast(t("updateReady"), {
-      id: "pwa-update",
-      duration: Number.POSITIVE_INFINITY,
-      action: { label: t("update"), onClick: apply },
-    });
-  });
-
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
 
@@ -29,20 +25,16 @@ export function ServiceWorker() {
 
     const container = navigator.serviceWorker;
     const hadController = Boolean(container.controller);
-    let registration: ServiceWorkerRegistration | undefined;
     let reloading = false;
 
-    const apply = () =>
-      registration?.waiting?.postMessage({ type: "SKIP_WAITING" });
-
     const onWaiting = () => {
-      if (container.controller) notifyUpdate(apply);
+      if (container.controller) markUpdateReady();
     };
 
-    const watch = (reg: ServiceWorkerRegistration) => {
-      if (reg.waiting) onWaiting();
-      reg.addEventListener("updatefound", () => {
-        const worker = reg.installing;
+    const watch = (registration: ServiceWorkerRegistration) => {
+      if (registration.waiting) onWaiting();
+      registration.addEventListener("updatefound", () => {
+        const worker = registration.installing;
         worker?.addEventListener("statechange", () => {
           if (worker.state === "installed") onWaiting();
         });
@@ -50,17 +42,27 @@ export function ServiceWorker() {
     };
 
     const check = () => {
-      registration?.update().catch(() => {});
+      if (navigator.onLine) void checkForUpdate();
     };
 
-    const onControllerChange = () => {
-      if (!hadController || reloading) return;
+    let pendingReload = false;
+
+    const reload = () => {
+      if (reloading) return;
       reloading = true;
       window.location.reload();
     };
 
+    const onControllerChange = () => {
+      if (!hadController) return;
+      if (document.visibilityState === "hidden") pendingReload = true;
+      else if (updateRequested()) reload();
+      else markUpdateReady();
+    };
+
     const onVisibilityChange = () => {
-      if (document.visibilityState === "hidden") apply();
+      if (document.visibilityState === "hidden") applyWaitingUpdate();
+      else if (pendingReload) reload();
       else check();
     };
 
@@ -71,9 +73,10 @@ export function ServiceWorker() {
 
     container
       .register("/sw.js", { scope: "/", updateViaCache: "none" })
-      .then((reg) => {
-        registration = reg;
-        watch(reg);
+      .then((registration) => {
+        setRegistration(registration);
+        watch(registration);
+        if (navigator.onLine) markChecked();
       })
       .catch(() => {});
 

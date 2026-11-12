@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { locale as rootLocale } from "next/root-params";
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { Onboarding } from "@/components/academic/onboarding";
 import { Logo } from "@/components/brand/logo";
-import { LangToggle } from "@/components/shared/lang-toggle";
-import { ModeToggle } from "@/components/shared/mode-toggle";
+import { JsonLd } from "@/components/shared/json-ld";
+import { resumeScript } from "@/lib/boot-script";
 import { alternatesFor } from "@/lib/seo";
+import { site } from "@/lib/site";
+import { getCatalogue } from "@/lib/timetable/data";
+import { localized } from "@/lib/timetable/paths";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await rootLocale();
@@ -17,27 +20,64 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function HomePage() {
-  const t = useTranslations("HomePage");
+export default async function HomePage() {
+  const [locale, catalogue, t, metadata] = await Promise.all([
+    rootLocale(),
+    getCatalogue(),
+    getTranslations("Onboarding"),
+    getTranslations("Metadata"),
+  ]);
+  const url = site.url + localized(locale, "/");
 
   return (
     <>
-      <header className="flex flex-wrap items-center justify-end gap-3 px-5 pt-4">
-        <LangToggle />
-        <ModeToggle />
-      </header>
+      <script dangerouslySetInnerHTML={{ __html: resumeScript(locale) }} />
 
-      <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center gap-10 px-5 py-24 text-center">
-        <Logo className="h-14 w-auto sm:h-18" />
-        <div className="flex flex-col items-center gap-4">
-          <h1 className="text-balance text-[32px] leading-10 tracking-[-0.01em] sm:text-[40px] sm:leading-12">
-            {t("title")}
-          </h1>
-          <p className="max-w-md text-base leading-6 text-foreground-secondary">
-            {t("description")}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              name: site.name,
+              alternateName: metadata("tagline"),
+              url,
+              inLanguage: locale,
+            },
+            {
+              "@type": "WebApplication",
+              name: site.name,
+              url,
+              description: metadata("description"),
+              applicationCategory: "EducationalApplication",
+              operatingSystem: "Any",
+              isAccessibleForFree: true,
+              offers: { "@type": "Offer", price: "0", priceCurrency: "DZD" },
+            },
+          ],
+        }}
+      />
+
+      <div className="mx-auto flex min-h-dvh w-full max-w-140 flex-col px-gutter pt-4 pb-5 lg:max-w-none lg:px-8 lg:pt-5 lg:pb-8">
+        <Logo className="mt-1.5 h-7.5 w-auto shrink-0 self-start [view-transition-name:edtly-logo] lg:h-8" />
+
+        <main className="flex flex-1 flex-col lg:mx-auto lg:w-full lg:max-w-110 lg:flex-none lg:pt-18 lg:pb-10">
+          <h1 className="sr-only">{`${metadata("title")} · ${metadata("tagline")}`}</h1>
+
+          <div className="flex flex-col gap-2 pt-8 pb-7 lg:pt-0">
+            <h2 className="text-screen lg:text-title">{t("title")}</h2>
+            <p className="text-label leading-5.5 text-foreground-secondary lg:text-base">
+              {t("description")}
+            </p>
+          </div>
+
+          <Onboarding catalogue={catalogue} />
+
+          <p className="mt-auto pt-8 text-center text-meta text-foreground-muted lg:mt-0 lg:pt-7 lg:text-left">
+            {t("footnote")}
           </p>
-        </div>
-      </main>
+        </main>
+      </div>
     </>
   );
 }

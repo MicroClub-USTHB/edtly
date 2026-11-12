@@ -3,14 +3,15 @@ import { locale as rootLocale } from "next/root-params";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { ViewTransitions } from "next-view-transitions";
-import { OfflineStatus } from "@/components/pwa/offline-status";
 import { ServiceWorker } from "@/components/pwa/service-worker";
+import { LazyToaster } from "@/components/ui/lazy-toaster";
 import { routing } from "@/i18n/routing";
+import { bootScript } from "@/lib/boot-script";
 import { bpmfHuninn, varelaRound } from "@/lib/fonts";
 import { startupImages } from "@/lib/pwa/splash";
 import { ogLocales, site } from "@/lib/site";
+import { MotionProvider } from "@/providers/motion-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { Toaster } from "sonner";
 import "@/styles/globals.css";
 
 export function generateStaticParams() {
@@ -31,6 +32,7 @@ export const viewport: Viewport = {
     },
   ],
   colorScheme: "light dark",
+  viewportFit: "cover",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -83,21 +85,23 @@ export default async function LocaleLayout({
     <ViewTransitions>
       <html
         lang={locale}
-        className={`${bpmfHuninn.variable} ${varelaRound.variable} h-full antialiased`}
+        className={`${bpmfHuninn.variable} ${varelaRound.variable} antialiased`}
         suppressHydrationWarning
       >
-        <body className="min-h-full flex flex-col">
+        <body className="min-h-dvh">
+          <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+
           <NextIntlClientProvider>
             <ThemeProvider
               attribute="class"
-              defaultTheme="light"
+              defaultTheme="system"
               enableSystem
               disableTransitionOnChange
             >
-              {children}
-              <Toaster />
+              <MotionProvider>{children}</MotionProvider>
+
+              <LazyToaster />
               <ServiceWorker />
-              <OfflineStatus />
             </ThemeProvider>
           </NextIntlClientProvider>
         </body>

@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: site.name,
     short_name: site.name,
     description:
-      "The timetable for USTHB Informatique students. Select your group, see your classes, go.",
+      "L'emploi du temps des étudiants d'Informatique de l'USTHB. Choisissez votre groupe, consultez vos séances. Projet indépendant, non officiel.",
     lang: routing.defaultLocale,
     dir: "ltr",
     start_url: "/",

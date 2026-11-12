@@ -1,19 +1,35 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 import { site } from "@/lib/site";
+import { getProgrammes } from "@/lib/timetable/data";
+import { localized, sectionPath } from "@/lib/timetable/paths";
 
-const paths = ["/"];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const programmes = await getProgrammes();
+  const pages = [
+    { path: "/", lastModified: undefined as string | undefined },
+    ...programmes.flatMap(({ system, level, speciality, source, sections }) =>
+      sections
+        .filter((section) => section.sessions.length > 0)
+        .map((section) => ({
+          path: sectionPath({
+            system,
+            level,
+            speciality: speciality.id,
+            section: section.id,
+          }),
+          lastModified: source.updatedAt,
+        })),
+    ),
+  ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const url = (locale: string, path: string) =>
-    `${site.url}/${locale}${path === "/" ? "" : path}`;
-
-  return paths.flatMap((path) =>
+  return pages.flatMap(({ path, lastModified }) =>
     routing.locales.map((locale) => ({
-      url: url(locale, path),
+      url: site.url + localized(locale, path),
+      lastModified,
       alternates: {
         languages: Object.fromEntries(
-          routing.locales.map((l) => [l, url(l, path)]),
+          routing.locales.map((l) => [l, site.url + localized(l, path)]),
         ),
       },
     })),

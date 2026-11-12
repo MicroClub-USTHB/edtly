@@ -2,17 +2,134 @@
   "Metadata": {
     "title": "Edtly",
     "tagline": "USTHB Informatique timetable",
-    "description": "The timetable for USTHB Informatique students. Select your group, see your classes, go.",
-    "ogImageAlt": "Edtly logo"
+    "faculty": "USTHB Faculty of Informatics",
+    "description": "The timetable for students of the USTHB Faculty of Informatics, LMD and Engineering. Pick your group and see your lectures, TD and TP. Independent, unofficial project.",
+    "ogImageAlt": "Edtly logo",
+    "timetableTitle": "{programme} timetable",
+    "timetableSectionTitle": "{programme} timetable · Section {section}",
+    "timetableDescription": "{programme} timetable at the USTHB Faculty of Informatics: lectures, TD and TP for semester {semester}, {year}. A fast, unofficial viewer based on the faculty PDF."
   },
-  "HomePage": {
-    "title": "Make everyday university life feel a little easier.",
-    "description": "The timetable for USTHB Informatique students. Select your group, see your classes, go."
+  "Onboarding": {
+    "title": "What do you study?",
+    "description": "Edtly remembers it. You can change it at any time.",
+    "footnote": "No account · Source: finfo.usthb.dz"
+  },
+  "Picker": {
+    "title": "My programme",
+    "system": "System",
+    "level": "Year",
+    "speciality": "Speciality",
+    "section": "Section",
+    "group": "Group",
+    "submit": "See my timetable",
+    "apply": "Apply"
+  },
+  "Systems": {
+    "lmd": "LMD",
+    "ing": "Engineering"
+  },
+  "Days": {
+    "long": {
+      "sat": "Saturday",
+      "sun": "Sunday",
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday"
+    },
+    "short": {
+      "sat": "Sat",
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu"
+    }
+  },
+  "SessionTypes": {
+    "cours": "Lecture",
+    "td": "TD",
+    "tp": "TP"
+  },
+  "Timetable": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This week",
+    "nextWeek": "Next week",
+    "weekRange": "{start} to {end}",
+    "weekOf": "Week of {start} to {end}",
+    "previousWeek": "Previous week",
+    "followingWeek": "Next week",
+    "days": "Days of the week",
+    "changeParcours": "Change programme",
+    "group": "Group",
+    "sectionLabel": "Section {name}",
+    "groupLabel": "Group {name}",
+    "now": "Now",
+    "next": "Next",
+    "free": "Free",
+    "freeFor": "Free for {group}",
+    "room": "Room {room}",
+    "seeAllGroups": "See all groups",
+    "others": "others",
+    "otherSessions": "{count, plural, one {# session for another group} other {# sessions for other groups}}",
+    "legendMine": "{group} sessions",
+    "legendCours": "Section lectures",
+    "legendOthers": "Other groups",
+    "legendOthersCount": "Other groups (+n)",
+    "updatedOn": "Updated {date}",
+    "officialPdf": "Official PDF"
+  },
+  "Session": {
+    "title": "Session details",
+    "close": "Close",
+    "room": "Room",
+    "teacher": "Teacher",
+    "status": "Status",
+    "wholeSection": "Whole section",
+    "sameSlot": "Other sessions, same time",
+    "openPdf": "Open the official PDF"
+  },
+  "Tabs": {
+    "label": "Navigation",
+    "day": "Day",
+    "week": "Week",
+    "settings": "Settings"
+  },
+  "Settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "startView": "On launch",
+    "startViewLabel": "View on launch",
+    "language": "Language",
+    "parcours": "My programme",
+    "edit": "Edit",
+    "timetable": "Timetable",
+    "lastUpdate": "Last update",
+    "checkNow": "Check now",
+    "officialPdf": "Official faculty PDF",
+    "disclaimer": "Edtly is an independent project. It is not an official USTHB service. Version {version}"
+  },
+  "States": {
+    "today": "today",
+    "nothing": "Nothing {when}",
+    "nothingFor": "Nothing {when} for {group}",
+    "nextClass": "Next class: {day} at {time}, {details}.",
+    "seeDay": "See {day}",
+    "emptyTitle": "No sessions for this section",
+    "emptyBody": "The faculty file has no sessions for {programme}.",
+    "changeSection": "Change section",
+    "unreadableNotice": "The file format has changed",
+    "unreadableTitle": "We cannot read this timetable",
+    "unreadableBody": "The official PDF is still available.",
+    "openPdf": "Open the official PDF",
+    "retry": "Try again"
   },
   "NotFound": {
     "title": "Page not found",
-    "description": "The page you are looking for does not exist.",
-    "backHome": "Back to home"
+    "description": "This page or programme does not exist, or is no longer published.",
+    "backHome": "Choose my programme",
+    "facultyPage": "Faculty page"
   },
   "Error": {
     "title": "Something went wrong",
@@ -27,8 +144,13 @@
     "language": "Language"
   },
   "Pwa": {
-    "updateReady": "A new version of Edtly is ready.",
-    "update": "Update",
-    "offline": "You are offline. Showing the saved copy."
+    "offline": "Offline · saved copy",
+    "offlineCopy": "Offline · copy from {date}",
+    "stale": "This copy is {days} days old",
+    "check": "Check",
+    "updated": "Timetable updated",
+    "see": "See",
+    "checkFailed": "Update failed. Try again later.",
+    "upToDate": "Timetable is up to date"
   }
 }

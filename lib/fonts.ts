@@ -13,4 +13,6 @@ export const varelaRound = Varela_Round({
   variable: "--font-varela-round",
   weight: "400",
   subsets: ["latin", "latin-ext"],
+  display: "swap",
+  preload: false,
 });

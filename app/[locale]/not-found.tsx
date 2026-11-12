@@ -1,25 +1,40 @@
-import { useTranslations } from "next-intl";
-import { LogoSymbol } from "@/components/brand/logo";
-import { Link } from "@/i18n/navigation";
+import { locale as rootLocale } from "next/root-params";
+import { getTranslations } from "next-intl/server";
+import { Link } from "next-view-transitions";
+import { LogoSymbol } from "@/components/brand/logo-symbol";
+import { buttonVariants } from "@/components/ui/button";
+import { staleParcoursScript } from "@/lib/boot-script";
+import { cn } from "@/lib/utils";
 
-export default function NotFound() {
-  const t = useTranslations("NotFound");
+export default async function NotFound() {
+  const [locale, t] = await Promise.all([
+    rootLocale(),
+    getTranslations("NotFound"),
+  ]);
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-5 text-center">
+    <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-gutter text-center">
+      <script dangerouslySetInnerHTML={{ __html: staleParcoursScript }} />
       <LogoSymbol title="" className="mb-4 size-12" />
 
-      <h1 className="text-[28px] leading-8.5">{t("title")}</h1>
-      <p className="max-w-sm text-base leading-6 text-foreground-secondary">
+      <h1 className="text-title">{t("title")}</h1>
+      <p className="max-w-sm text-base text-foreground-secondary">
         {t("description")}
       </p>
 
-      <Link
-        href="/"
-        className="mt-4 inline-flex h-12 items-center rounded-full bg-primary px-5 text-[15px] leading-5 text-primary-foreground transition-colors duration-120 ease-out hover:bg-primary-hover active:bg-primary-active"
-      >
-        {t("backHome")}
-      </Link>
+      <div className="mt-4 flex flex-col gap-2">
+        <Link href={`/${locale}`} className={cn(buttonVariants())}>
+          {t("backHome")}
+        </Link>
+        <a
+          href="https://finfo.usthb.dz/etudes/emploi-du-temps"
+          target="_blank"
+          rel="noreferrer"
+          className={cn(buttonVariants({ variant: "outline" }))}
+        >
+          {t("facultyPage")}
+        </a>
+      </div>
     </main>
   );
 }

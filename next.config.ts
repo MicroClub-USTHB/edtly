@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import packageJson from "./package.json";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -11,6 +12,7 @@ const appVersion =
 const nextConfig: NextConfig = {
   env: {
     APP_VERSION: appVersion,
+    APP_RELEASE: packageJson.version,
   },
   experimental: {
     agentFeedback: true,
@@ -21,6 +23,10 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   outputFileTracingIncludes: {
     "/sw.js": ["./lib/pwa/sw.js"],
+    "/[locale]/[system]/[level]/[speciality]/[section]": ["./data/**/*.json"],
+    "/[locale]/[system]/[level]/[speciality]/[section]/[group]": [
+      "./data/**/*.json",
+    ],
   },
   turbopack: {
     rules: {
