@@ -12,6 +12,8 @@ import { startupImages } from "@/lib/pwa/splash";
 import { ogLocales, site } from "@/lib/site";
 import { MotionProvider } from "@/providers/motion-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "@/styles/globals.css";
 
 export function generateStaticParams() {
@@ -102,6 +104,9 @@ export default async function LocaleLayout({
 
               <LazyToaster />
               <ServiceWorker />
+
+              <Analytics />
+              <SpeedInsights />
             </ThemeProvider>
           </NextIntlClientProvider>
         </body>
