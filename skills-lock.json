@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "skills": {
+    "animate-ui": {
+      "source": "PrototyperAI/prototyper-ui",
+      "sourceType": "github",
+      "skillPath": "apps/docs/skill/animate-ui/SKILL.md",
+      "computedHash": "8cfa4d2a8b4832a8ee75bfd08b99eae0af7667b4e9e5d7600090f6cd837597a4"
+    },
+    "apple-design": {
+      "source": "dickwu/apple-design-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "bdf7ebe3c47e7512f7a07cee7ea4c9eebf153ad9425f90c0a9f6cb0c859247ca"
+    },
+    "better-ui": {
+      "source": "jakubkrehel/skills",
+      "sourceType": "github",
+      "skillPath": "skills/better-ui/SKILL.md",
+      "computedHash": "36417d09a0d91fb8c8cbbbeeb14f0ac0c0d4399342d80bcec02c8c446ebadce3"
+    }
+  }
+}
