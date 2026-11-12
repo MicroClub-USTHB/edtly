@@ -1,0 +1,83 @@
+import type { SVGProps } from "react";
+
+const SYMBOL_FRAME =
+  "M30 0H105A15 15 0 0 1 105 30H45A15 15 0 0 0 30 45V75A15 15 0 0 0 45 90H105A15 15 0 0 1 105 120H30A30 30 0 0 1 0 90V30A30 30 0 0 1 30 0Z";
+
+const LETTERS = [
+  // d
+  "M169 698Q113 666 79.5 606.5Q46 547 46 470Q46 392 80 331Q113 273 167 241.5Q221 210 283 210Q378 210 449 283V46Q449 27 463 13.5Q477 0 495 0Q514 0 527 14Q540 28 540 46V680Q540 698 527 711.5Q514 725 495 725Q477 725 463 711.5Q449 698 449 680V656Q378 730 283 730Q224 730 169 698ZM449 573V367Q418 334 378.5 314.5Q339 295 296 295Q222 295 179.5 341.5Q137 388 137 470Q137 552 179.5 598.5Q222 645 296 645Q339 645 378 625.5Q417 606 449 573Z",
+  // t
+  "M725 600V303H677Q658 303 648 292.5Q638 282 638 264Q638 245 648 235Q658 225 677 225H725V156Q725 133 737 121.5Q749 110 771 110Q793 110 804.5 122Q816 134 816 156V225H926Q943 225 954 236Q965 247 965 264Q965 279 953.5 291Q942 303 926 303H816V592Q816 627 832 638.5Q848 650 879 650Q899 650 918 644Q920 644 921 643Q931 641 937 641Q952 641 963 651.5Q974 662 974 677Q974 699 950 712Q913 730 869 730Q725 730 725 600Z",
+  // l
+  "M1069 680V46Q1069 28 1082.5 14Q1096 0 1114 0Q1134 0 1147 13Q1160 26 1160 46V680Q1160 699 1146.5 712Q1133 725 1114 725Q1096 725 1082.5 711.5Q1069 698 1069 680Z",
+  // y
+  "M1370 906Q1370 895 1372 890L1436 727L1252 280Q1248 270 1248 261Q1248 243 1261.5 229Q1275 215 1293 215Q1307 215 1318.5 223Q1330 231 1335 243L1485 614L1637 245Q1651 215 1679 215Q1697 215 1710.5 229Q1724 243 1724 261Q1724 270 1721 278L1454 918Q1442 949 1412 949Q1394 949 1382 936.5Q1370 924 1370 906Z",
+];
+
+type Tone = "brand" | "mono";
+
+type MarkProps = Omit<SVGProps<SVGSVGElement>, "children"> & {
+  tone?: Tone;
+  title?: string;
+};
+
+function a11y(title: string) {
+  return title
+    ? ({ role: "img", "aria-label": title } as const)
+    : ({ "aria-hidden": true } as const);
+}
+
+export function Logo({ tone = "brand", title = "Edtly", ...props }: MarkProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 2493.62 949"
+      fill="currentColor"
+      {...a11y(title)}
+      {...props}
+    >
+      <g transform="scale(6.04)">
+        <path d={SYMBOL_FRAME} />
+        <rect
+          x="45"
+          y="45"
+          width="50"
+          height="30"
+          rx="15"
+          className={tone === "brand" ? "fill-primary" : undefined}
+        />
+      </g>
+      <g transform="translate(769.62 0)">
+        {LETTERS.map((d) => (
+          <path key={d.slice(0, 12)} d={d} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
+export function LogoSymbol({
+  tone = "brand",
+  title = "Edtly",
+  ...props
+}: MarkProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 120 120"
+      fill="currentColor"
+      {...a11y(title)}
+      {...props}
+    >
+      <path d={SYMBOL_FRAME} />
+      <rect
+        x="45"
+        y="45"
+        width="50"
+        height="30"
+        rx="15"
+        className={tone === "brand" ? "fill-primary" : undefined}
+      />
+    </svg>
+  );
+}

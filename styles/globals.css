@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* Neutrals · warm white to warm ink */
+  --background: #ffffff;
+  --surface: #ffffff;
+  --muted: #f7f3f2;
+  --muted-hover: #f0ecea;
+  --divider: #f0ecea;
+  --border: #e3dedc;
+  --border-strong: #857f7c;
+  --foreground: #1e1615;
+  --foreground-secondary: #524b4a;
+  --foreground-muted: #726c6a;
+
+  /* Brand · Grenade */
+  --primary: #d03232;
+  --primary-hover: #b72728;
+  --primary-active: #9c2021;
+  --primary-foreground: #ffffff;
+  --tint: #ffeae7;
+  --tint-strong: #ffd6d0;
+  --tint-foreground: #6d1c1a;
+
+  /* Lectures · Cours blue */
+  --cours: #4f83bd;
+  --cours-tint: #e6f2ff;
+  --cours-foreground: #193860;
+
+  /* Functional */
+  --success: #167645;
+  --success-tint: #dff8e6;
+  --warning: #865901;
+  --warning-tint: #fdf0c7;
+  --error: #9d1135;
+  --error-tint: #feeaed;
+}
+
+.dark {
+  --background: #110d0d;
+  --surface: #1a1615;
+  --muted: #241f1e;
+  --muted-hover: #292423;
+  --divider: #292423;
+  --border: #373130;
+  --border-strong: #6d6766;
+  --foreground: #f3efee;
+  --foreground-secondary: #bbb6b4;
+  --foreground-muted: #96918f;
+
+  --primary: #f9746b;
+  --primary-foreground: #1d0c0a;
+  --tint: #491f1c;
+  --tint-foreground: #ffd0c9;
+
+  --cours: #76a9e2;
+  --cours-tint: #1e2f44;
+  --cours-foreground: #c9e1fc;
+
+  /* Not specified in the canvas for dark — derived, adjust when the brand defines them. */
+  --primary-hover: #fa8a82;
+  --primary-active: #fb9f98;
+  --tint-strong: #5c2723;
+  --success: #6fd49a;
+  --success-tint: #12301f;
+  --warning: #e9b949;
+  --warning-tint: #33270a;
+  --error: #f7849a;
+  --error-tint: #3d1420;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-muted-hover: var(--muted-hover);
+  --color-divider: var(--divider);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-tint: var(--tint);
+  --color-tint-strong: var(--tint-strong);
+  --color-tint-foreground: var(--tint-foreground);
+
+  --color-cours: var(--cours);
+  --color-cours-tint: var(--cours-tint);
+  --color-cours-foreground: var(--cours-foreground);
+
+  --color-success: var(--success);
+  --color-success-tint: var(--success-tint);
+  --color-warning: var(--warning);
+  --color-warning-tint: var(--warning-tint);
+  --color-error: var(--error);
+  --color-error-tint: var(--error-tint);
+
+  /* Bpmf Huninn, with Varela Round for the French accents it lacks (ç â ê î ô û œ). */
+  --font-sans:
+    var(--font-bpmf-huninn), var(--font-varela-round), ui-rounded, system-ui,
+    sans-serif;
+
+  /* Radius: 12 week cell · 14 banner · 20 session · 28 sheet · full for controls */
+  --radius-cell: 12px;
+  --radius-banner: 14px;
+  --radius-session: 20px;
+  --radius-sheet: 28px;
+
+  /* Motion: ease-out, nothing longer than 280ms */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@layer base {
+  html {
+    /* One weight only (400): never let the browser fake bold or italic. */
+    font-synthesis: none;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Focus: 2px ink ring, 2px offset, on each control. */
+  :focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 2px;
+  }
+}
