@@ -6,7 +6,12 @@ import { setDay, useSelectedDay } from "@/lib/stores/view-store";
 import { DAYS } from "@/lib/timetable/types";
 import { DayChip } from "./day-chip";
 
-export function DayStrip({ week }: { week: Week }) {
+type DayStripProps = {
+  week: Week;
+  days: number[];
+};
+
+export function DayStrip({ week, days }: DayStripProps) {
   const t = useTranslations("Timetable");
   const short = useTranslations("Days.short");
   const long = useTranslations("Days.long");
@@ -17,20 +22,22 @@ export function DayStrip({ week }: { week: Week }) {
       role="group"
       aria-label={t("days")}
       data-view-panel="day"
-      className="gap-1 px-gutter pt-3 pb-2.5"
+      className="px-gutter pt-3 pb-2.5"
     >
-      {DAYS.map((day, index) => (
-        <DayChip
-          key={day}
-          index={index}
-          label={short(day)}
-          name={long(day)}
-          date={week.dates ? week.dates[index].getDate() : null}
-          today={week.today === index}
-          selected={selected === index}
-          onSelect={() => setDay(index)}
-        />
-      ))}
+      <div className="grid w-full grid-cols-6 gap-1">
+        {days.map((index) => (
+          <DayChip
+            key={DAYS[index]}
+            index={index}
+            label={short(DAYS[index])}
+            name={long(DAYS[index])}
+            date={week.dates ? week.dates[index].getDate() : null}
+            today={week.today === index}
+            selected={selected === index}
+            onSelect={() => setDay(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 }

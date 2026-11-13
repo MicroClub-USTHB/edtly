@@ -6,13 +6,15 @@ import { buttonVariants } from "@/components/ui/button";
 import { Sheet, type SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
+  mainTone,
   sessionKey,
-  toneOf,
+  type Conflicts,
   type SlotSessions,
   type SlotStatus,
 } from "@/lib/timetable/schedule";
 import type { Day } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
+import { ConflictNote } from "./conflict-note";
 
 export type SessionDetail = {
   day: Day;
@@ -27,6 +29,7 @@ type SessionSheetProps = {
   group: string | null;
   sectionName: string;
   pdfUrl: string;
+  conflicts: Conflicts;
   onFocus: (key: string) => void;
   onClose: () => void;
 };
@@ -42,6 +45,7 @@ export function SessionSheet({
   group,
   sectionName,
   pdfUrl,
+  conflicts,
   onFocus,
   onClose,
 }: SessionSheetProps) {
@@ -55,7 +59,10 @@ export function SessionSheet({
     all.find((session) => sessionKey(session) === detail?.focus) ??
     detail?.slot.mains[0];
   const rest = all.filter((session) => session !== focused);
-  const tone = focused ? toneOf(focused, group) : "other";
+  const tone =
+    focused && detail?.slot.mains.includes(focused)
+      ? mainTone(focused)
+      : "other";
   const audience = !focused
     ? ""
     : focused.groups.length > 0
@@ -63,6 +70,11 @@ export function SessionSheet({
       : sectionName
         ? timetable("sectionLabel", { name: sectionName })
         : t("wholeSection");
+
+  const conflict =
+    focused && tone !== "other"
+      ? labels.conflict(conflicts.get(sessionKey(focused)))
+      : undefined;
 
   const facts = focused
     ? [
@@ -97,7 +109,9 @@ export function SessionSheet({
           <div className="flex flex-col gap-0.5">
             <h2 className="text-heading wrap-anywhere">{focused.module}</h2>
             <p className="text-note">
-              {[labels.type(focused), audience].filter(Boolean).join(" · ")}
+              {[labels.type(focused), audience, focused.origin]
+                .filter(Boolean)
+                .join(" · ")}
             </p>
           </div>
 
@@ -109,6 +123,8 @@ export function SessionSheet({
               </div>
             ))}
           </dl>
+
+          {conflict && <ConflictNote text={conflict} />}
         </div>
       ) : (
         <p className="flex h-9 items-center rounded-full border border-dashed border-border px-4 text-note text-foreground-muted">
@@ -142,7 +158,7 @@ export function SessionSheet({
                       {session.module}
                     </span>
                     <span className="text-xs text-foreground-muted">
-                      {labels.meta(session)}
+                      {labels.meta(session, session.groups[0] ?? null)}
                     </span>
                   </span>
 
@@ -160,7 +176,7 @@ export function SessionSheet({
       )}
 
       <a
-        href={pdfUrl}
+        href={focused?.originUrl ?? pdfUrl}
         target="_blank"
         rel="noreferrer"
         className={cn(buttonVariants({ variant: "outline" }))}

@@ -1,5 +1,6 @@
 import type { SlotStatus, Tone } from "@/lib/timetable/schedule";
 import { cn } from "@/lib/utils";
+import { ConflictNote } from "./conflict-note";
 
 type SessionCardProps = {
   title: string;
@@ -7,6 +8,7 @@ type SessionCardProps = {
   tone: Exclude<Tone, "other">;
   status?: SlotStatus;
   statusLabel?: string;
+  conflict?: string;
   flash?: boolean;
 };
 
@@ -16,6 +18,7 @@ export function SessionCard({
   tone,
   status,
   statusLabel,
+  conflict,
   flash = false,
 }: SessionCardProps) {
   return (
@@ -25,6 +28,7 @@ export function SessionCard({
         tone === "cours"
           ? "bg-cours-tint text-cours-foreground group-active:bg-cours-tint-strong"
           : "bg-tint text-tint-foreground group-active:bg-tint-strong",
+        conflict && "outline-1 outline-warning/60",
         flash && "outline-2 outline-primary",
       )}
     >
@@ -45,6 +49,8 @@ export function SessionCard({
       </span>
 
       <span className="text-meta">{meta}</span>
+
+      {conflict && <ConflictNote text={conflict} className="pt-0.5" />}
     </span>
   );
 }

@@ -78,7 +78,14 @@
     "legendOthers": "Autres groupes",
     "legendOthersCount": "Autres groupes (+n)",
     "updatedOn": "Mis à jour le {date}",
-    "officialPdf": "PDF officiel"
+    "officialPdf": "PDF officiel",
+    "conflictWith": "Chevauche {module} ({start} – {end})",
+    "conflictCount": "{count, plural, one {# chevauchement} other {# chevauchements}}",
+    "conflictShort": "chevauchement",
+    "freeGap": "Temps libre · {duration}",
+    "freeShort": "Libre",
+    "weeksAhead": "{count, plural, one {Semaine prochaine} other {Dans # semaines}}",
+    "weeksBehind": "{count, plural, one {Semaine dernière} other {Il y a # semaines}}"
   },
   "Session": {
     "title": "Détails de la séance",
@@ -103,6 +110,10 @@
     "language": "Langue",
     "parcours": "Mon parcours",
     "edit": "Modifier",
+    "personal": "Mon emploi du temps",
+    "modules": "Modules et groupes",
+    "customize": "Personnaliser",
+    "reset": "Réinitialiser mon emploi du temps",
     "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB. Version {version}"
   },
   "States": {
@@ -150,5 +161,72 @@
   },
   "Legal": {
     "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB."
+  },
+  "Personal": {
+    "view": "Affichage",
+    "mine": "Mon emploi du temps",
+    "full": "Complet",
+    "title": "Mon emploi du temps",
+    "customize": "Personnaliser",
+    "mainGroup": "Groupe principal",
+    "modules": "Modules · {section}",
+    "module": "Module",
+    "hidden": "Masqué",
+    "follow": "Suivre {module}",
+    "moduleGroup": "Groupe de TD et TP pour {module}",
+    "extras": "Modules en dette",
+    "extrasHint": "Ajoutez un module d'une autre année ou d'une autre spécialité.",
+    "add": "Ajouter un module",
+    "addTitle": "Ajouter un module",
+    "addSubmit": "Ajouter ce module",
+    "back": "Retour",
+    "remove": "Retirer {module}",
+    "loading": "Chargement des modules…",
+    "loadFailed": "Impossible de charger cette section.",
+    "retry": "Réessayer",
+    "unavailable": "Ce module n'est plus publié",
+    "reset": "Réinitialiser",
+    "resetDone": "Emploi du temps réinitialisé",
+    "undo": "Annuler",
+    "allModules": "Tous les modules",
+    "hiddenCount": "{count, plural, one {# masqué} other {# masqués}}",
+    "extrasCount": "{count, plural, one {# en dette} other {# en dette}}",
+    "emptyTitle": "Aucun module dans votre emploi du temps",
+    "emptyBody": "Vous avez masqué tous les modules. Personnalisez votre emploi du temps pour en réafficher.",
+    "legend": "Mes séances"
+  },
+  "Now": {
+    "region": "Maintenant",
+    "now": "En cours",
+    "until": "jusqu'à {time}",
+    "remaining": "encore {duration}",
+    "next": "Ensuite",
+    "first": "Premier cours",
+    "freeUntil": "Temps libre jusqu'à {time}",
+    "in": "dans {duration}",
+    "last": "Dernier cours de la journée",
+    "done": "Fini pour aujourd'hui",
+    "doneNext": "Prochain cours : {day} à {time}, {module}",
+    "doneNone": "Aucun autre cours cette semaine"
+  },
+  "Duration": {
+    "minutes": "{minutes} min",
+    "hours": "{hours} h",
+    "hoursMinutes": "{hours} h {padded}"
+  },
+  "Filters": {
+    "title": "Filtres",
+    "open": "Filtres",
+    "openActive": "{count, plural, one {Filtres, # actif} other {Filtres, # actifs}}",
+    "types": "Type de séance",
+    "days": "Jours",
+    "groups": "Groupes",
+    "modules": "Modules",
+    "clear": "Effacer",
+    "clearAll": "Effacer les filtres",
+    "show": "{count, plural, =0 {Aucune séance} one {Voir # séance} other {Voir # séances}}",
+    "active": "Filtres : {list}",
+    "noMatch": "Aucune séance ne correspond aux filtres",
+    "noMatchBody": "Modifiez ou effacez les filtres pour revoir votre emploi du temps."
   }
 }

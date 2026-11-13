@@ -19,6 +19,8 @@ export type Session = {
   module: string;
   room: string;
   groups: string[];
+  origin?: string;
+  originUrl?: string;
 };
 
 export type Section = {

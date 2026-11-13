@@ -24,13 +24,30 @@ export function useSessionLabels() {
       : groups(session);
   };
 
+  const conflict = (others: Session[] | undefined) => {
+    if (!others || others.length === 0) return undefined;
+    const [first] = others;
+    const text = t("conflictWith", {
+      module: first.module,
+      start: first.start,
+      end: first.end,
+    });
+    return others.length > 1 ? `${text} +${others.length - 1}` : text;
+  };
+
   return {
     room,
     groups,
     audience,
+    conflict,
     type: (session: Session) => types(session.type),
-    meta: (session: Session) =>
-      [types(session.type), session.room && room(session.room)]
+    meta: (session: Session, group: string | null = null) =>
+      [
+        types(session.type),
+        !(group && session.groups.includes(group)) && groups(session),
+        session.room && room(session.room),
+        session.origin,
+      ]
         .filter(Boolean)
         .join(" · "),
     short: (session: Session) =>

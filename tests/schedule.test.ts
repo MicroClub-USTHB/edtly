@@ -3,10 +3,11 @@ import {
   abbreviate,
   compactLabel,
   daySlots,
+  forGroup,
   nextSessionAfter,
   slotStatuses,
   sortSessions,
-  toneOf,
+  mainTone,
   weekRows,
 } from "@/lib/timetable/schedule";
 import type { Session } from "@/lib/timetable/types";
@@ -33,22 +34,24 @@ const sessions = sortSessions([
 describe("highlight rules", () => {
   test("a section lecture is always highlighted as cours", () => {
     const lecture = sessions.find(({ type }) => type === "cours")!;
-    expect(toneOf(lecture, "G1")).toBe("cours");
-    expect(toneOf(lecture, "G4")).toBe("cours");
-    expect(toneOf(lecture, null)).toBe("cours");
+    expect(mainTone(lecture)).toBe("cours");
+    expect(forGroup("G1")(lecture)).toBe(true);
+    expect(forGroup("G4")(lecture)).toBe(true);
+    expect(forGroup(null)(lecture)).toBe(true);
   });
 
   test("TD and TP are highlighted only for the selected group", () => {
     const td = sessions.find(({ groups }) => groups[0] === "G1")!;
-    expect(toneOf(td, "G1")).toBe("mine");
-    expect(toneOf(td, "G2")).toBe("other");
-    expect(toneOf(td, null)).toBe("other");
+    expect(mainTone(td)).toBe("mine");
+    expect(forGroup("G1")(td)).toBe(true);
+    expect(forGroup("G2")(td)).toBe(false);
+    expect(forGroup(null)(td)).toBe(false);
   });
 });
 
 describe("day slots", () => {
   test("keeps every session visible and splits mine from others", () => {
-    const slots = daySlots(sessions, "mon", "G1");
+    const slots = daySlots(sessions, "mon", forGroup("G1"));
     expect(slots.map(({ start }) => start)).toEqual(["08:00", "09:40", "11:20"]);
     expect(slots[0].mains.map(({ module }) => module)).toEqual(["ALGO2"]);
     expect(slots[0].others.map(({ module }) => module)).toEqual(["ARCH1"]);
@@ -63,13 +66,13 @@ describe("day slots", () => {
   });
 
   test("switching group only moves sessions between mains and others", () => {
-    const [first] = daySlots(sessions, "mon", "G2");
+    const [first] = daySlots(sessions, "mon", forGroup("G2"));
     expect(first.mains.map(({ module }) => module)).toEqual(["ARCH1"]);
     expect(first.others.map(({ module }) => module)).toEqual(["ALGO2"]);
   });
 
   test("marks the running and the upcoming session", () => {
-    const slots = daySlots(sessions, "mon", "G1");
+    const slots = daySlots(sessions, "mon", forGroup("G1"));
     const statuses = slotStatuses(slots, 8 * 60 + 15);
     expect(statuses.get("08:00")).toBe("now");
     expect(statuses.get("09:40")).toBe("next");
@@ -80,7 +83,7 @@ describe("day slots", () => {
 
 describe("week", () => {
   test("has one row per time slot and six day cells", () => {
-    const rows = weekRows(sessions, "G2");
+    const rows = weekRows(sessions, forGroup("G2"));
     expect(rows.map(({ start }) => start)).toEqual([
       "08:00",
       "09:40",
@@ -92,9 +95,9 @@ describe("week", () => {
   });
 
   test("finds the next class after an empty day, wrapping the week", () => {
-    expect(nextSessionAfter(sessions, "G2", 2)?.dayIndex).toBe(4);
-    expect(nextSessionAfter(sessions, "G2", 4)?.dayIndex).toBe(2);
-    expect(nextSessionAfter([], "G1", 0)).toBeNull();
+    expect(nextSessionAfter(sessions, forGroup("G2"), 2)?.dayIndex).toBe(4);
+    expect(nextSessionAfter(sessions, forGroup("G2"), 4)?.dayIndex).toBe(2);
+    expect(nextSessionAfter([], forGroup("G1"), 0)).toBeNull();
   });
 });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LangToggle } from "@/components/shared/lang-toggle";
 import { ModeToggle } from "@/components/shared/mode-toggle";
@@ -15,13 +16,24 @@ import { SettingsSection } from "./settings-section";
 type SettingsPanelProps = {
   parcours: string;
   version: string;
+  personalSummary: string;
+  customized: boolean;
   onEditParcours: (anchor: SheetAnchor) => void;
+  onCustomize: (anchor: SheetAnchor) => void;
+  onReset: () => void;
 };
+
+const ROW =
+  "flex items-center justify-between gap-3 border-b border-divider py-2 text-left text-label";
 
 export function SettingsPanel({
   parcours,
   version,
+  personalSummary,
+  customized,
   onEditParcours,
+  onCustomize,
+  onReset,
 }: SettingsPanelProps) {
   const t = useTranslations("Settings");
   const tabs = useTranslations("Tabs");
@@ -60,10 +72,44 @@ export function SettingsPanel({
             onClick={(event) =>
               onEditParcours(event.currentTarget.getBoundingClientRect())
             }
-            className="flex min-h-14 items-center justify-between gap-3 border-b border-divider py-2 text-left text-label"
+            className={`${ROW} min-h-14`}
           >
             <span className="min-w-0 wrap-anywhere">{parcours}</span>
             <span className="shrink-0 text-primary">{t("edit")}</span>
+          </button>
+        </SettingsSection>
+
+        <SettingsSection label={t("personal")} dense>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            onClick={(event) =>
+              onCustomize(event.currentTarget.getBoundingClientRect())
+            }
+            className={`${ROW} min-h-14`}
+          >
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span>{t("modules")}</span>
+              <span className="text-meta wrap-anywhere text-foreground-muted">
+                {personalSummary}
+              </span>
+            </span>
+            <span className="shrink-0 text-primary">{t("customize")}</span>
+          </button>
+
+          <button
+            type="button"
+            aria-disabled={!customized}
+            onClick={onReset}
+            className={`${ROW} min-h-13 border-b-0 aria-disabled:pointer-events-none aria-disabled:text-foreground-muted`}
+          >
+            {t("reset")}
+            <RotateCcw
+              size={18}
+              strokeWidth={1.6}
+              aria-hidden="true"
+              className="shrink-0"
+            />
           </button>
         </SettingsSection>
       </div>

@@ -3,14 +3,15 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { useEffect, useState } from "react";
-import { StatusBanner } from "@/components/pwa/status-banner";
-import { Disclaimer } from "@/components/shared/disclaimer";
-import { SettingsPanel } from "@/components/settings/settings-panel";
-import { Button } from "@/components/ui/button";
-import { usePathname } from "@/i18n/navigation";
+import { FilterSheet } from "@/components/filters/filter-sheet";
+import { PersonalSheet } from "@/components/personal/personal-sheet";
 import type { SheetAnchor } from "@/components/ui/sheet";
-import { StateBlock } from "@/components/ui/state-block";
-import { minutesNow } from "@/lib/dates";
+import { usePathname } from "@/i18n/navigation";
+import { minutesNow, todayIndex } from "@/lib/dates";
+import { useKeyboardNavigation } from "@/lib/hooks/use-keyboard-navigation";
+import { usePersonalSummary } from "@/lib/hooks/use-personal-summary";
+import { usePersonalTimetable } from "@/lib/hooks/use-personal-timetable";
+import { useResetPersonal } from "@/lib/hooks/use-reset-personal";
 import { useWeek } from "@/lib/hooks/use-week";
 import { cachePages } from "@/lib/pwa/cache-pages";
 import { trackSessions, useChangedSessions } from "@/lib/stores/changes-store";
@@ -19,6 +20,15 @@ import {
   saveParcours,
   useSavedParcours,
 } from "@/lib/stores/preferences";
+import { setDay, useSelectedDay } from "@/lib/stores/view-store";
+import {
+  activeFilterCount,
+  filterSessions,
+  NO_FILTERS,
+  pruneFilters,
+  visibleDays,
+  type Filters,
+} from "@/lib/timetable/filters";
 import {
   groupSlug,
   localized,
@@ -26,7 +36,18 @@ import {
   sectionPath,
 } from "@/lib/timetable/paths";
 import {
+  isCustomized,
+  matcherFor,
+  mergeSessions,
+  modulesOf,
+} from "@/lib/timetable/personal";
+import {
+  conflictPairs,
+  conflictsOf,
+  dayStatus,
   daySlots,
+  forGroup,
+  forGroups,
   sessionKey,
   slotSessions,
   slotStatuses,
@@ -39,21 +60,11 @@ import {
   type ProgrammeInfo,
   type Section,
 } from "@/lib/timetable/types";
-import { DayPanels } from "./day-panels";
-import { DayStrip } from "./day-strip";
-import { DayTitle } from "./day-title";
-import { DesktopHeader } from "./desktop-header";
-import { DesktopToolbar } from "./desktop-toolbar";
-import { DesktopWeek } from "./desktop-week";
-import { GroupSwitch } from "./group-switch";
-import { MobileHeader } from "./mobile-header";
-import { ParcoursButton } from "./parcours-button";
 import { ParcoursSheet } from "./parcours-sheet";
 import { SessionSheet } from "./session-sheet";
-import { TabBar } from "./tab-bar";
-import { WeekGrid } from "./week-grid";
-import { WeekLegend } from "./week-legend";
-import { WeekTitle } from "./week-title";
+import { TimetableDesktop } from "./timetable-desktop";
+import { TimetableMobile } from "./timetable-mobile";
+import type { TimetableModel } from "./timetable-model";
 
 type TimetableViewProps = {
   programme: ProgrammeInfo;
@@ -70,6 +81,8 @@ type DetailRequest = Slot & {
   anchor: SheetAnchor;
 };
 
+type SheetRequest = { anchor: SheetAnchor | null };
+
 export function TimetableView({
   programme,
   section,
@@ -79,23 +92,29 @@ export function TimetableView({
   version,
 }: TimetableViewProps) {
   const t = useTranslations("Timetable");
-  const states = useTranslations("States");
   const types = useTranslations("SessionTypes");
+  const short = useTranslations("Days.short");
   const locale = useLocale();
   const router = useTransitionRouter();
   const saved = useSavedParcours();
   const changed = useChangedSessions();
-  const week = useWeek();
-  const [weekOffset, setWeekOffset] = useState(0);
-  const shiftedWeek = useWeek(weekOffset);
   const pathname = usePathname();
+  const summarize = usePersonalSummary();
+  const selectedDay = useSelectedDay();
+  const [weekOffset, setWeekOffset] = useState(0);
+  const week = useWeek();
+  const shiftedWeek = useWeek(weekOffset);
+  const [filters, setFilters] = useState<Filters>(NO_FILTERS);
   const [detail, setDetail] = useState<DetailRequest | null>(null);
   const [pickerAnchor, setPickerAnchor] = useState<SheetAnchor | null>(null);
+  const [personalSheet, setPersonalSheet] = useState<SheetRequest | null>(null);
+  const [filterSheet, setFilterSheet] = useState<SheetRequest | null>(null);
 
   const { system, level, speciality, source } = programme;
   const { id: sectionId, groups, sessions } = section;
   const base = { system, level, speciality: speciality.id, section: sectionId };
   const basePath = sectionPath(base);
+  const resetPersonal = useResetPersonal(basePath);
   const savedHere = saved && sectionPath(saved) === basePath ? saved : null;
   const savedGroup =
     savedHere?.group && groups.includes(savedHere.group)
@@ -106,7 +125,41 @@ export function TimetableView({
     null;
   const group = urlGroup ?? savedGroup ?? groups[0] ?? null;
   const parcours: Parcours = { ...base, group };
-  const empty = sessions.length === 0;
+
+  const { mode, personal, entries, mySessions } = usePersonalTimetable(
+    basePath,
+    sessions,
+    group,
+  );
+  const mineMode = mode === "mine";
+  const ownSessions = mineMode ? mySessions : sessions;
+  const ownMatcher = mineMode ? matcherFor(mySessions) : forGroup(group);
+  const moduleNames = modulesOf(ownSessions).map(({ name }) => name);
+  const filterGroups = mineMode ? [] : groups;
+  const active = pruneFilters(filters, moduleNames, filterGroups);
+  const filterCount = activeFilterCount(active);
+  const visible = filterSessions(ownSessions, active);
+  const days = visibleDays(active);
+  const mine =
+    !mineMode && active.groups.length > 0
+      ? forGroups(active.groups)
+      : ownMatcher;
+  const labelGroup = mineMode
+    ? null
+    : active.groups.length > 0
+      ? active.groups.length === 1
+        ? active.groups[0]
+        : null
+      : group;
+  const conflicts = conflictsOf(ownSessions, ownMatcher);
+  const status =
+    week.now && week.today !== null
+      ? dayStatus(ownSessions, week.today, ownMatcher, minutesNow(week.now))
+      : null;
+  const extrasLoading = personal.extras.some(
+    (extra) => entries.get(sectionPath(extra))?.status !== "ready",
+  );
+  const mineEmpty = mineMode && mySessions.length === 0 && !extrasLoading;
 
   const sectionName = programme.sectionCount > 1 ? section.name : "";
   const sectionLabel = sectionName && t("sectionLabel", { name: sectionName });
@@ -114,6 +167,13 @@ export function TimetableView({
   const groupLabel = groupNumber
     ? t("groupLabel", { name: groupNumber })
     : group;
+  const filterLabels = [
+    ...active.types.map((type) => types(type)),
+    ...DAYS.filter((day) => active.days.includes(day)).map((day) => short(day)),
+    ...active.groups,
+    ...active.modules,
+  ];
+  const daysKey = days.join(",");
 
   useEffect(() => {
     if (readParcours()) return;
@@ -145,6 +205,13 @@ export function TimetableView({
     trackSessions(basePath, source.updatedAt, sessions.map(sessionKey));
   }, [basePath, source.updatedAt, sessions]);
 
+  useEffect(() => {
+    const allowed = daysKey.split(",").map(Number);
+    if (selectedDay !== null && !allowed.includes(selectedDay)) {
+      setDay(allowed[0]);
+    }
+  }, [daysKey, selectedDay]);
+
   const selectGroup = (next: string) => {
     const nextParcours = { ...base, group: next };
     if (!saved || savedHere) saveParcours(nextParcours);
@@ -172,165 +239,110 @@ export function TimetableView({
     focus: string | null = null,
   ) => setDetail({ dayIndex, start: slot.start, end: slot.end, focus, anchor });
 
+  const shiftWeek = (delta: number) =>
+    setWeekOffset((offset) => offset + delta);
+
+  const goToday = () => {
+    setWeekOffset(0);
+    setDay(todayIndex(new Date()) ?? days[0]);
+  };
+
+  const stepDay = (direction: 1 | -1) => {
+    const position = days.indexOf(selectedDay ?? days[0]);
+    const next = position + direction;
+    if (position !== -1 && next >= 0 && next < days.length) {
+      setDay(days[next]);
+      return;
+    }
+    shiftWeek(direction);
+    setDay(direction > 0 ? days[0] : days[days.length - 1]);
+  };
+
+  useKeyboardNavigation({
+    onDay: stepDay,
+    onWeek: shiftWeek,
+    onToday: goToday,
+  });
+
   const detailDay = detail ? DAYS[detail.dayIndex] : null;
+  const detailSessions = mineMode
+    ? mergeSessions(mySessions, sessions)
+    : sessions;
   const detailStatus =
-    detail && detailDay && week.now && week.today === detail.dayIndex
+    detail &&
+    detailDay &&
+    weekOffset === 0 &&
+    week.now &&
+    week.today === detail.dayIndex
       ? slotStatuses(
-          daySlots(sessions, detailDay, group),
+          daySlots(visible, detailDay, mine),
           minutesNow(week.now),
         ).get(detail.start)
       : undefined;
 
-  const emptyState = (
-    <StateBlock
-      title={states("emptyTitle")}
-      description={states("emptyBody", {
-        programme: [programmeLabel, sectionLabel].filter(Boolean).join(", "),
-      })}
-    >
-      <Button
-        variant="outline"
-        aria-haspopup="dialog"
-        onClick={(event) =>
-          setPickerAnchor(event.currentTarget.getBoundingClientRect())
-        }
-      >
-        {states("changeSection")}
-      </Button>
-    </StateBlock>
-  );
+  const model: TimetableModel = {
+    empty: sessions.length === 0,
+    mode,
+    mineEmpty,
+    programmeLabel,
+    sectionName,
+    sectionLabel,
+    parcoursLabel: [programmeLabel, sectionLabel, groupLabel]
+      .filter(Boolean)
+      .join(" · "),
+    updatedShort,
+    version,
+    pdfUrl: source.url,
+    groups,
+    group,
+    labelGroup,
+    sessions: visible,
+    mine,
+    conflicts,
+    changed,
+    week: shiftedWeek,
+    weekOffset,
+    todayIndex: week.today,
+    status,
+    days,
+    filtered: filterCount > 0,
+    filterCount,
+    filterLabels,
+    summary: summarize(personal, group, conflictPairs(conflicts)),
+    customized: isCustomized(personal),
+    onGroupChange: selectGroup,
+    onParcours: setPickerAnchor,
+    onCustomize: (anchor) => setPersonalSheet({ anchor: anchor ?? null }),
+    onReset: resetPersonal,
+    onFilters: (anchor) => setFilterSheet({ anchor: anchor ?? null }),
+    onClearFilters: () => setFilters(NO_FILTERS),
+    onOpen: openSlot,
+    onShiftWeek: shiftWeek,
+    onToday: goToday,
+    onStepDay: stepDay,
+  };
 
   return (
     <>
-      <div className="mx-auto flex min-h-dvh w-full max-w-140 flex-col lg:hidden">
-        <MobileHeader>
-          <ParcoursButton
-            label={[programmeLabel, sectionName].filter(Boolean).join(" · ")}
-            onOpen={setPickerAnchor}
-          />
-        </MobileHeader>
-
-        <StatusBanner />
-
-        {empty ? (
-          <div data-view-panel="day week" className="px-gutter pt-10">
-            {emptyState}
-          </div>
-        ) : (
-          <>
-            <DayTitle week={week} />
-            <WeekTitle week={week} />
-
-            {groups.length > 1 && (
-              <div data-view-panel="day week" className="flex-col px-gutter pt-3.5">
-                <GroupSwitch
-                  id="group-mobile"
-                  groups={groups}
-                  value={group}
-                  onChange={selectGroup}
-                />
-              </div>
-            )}
-
-            <DayStrip week={week} />
-            <DayPanels
-              sessions={sessions}
-              group={group}
-              week={week}
-              changed={changed}
-              onOpen={openSlot}
-            />
-
-            <WeekGrid
-              sessions={sessions}
-              group={group}
-              week={week}
-              onOpen={openSlot}
-            />
-            <div data-view-panel="week" className="px-gutter pb-3">
-              <WeekLegend
-                className="gap-x-3.5 gap-y-1 text-xs"
-                mine={group}
-                cours={types("cours")}
-                others={groups.length > 1 ? t("legendOthersCount") : null}
-              />
-            </div>
-          </>
-        )}
-
-        <SettingsPanel
-          parcours={[programmeLabel, sectionLabel, groupLabel]
-            .filter(Boolean)
-            .join(" · ")}
-          version={version}
-          onEditParcours={setPickerAnchor}
-        />
-
-        <TabBar />
-      </div>
-
-      <div className="hidden min-h-dvh flex-col gap-5 px-8 pt-5 pb-8 lg:flex">
-        <DesktopHeader updated={updatedShort} pdfUrl={source.url}>
-          <ParcoursButton
-            label={[programmeLabel, sectionLabel].filter(Boolean).join(" · ")}
-            onOpen={setPickerAnchor}
-          />
-          <GroupSwitch
-            id="group-desktop"
-            size="sm"
-            groups={groups}
-            value={group}
-            onChange={selectGroup}
-          />
-        </DesktopHeader>
-
-        <StatusBanner />
-
-        {empty ? (
-          <div className="pt-12">{emptyState}</div>
-        ) : (
-          <>
-            <DesktopToolbar
-              week={shiftedWeek}
-              onShift={(delta) => setWeekOffset((offset) => offset + delta)}
-              onToday={() => setWeekOffset(0)}
-            />
-
-            <DesktopWeek
-              sessions={sessions}
-              group={group}
-              week={shiftedWeek}
-              changed={changed}
-              onOpen={openSlot}
-            />
-
-            <WeekLegend
-              className="gap-5 text-note"
-              mine={group && t("legendMine", { group })}
-              cours={t("legendCours")}
-              others={groups.length > 1 ? t("legendOthers") : null}
-            />
-          </>
-        )}
-
-        <Disclaimer className="mt-auto border-t border-divider pt-5" />
-      </div>
+      <TimetableMobile model={model} />
+      <TimetableDesktop model={model} />
 
       <SessionSheet
         detail={
           detail && detailDay
             ? {
                 day: detailDay,
-                slot: slotSessions(sessions, detailDay, detail, group),
+                slot: slotSessions(detailSessions, detailDay, detail, mine),
                 focus: detail.focus,
                 status: detailStatus,
                 anchor: detail.anchor,
               }
             : null
         }
-        group={group}
+        group={labelGroup}
         sectionName={sectionName}
         pdfUrl={source.url}
+        conflicts={conflicts}
         onFocus={(focus) => setDetail(detail && { ...detail, focus })}
         onClose={() => setDetail(null)}
       />
@@ -342,6 +354,30 @@ export function TimetableView({
         current={parcours}
         onSubmit={submitParcours}
         onClose={() => setPickerAnchor(null)}
+      />
+
+      <PersonalSheet
+        open={personalSheet !== null}
+        anchor={personalSheet?.anchor ?? null}
+        path={basePath}
+        sectionLabel={[programmeLabel, sectionLabel].filter(Boolean).join(", ")}
+        sessions={sessions}
+        groups={groups}
+        mainGroup={group}
+        catalogue={catalogue}
+        onMainGroupChange={selectGroup}
+        onClose={() => setPersonalSheet(null)}
+      />
+
+      <FilterSheet
+        open={filterSheet !== null}
+        anchor={filterSheet?.anchor ?? null}
+        filters={active}
+        modules={moduleNames}
+        groups={filterGroups}
+        count={visible.length}
+        onChange={setFilters}
+        onClose={() => setFilterSheet(null)}
       />
     </>
   );

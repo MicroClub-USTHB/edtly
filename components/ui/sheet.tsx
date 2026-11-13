@@ -22,18 +22,23 @@ type SheetProps = {
   closeLabel: string;
   heading: ReactNode;
   anchor?: SheetAnchor | null;
+  size?: keyof typeof widths;
   className?: string;
   children: ReactNode;
 };
 
-const POPOVER_WIDTH = 400;
+const widths = {
+  default: { px: 400, className: "w-100" },
+  wide: { px: 560, className: "w-140" },
+} as const;
+
 const GUTTER = 16;
 const GAP = 8;
 
-function popoverStyle(anchor: SheetAnchor) {
+function popoverStyle(anchor: SheetAnchor, width: number) {
   const left = Math.max(
     GUTTER,
-    Math.min(anchor.left, window.innerWidth - POPOVER_WIDTH - GUTTER),
+    Math.min(anchor.left, window.innerWidth - width - GUTTER),
   );
   const below = window.innerHeight - anchor.bottom;
   return below >= anchor.top
@@ -62,6 +67,7 @@ export function Sheet({
   closeLabel,
   heading,
   anchor,
+  size = "default",
   className,
   children,
 }: SheetProps) {
@@ -108,13 +114,15 @@ export function Sheet({
           />
 
           <m.div
-            style={popover ? popoverStyle(anchor) : undefined}
+            style={popover ? popoverStyle(anchor, widths[size].px) : undefined}
             className={cn(
-              "absolute flex flex-col gap-4 overflow-y-auto overscroll-contain bg-background px-5 pt-2.5 pb-6",
+              "absolute flex flex-col overflow-hidden bg-background",
               popover
-                ? "w-100 rounded-sheet border border-border pt-5 shadow-[0_12px_40px_rgb(30_22_21/0.14)]"
-                : "inset-x-0 bottom-0 mx-auto max-h-[92dvh] max-w-140 rounded-t-sheet pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2 lg:rounded-sheet lg:pt-5",
-              className,
+                ? cn(
+                    widths[size].className,
+                    "rounded-sheet border border-border shadow-[0_12px_40px_rgb(30_22_21/0.14)]",
+                  )
+                : "inset-x-0 bottom-0 mx-auto max-h-[92dvh] max-w-140 rounded-t-sheet lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2 lg:rounded-sheet",
             )}
             initial={fade ? { opacity: 0 } : { y: "100%" }}
             animate={
@@ -136,7 +144,10 @@ export function Sheet({
           >
             <div
               onPointerDown={(event) => dragControls.start(event)}
-              className="flex touch-none flex-col gap-4"
+              className={cn(
+                "flex shrink-0 touch-none flex-col gap-4 px-5 pt-2.5 pb-4",
+                (popover || desktop) && "pt-5",
+              )}
             >
               <span
                 aria-hidden="true"
@@ -157,7 +168,16 @@ export function Sheet({
               </div>
             </div>
 
-            {children}
+            <div
+              className={cn(
+                "scrollbar-subtle mr-1.5 mb-3 flex min-h-0 flex-col gap-4 overflow-y-auto overscroll-contain pr-3.5 pb-3 pl-5",
+                !popover &&
+                  "mb-[max(0.75rem,env(safe-area-inset-bottom))] lg:mb-3",
+                className,
+              )}
+            >
+              {children}
+            </div>
           </m.div>
         </dialog>
       )}

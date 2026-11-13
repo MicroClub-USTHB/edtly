@@ -78,7 +78,14 @@
     "legendOthers": "Other groups",
     "legendOthersCount": "Other groups (+n)",
     "updatedOn": "Updated {date}",
-    "officialPdf": "Official PDF"
+    "officialPdf": "Official PDF",
+    "conflictWith": "Overlaps {module} ({start} – {end})",
+    "conflictCount": "{count, plural, one {# overlap} other {# overlaps}}",
+    "conflictShort": "overlap",
+    "freeGap": "Free time · {duration}",
+    "freeShort": "Free",
+    "weeksAhead": "{count, plural, one {Next week} other {In # weeks}}",
+    "weeksBehind": "{count, plural, one {Last week} other {# weeks ago}}"
   },
   "Session": {
     "title": "Session details",
@@ -103,6 +110,10 @@
     "language": "Language",
     "parcours": "My programme",
     "edit": "Edit",
+    "personal": "My timetable",
+    "modules": "Modules and groups",
+    "customize": "Customise",
+    "reset": "Reset my timetable",
     "disclaimer": "Edtly is an independent project. It is not an official USTHB service. Version {version}"
   },
   "States": {
@@ -150,5 +161,72 @@
   },
   "Legal": {
     "disclaimer": "Edtly is an independent project. It is not an official USTHB service."
+  },
+  "Personal": {
+    "view": "View",
+    "mine": "My timetable",
+    "full": "Full timetable",
+    "title": "My timetable",
+    "customize": "Customise",
+    "mainGroup": "Main group",
+    "modules": "Modules · {section}",
+    "module": "Module",
+    "hidden": "Hidden",
+    "follow": "Follow {module}",
+    "moduleGroup": "TD and TP group for {module}",
+    "extras": "Retake modules",
+    "extrasHint": "Add a module from another year or speciality.",
+    "add": "Add a module",
+    "addTitle": "Add a module",
+    "addSubmit": "Add this module",
+    "back": "Back",
+    "remove": "Remove {module}",
+    "loading": "Loading modules…",
+    "loadFailed": "This section could not be loaded.",
+    "retry": "Try again",
+    "unavailable": "This module is no longer published",
+    "reset": "Reset",
+    "resetDone": "Timetable reset",
+    "undo": "Undo",
+    "allModules": "All modules",
+    "hiddenCount": "{count, plural, one {# hidden} other {# hidden}}",
+    "extrasCount": "{count, plural, one {# retake} other {# retakes}}",
+    "emptyTitle": "No modules in your timetable",
+    "emptyBody": "You have hidden every module. Customise your timetable to show them again.",
+    "legend": "My sessions"
+  },
+  "Now": {
+    "region": "Right now",
+    "now": "Now",
+    "until": "until {time}",
+    "remaining": "{duration} left",
+    "next": "Next",
+    "first": "First class",
+    "freeUntil": "Free until {time}",
+    "in": "in {duration}",
+    "last": "Last class of the day",
+    "done": "Done for today",
+    "doneNext": "Next class: {day} at {time}, {module}",
+    "doneNone": "No other classes this week"
+  },
+  "Duration": {
+    "minutes": "{minutes} min",
+    "hours": "{hours} h",
+    "hoursMinutes": "{hours} h {minutes} min"
+  },
+  "Filters": {
+    "title": "Filters",
+    "open": "Filters",
+    "openActive": "{count, plural, one {Filters, # active} other {Filters, # active}}",
+    "types": "Session type",
+    "days": "Days",
+    "groups": "Groups",
+    "modules": "Modules",
+    "clear": "Clear",
+    "clearAll": "Clear filters",
+    "show": "{count, plural, =0 {No sessions} one {Show # session} other {Show # sessions}}",
+    "active": "Filters: {list}",
+    "noMatch": "No sessions match the filters",
+    "noMatchBody": "Change or clear the filters to see your timetable again."
   }
 }
