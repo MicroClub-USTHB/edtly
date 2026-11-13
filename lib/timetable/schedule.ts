@@ -3,6 +3,7 @@ import { DAYS, type Day, type Session, type SessionType } from "./types";
 export type Slot = { start: string; end: string };
 export type SlotSessions = Slot & { mains: Session[]; others: Session[] };
 export type Tone = "mine" | "cours" | "other";
+export type Matcher = (session: Session) => boolean;
 
 const TYPE_ORDER: Record<SessionType, number> = { cours: 0, td: 1, tp: 2 };
 
@@ -22,14 +23,17 @@ export function sortSessions(sessions: Session[]) {
   );
 }
 
-export const appliesTo = (session: Session, group: string | null) =>
-  session.groups.length === 0 ||
-  (group !== null && session.groups.includes(group));
+export const forGroup =
+  (group: string | null): Matcher =>
+  (session) =>
+    session.groups.length === 0 ||
+    (group !== null && session.groups.includes(group));
 
-export function toneOf(session: Session, group: string | null): Tone {
-  if (!appliesTo(session, group)) return "other";
-  return session.type === "cours" ? "cours" : "mine";
-}
+export const mainTone = (session: Session): Exclude<Tone, "other"> =>
+  session.type === "cours" ? "cours" : "mine";
+
+export const toneOf = (session: Session, mine: Matcher): Tone =>
+  mine(session) ? mainTone(session) : "other";
 
 export function slotsOf(sessions: Session[]): Slot[] {
   const slots = new Map<string, Slot>();
@@ -45,7 +49,7 @@ export function slotSessions(
   sessions: Session[],
   day: Day,
   slot: Slot,
-  group: string | null,
+  mine: Matcher,
 ): SlotSessions {
   const inSlot = sessions.filter(
     (session) =>
@@ -55,27 +59,27 @@ export function slotSessions(
   );
   return {
     ...slot,
-    mains: inSlot.filter((session) => appliesTo(session, group)),
-    others: inSlot.filter((session) => !appliesTo(session, group)),
+    mains: inSlot.filter((session) => mine(session)),
+    others: inSlot.filter((session) => !mine(session)),
   };
 }
 
 export function daySlots(
   sessions: Session[],
   day: Day,
-  group: string | null,
+  mine: Matcher,
 ): SlotSessions[] {
   return slotsOf(sessions.filter((session) => session.day === day)).map(
-    (slot) => slotSessions(sessions, day, slot, group),
+    (slot) => slotSessions(sessions, day, slot, mine),
   );
 }
 
 export type WeekRow = Slot & { cells: SlotSessions[] };
 
-export function weekRows(sessions: Session[], group: string | null): WeekRow[] {
+export function weekRows(sessions: Session[], mine: Matcher): WeekRow[] {
   return slotsOf(sessions).map((slot) => ({
     ...slot,
-    cells: DAYS.map((day) => slotSessions(sessions, day, slot, group)),
+    cells: DAYS.map((day) => slotSessions(sessions, day, slot, mine)),
   }));
 }
 
@@ -83,14 +87,13 @@ export type NextSession = { session: Session; dayIndex: number };
 
 export function nextSessionAfter(
   sessions: Session[],
-  group: string | null,
+  mine: Matcher,
   fromDayIndex: number,
 ): NextSession | null {
   for (let offset = 1; offset <= DAYS.length; offset += 1) {
     const dayIndex = (fromDayIndex + offset) % DAYS.length;
     const session = sessions.find(
-      (candidate) =>
-        candidate.day === DAYS[dayIndex] && appliesTo(candidate, group),
+      (candidate) => candidate.day === DAYS[dayIndex] && mine(candidate),
     );
     if (session) return { session, dayIndex };
   }

@@ -3,24 +3,24 @@
 import { useTranslations } from "next-intl";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import type { Week } from "@/lib/hooks/use-week";
-import { weekRows, type Slot } from "@/lib/timetable/schedule";
+import { weekRows, type Matcher, type Slot } from "@/lib/timetable/schedule";
 import { DAYS, type Session } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
 import { WeekCell } from "./week-cell";
 
 type WeekGridProps = {
   sessions: Session[];
-  group: string | null;
+  mine: Matcher;
   week: Week;
   onOpen: (dayIndex: number, slot: Slot, anchor: SheetAnchor) => void;
 };
 
 const COLUMNS = "grid grid-cols-[34px_repeat(6,minmax(0,1fr))] gap-1";
 
-export function WeekGrid({ sessions, group, week, onOpen }: WeekGridProps) {
+export function WeekGrid({ sessions, mine, week, onOpen }: WeekGridProps) {
   const short = useTranslations("Days.short");
   const long = useTranslations("Days.long");
-  const rows = weekRows(sessions, group);
+  const rows = weekRows(sessions, mine);
 
   return (
     <div data-view-panel="week" className="flex-col gap-1 px-4 pt-3.5 pb-4">
@@ -65,7 +65,6 @@ export function WeekGrid({ sessions, group, week, onOpen }: WeekGridProps) {
               key={DAYS[index]}
               cell={cell}
               dayName={long(DAYS[index])}
-              group={group}
               onOpen={(anchor) => onOpen(index, row, anchor)}
             />
           ))}

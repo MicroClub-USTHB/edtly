@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { minutesNow, minutesOf } from "@/lib/dates";
 import type { Week } from "@/lib/hooks/use-week";
-import { weekRows, type Slot } from "@/lib/timetable/schedule";
+import { weekRows, type Matcher, type Slot } from "@/lib/timetable/schedule";
 import { DAYS, type Session } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
 import { DesktopCell } from "./desktop-cell";
@@ -12,6 +12,7 @@ import { DesktopCell } from "./desktop-cell";
 type DesktopWeekProps = {
   sessions: Session[];
   group: string | null;
+  mine: Matcher;
   week: Week;
   changed: ReadonlySet<string>;
   onOpen: (
@@ -27,12 +28,13 @@ const COLUMNS = "grid grid-cols-[56px_repeat(6,minmax(0,1fr))] gap-2";
 export function DesktopWeek({
   sessions,
   group,
+  mine,
   week,
   changed,
   onOpen,
 }: DesktopWeekProps) {
   const days = useTranslations("Days.long");
-  const rows = weekRows(sessions, group);
+  const rows = weekRows(sessions, mine);
   const minutes = week.now && week.today !== null ? minutesNow(week.now) : null;
 
   return (

@@ -1,12 +1,12 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
+  mainTone,
   sessionKey,
-  toneOf,
   type SlotSessions,
   type SlotStatus,
 } from "@/lib/timetable/schedule";
@@ -44,20 +44,29 @@ export function SlotRow({ slot, group, status, changed, onOpen }: SlotRowProps) 
         onClick={(event) => onOpen(event.currentTarget.getBoundingClientRect())}
         className="group flex min-w-0 flex-1 flex-col gap-1.25 rounded-session text-left"
       >
-        {slot.mains.map((session) => {
-          const tone = toneOf(session, group);
-          return (
-            <SessionCard
-              key={sessionKey(session)}
-              title={session.module}
-              meta={labels.meta(session)}
-              tone={tone === "cours" ? "cours" : "mine"}
-              status={status}
-              statusLabel={status && t(status)}
-              flash={changed.has(sessionKey(session))}
+        {slot.mains.map((session) => (
+          <SessionCard
+            key={sessionKey(session)}
+            title={session.module}
+            meta={labels.meta(session, group)}
+            tone={mainTone(session)}
+            status={status}
+            statusLabel={status && t(status)}
+            flash={changed.has(sessionKey(session))}
+          />
+        ))}
+
+        {slot.mains.length > 1 && (
+          <span className="flex items-center gap-1.5 self-stretch pl-4 text-xs text-warning">
+            <TriangleAlert
+              size={12}
+              strokeWidth={1.75}
+              aria-hidden="true"
+              className="shrink-0"
             />
-          );
-        })}
+            {t("conflict", { count: slot.mains.length })}
+          </span>
+        )}
 
         {slot.mains.length === 0 && (
           <span className="flex h-9 items-center self-stretch rounded-full border border-dashed border-border px-4 text-note text-foreground-muted group-active:bg-muted">

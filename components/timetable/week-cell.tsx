@@ -5,7 +5,7 @@ import type { SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
   compactLabel,
-  toneOf,
+  mainTone,
   type SlotSessions,
 } from "@/lib/timetable/schedule";
 import { cn } from "@/lib/utils";
@@ -13,11 +13,10 @@ import { cn } from "@/lib/utils";
 type WeekCellProps = {
   cell: SlotSessions;
   dayName: string;
-  group: string | null;
   onOpen: (anchor: SheetAnchor) => void;
 };
 
-export function WeekCell({ cell, dayName, group, onOpen }: WeekCellProps) {
+export function WeekCell({ cell, dayName, onOpen }: WeekCellProps) {
   const t = useTranslations("Timetable");
   const labels = useSessionLabels();
   const [main] = cell.mains;
@@ -25,7 +24,7 @@ export function WeekCell({ cell, dayName, group, onOpen }: WeekCellProps) {
 
   if (!main && extra === 0) return <span aria-hidden="true" />;
 
-  const tone = main ? toneOf(main, group) : "other";
+  const tone = main ? mainTone(main) : "other";
 
   return (
     <button

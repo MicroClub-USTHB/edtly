@@ -5,8 +5,8 @@ import type { SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
   abbreviate,
+  mainTone,
   sessionKey,
-  toneOf,
   type SlotSessions,
 } from "@/lib/timetable/schedule";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ export function DesktopCell({
             }
             className={cn(
               "flex flex-col gap-0.5 rounded-banner px-3 py-2 text-left transition-colors duration-200 ease-out motion-reduce:transition-none",
-              toneOf(session, group) === "cours"
+              mainTone(session) === "cours"
                 ? "bg-cours-tint text-cours-foreground hover:bg-cours-tint-strong"
                 : "bg-tint text-tint-foreground hover:bg-tint-strong",
               changed.has(key) && "outline-2 outline-primary",
@@ -53,7 +53,7 @@ export function DesktopCell({
               {session.module}
             </span>
             <span className="text-meta">
-              {labels.meta(session)}
+              {labels.meta(session, group)}
               {current && ` · ${t("now")}`}
             </span>
           </button>

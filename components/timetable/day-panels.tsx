@@ -7,13 +7,14 @@ import { minutesNow } from "@/lib/dates";
 import type { Week } from "@/lib/hooks/use-week";
 import { DURATION, EASE_OUT } from "@/lib/motion";
 import { setDay, useSelectedDay } from "@/lib/stores/view-store";
-import type { Slot } from "@/lib/timetable/schedule";
+import type { Matcher, Slot } from "@/lib/timetable/schedule";
 import { DAYS, type Session } from "@/lib/timetable/types";
 import { DayPanel } from "./day-panel";
 
 type DayPanelsProps = {
   sessions: Session[];
   group: string | null;
+  mine: Matcher;
   week: Week;
   changed: ReadonlySet<string>;
   onOpen: (dayIndex: number, slot: Slot, anchor: SheetAnchor) => void;
@@ -24,6 +25,7 @@ const SWIPE_DISTANCE = 56;
 export function DayPanels({
   sessions,
   group,
+  mine,
   week,
   changed,
   onOpen,
@@ -92,6 +94,7 @@ export function DayPanels({
           index={index}
           sessions={sessions}
           group={group}
+          mine={mine}
           minutes={week.now && week.today === index ? minutesNow(week.now) : null}
           changed={changed}
           onOpen={onOpen}

@@ -78,7 +78,8 @@
     "legendOthers": "Autres groupes",
     "legendOthersCount": "Autres groupes (+n)",
     "updatedOn": "Mis à jour le {date}",
-    "officialPdf": "PDF officiel"
+    "officialPdf": "PDF officiel",
+    "conflict": "{count} séances au même horaire"
   },
   "Session": {
     "title": "Détails de la séance",
@@ -103,6 +104,10 @@
     "language": "Langue",
     "parcours": "Mon parcours",
     "edit": "Modifier",
+    "personal": "Mon emploi du temps",
+    "modules": "Modules et groupes",
+    "customize": "Personnaliser",
+    "reset": "Réinitialiser mon emploi du temps",
     "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB. Version {version}"
   },
   "States": {
@@ -150,5 +155,38 @@
   },
   "Legal": {
     "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB."
+  },
+  "Personal": {
+    "view": "Affichage",
+    "mine": "Mon emploi du temps",
+    "full": "Complet",
+    "title": "Mon emploi du temps",
+    "customize": "Personnaliser",
+    "mainGroup": "Groupe principal",
+    "modules": "Modules · {section}",
+    "module": "Module",
+    "hidden": "Masqué",
+    "follow": "Suivre {module}",
+    "moduleGroup": "Groupe de TD et TP pour {module}",
+    "extras": "Modules en dette",
+    "extrasHint": "Ajoutez un module d'une autre année ou d'une autre spécialité.",
+    "add": "Ajouter un module",
+    "addTitle": "Ajouter un module",
+    "addSubmit": "Ajouter ce module",
+    "back": "Retour",
+    "remove": "Retirer {module}",
+    "loading": "Chargement des modules…",
+    "loadFailed": "Impossible de charger cette section.",
+    "retry": "Réessayer",
+    "unavailable": "Ce module n'est plus publié",
+    "reset": "Réinitialiser",
+    "resetDone": "Emploi du temps réinitialisé",
+    "undo": "Annuler",
+    "allModules": "Tous les modules",
+    "hiddenCount": "{count, plural, one {# masqué} other {# masqués}}",
+    "extrasCount": "{count, plural, one {# en dette} other {# en dette}}",
+    "emptyTitle": "Aucun module dans votre emploi du temps",
+    "emptyBody": "Vous avez masqué tous les modules. Personnalisez votre emploi du temps pour en réafficher.",
+    "legend": "Mes séances"
   }
 }

@@ -6,6 +6,7 @@ import {
   daySlots,
   nextSessionAfter,
   slotStatuses,
+  type Matcher,
   type Slot,
 } from "@/lib/timetable/schedule";
 import { DAYS, type Session } from "@/lib/timetable/types";
@@ -16,6 +17,7 @@ type DayPanelProps = {
   index: number;
   sessions: Session[];
   group: string | null;
+  mine: Matcher;
   minutes: number | null;
   changed: ReadonlySet<string>;
   onOpen: (dayIndex: number, slot: Slot, anchor: SheetAnchor) => void;
@@ -25,13 +27,14 @@ export function DayPanel({
   index,
   sessions,
   group,
+  mine,
   minutes,
   changed,
   onOpen,
 }: DayPanelProps) {
   const days = useTranslations("Days.long");
   const day = DAYS[index];
-  const slots = daySlots(sessions, day, group);
+  const slots = daySlots(sessions, day, mine);
   const statuses = minutes === null ? null : slotStatuses(slots, minutes);
 
   return (
@@ -43,7 +46,7 @@ export function DayPanel({
           day={day}
           group={group}
           isToday={minutes !== null}
-          next={nextSessionAfter(sessions, group, index)}
+          next={nextSessionAfter(sessions, mine, index)}
         />
       ) : (
         <ul className="flex flex-col gap-2.5">

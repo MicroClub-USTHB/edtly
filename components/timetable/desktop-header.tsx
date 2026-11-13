@@ -19,7 +19,7 @@ export function DesktopHeader({ updated, pdfUrl, children }: DesktopHeaderProps)
   const t = useTranslations("Timetable");
 
   return (
-    <header className="flex flex-wrap items-center gap-4">
+    <header className="flex flex-wrap items-center gap-3">
       <Logo className="mt-1.5 h-8 w-auto shrink-0 [view-transition-name:edtly-logo]" />
 
       {children}
@@ -27,7 +27,7 @@ export function DesktopHeader({ updated, pdfUrl, children }: DesktopHeaderProps)
       <span className="flex-1" />
 
       {updated && (
-        <span className="text-note text-foreground-muted">
+        <span className="hidden text-note text-foreground-muted min-[1440px]:inline">
           {t("updatedOn", { date: updated })}
         </span>
       )}

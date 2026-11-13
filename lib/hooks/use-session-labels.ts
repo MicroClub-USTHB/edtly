@@ -29,8 +29,13 @@ export function useSessionLabels() {
     groups,
     audience,
     type: (session: Session) => types(session.type),
-    meta: (session: Session) =>
-      [types(session.type), session.room && room(session.room)]
+    meta: (session: Session, group: string | null = null) =>
+      [
+        types(session.type),
+        !(group && session.groups.includes(group)) && groups(session),
+        session.room && room(session.room),
+        session.origin,
+      ]
         .filter(Boolean)
         .join(" · "),
     short: (session: Session) =>

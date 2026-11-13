@@ -24,6 +24,7 @@ type SegmentedControlProps<T extends string> = {
 const sizes = {
   md: "h-11 min-w-0 flex-1 text-label",
   sm: "h-9 w-15 text-sm",
+  compact: "h-9 px-4 text-sm",
   icon: "size-9",
 } as const;
 
@@ -52,7 +53,7 @@ export function SegmentedControl<T extends string>({
             aria-label={option.ariaLabel}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative flex items-center justify-center rounded-full transition-colors duration-120 ease-out motion-reduce:transition-none",
+              "relative flex items-center justify-center rounded-full select-none transition-colors duration-120 ease-out motion-reduce:transition-none",
               sizes[size],
               selected
                 ? "text-tint-foreground"

@@ -78,7 +78,8 @@
     "legendOthers": "Other groups",
     "legendOthersCount": "Other groups (+n)",
     "updatedOn": "Updated {date}",
-    "officialPdf": "Official PDF"
+    "officialPdf": "Official PDF",
+    "conflict": "{count} sessions at the same time"
   },
   "Session": {
     "title": "Session details",
@@ -103,6 +104,10 @@
     "language": "Language",
     "parcours": "My programme",
     "edit": "Edit",
+    "personal": "My timetable",
+    "modules": "Modules and groups",
+    "customize": "Customise",
+    "reset": "Reset my timetable",
     "disclaimer": "Edtly is an independent project. It is not an official USTHB service. Version {version}"
   },
   "States": {
@@ -150,5 +155,38 @@
   },
   "Legal": {
     "disclaimer": "Edtly is an independent project. It is not an official USTHB service."
+  },
+  "Personal": {
+    "view": "View",
+    "mine": "My timetable",
+    "full": "Full timetable",
+    "title": "My timetable",
+    "customize": "Customise",
+    "mainGroup": "Main group",
+    "modules": "Modules · {section}",
+    "module": "Module",
+    "hidden": "Hidden",
+    "follow": "Follow {module}",
+    "moduleGroup": "TD and TP group for {module}",
+    "extras": "Retake modules",
+    "extrasHint": "Add a module from another year or speciality.",
+    "add": "Add a module",
+    "addTitle": "Add a module",
+    "addSubmit": "Add this module",
+    "back": "Back",
+    "remove": "Remove {module}",
+    "loading": "Loading modules…",
+    "loadFailed": "This section could not be loaded.",
+    "retry": "Try again",
+    "unavailable": "This module is no longer published",
+    "reset": "Reset",
+    "resetDone": "Timetable reset",
+    "undo": "Undo",
+    "allModules": "All modules",
+    "hiddenCount": "{count, plural, one {# hidden} other {# hidden}}",
+    "extrasCount": "{count, plural, one {# retake} other {# retakes}}",
+    "emptyTitle": "No modules in your timetable",
+    "emptyBody": "You have hidden every module. Customise your timetable to show them again.",
+    "legend": "My sessions"
   }
 }
