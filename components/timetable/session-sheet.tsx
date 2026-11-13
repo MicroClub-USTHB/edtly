@@ -8,11 +8,13 @@ import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
   mainTone,
   sessionKey,
+  type Conflicts,
   type SlotSessions,
   type SlotStatus,
 } from "@/lib/timetable/schedule";
 import type { Day } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
+import { ConflictNote } from "./conflict-note";
 
 export type SessionDetail = {
   day: Day;
@@ -27,6 +29,7 @@ type SessionSheetProps = {
   group: string | null;
   sectionName: string;
   pdfUrl: string;
+  conflicts: Conflicts;
   onFocus: (key: string) => void;
   onClose: () => void;
 };
@@ -42,6 +45,7 @@ export function SessionSheet({
   group,
   sectionName,
   pdfUrl,
+  conflicts,
   onFocus,
   onClose,
 }: SessionSheetProps) {
@@ -66,6 +70,11 @@ export function SessionSheet({
       : sectionName
         ? timetable("sectionLabel", { name: sectionName })
         : t("wholeSection");
+
+  const conflict =
+    focused && tone !== "other"
+      ? labels.conflict(conflicts.get(sessionKey(focused)))
+      : undefined;
 
   const facts = focused
     ? [
@@ -114,6 +123,8 @@ export function SessionSheet({
               </div>
             ))}
           </dl>
+
+          {conflict && <ConflictNote text={conflict} />}
         </div>
       ) : (
         <p className="flex h-9 items-center rounded-full border border-dashed border-border px-4 text-note text-foreground-muted">

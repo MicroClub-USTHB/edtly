@@ -79,7 +79,13 @@
     "legendOthersCount": "Autres groupes (+n)",
     "updatedOn": "Mis à jour le {date}",
     "officialPdf": "PDF officiel",
-    "conflict": "{count} séances au même horaire"
+    "conflictWith": "Chevauche {module} ({start} – {end})",
+    "conflictCount": "{count, plural, one {# chevauchement} other {# chevauchements}}",
+    "conflictShort": "chevauchement",
+    "freeGap": "Temps libre · {duration}",
+    "freeShort": "Libre",
+    "weeksAhead": "{count, plural, one {Semaine prochaine} other {Dans # semaines}}",
+    "weeksBehind": "{count, plural, one {Semaine dernière} other {Il y a # semaines}}"
   },
   "Session": {
     "title": "Détails de la séance",
@@ -188,5 +194,39 @@
     "emptyTitle": "Aucun module dans votre emploi du temps",
     "emptyBody": "Vous avez masqué tous les modules. Personnalisez votre emploi du temps pour en réafficher.",
     "legend": "Mes séances"
+  },
+  "Now": {
+    "region": "Maintenant",
+    "now": "En cours",
+    "until": "jusqu'à {time}",
+    "remaining": "encore {duration}",
+    "next": "Ensuite",
+    "first": "Premier cours",
+    "freeUntil": "Temps libre jusqu'à {time}",
+    "in": "dans {duration}",
+    "last": "Dernier cours de la journée",
+    "done": "Fini pour aujourd'hui",
+    "doneNext": "Prochain cours : {day} à {time}, {module}",
+    "doneNone": "Aucun autre cours cette semaine"
+  },
+  "Duration": {
+    "minutes": "{minutes} min",
+    "hours": "{hours} h",
+    "hoursMinutes": "{hours} h {padded}"
+  },
+  "Filters": {
+    "title": "Filtres",
+    "open": "Filtres",
+    "openActive": "{count, plural, one {Filtres, # actif} other {Filtres, # actifs}}",
+    "types": "Type de séance",
+    "days": "Jours",
+    "groups": "Groupes",
+    "modules": "Modules",
+    "clear": "Effacer",
+    "clearAll": "Effacer les filtres",
+    "show": "{count, plural, =0 {Aucune séance} one {Voir # séance} other {Voir # séances}}",
+    "active": "Filtres : {list}",
+    "noMatch": "Aucune séance ne correspond aux filtres",
+    "noMatchBody": "Modifiez ou effacez les filtres pour revoir votre emploi du temps."
   }
 }

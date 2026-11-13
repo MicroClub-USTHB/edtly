@@ -1,12 +1,13 @@
 "use client";
 
-import { ChevronRight, TriangleAlert } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import {
   mainTone,
   sessionKey,
+  type Conflicts,
   type SlotSessions,
   type SlotStatus,
 } from "@/lib/timetable/schedule";
@@ -16,13 +17,24 @@ type SlotRowProps = {
   slot: SlotSessions;
   group: string | null;
   status?: SlotStatus;
+  conflicts: Conflicts;
   changed: ReadonlySet<string>;
   onOpen: (anchor: SheetAnchor) => void;
 };
 
-export function SlotRow({ slot, group, status, changed, onOpen }: SlotRowProps) {
+export function SlotRow({
+  slot,
+  group,
+  status,
+  conflicts,
+  changed,
+  onOpen,
+}: SlotRowProps) {
   const t = useTranslations("Timetable");
   const labels = useSessionLabels();
+  const overlapping = slot.mains.some((session) =>
+    conflicts.has(sessionKey(session)),
+  );
   const summary =
     slot.mains.length > 0
       ? slot.mains
@@ -39,7 +51,7 @@ export function SlotRow({ slot, group, status, changed, onOpen }: SlotRowProps) 
 
       <button
         type="button"
-        aria-label={`${slot.start}, ${summary}. ${t("seeAllGroups")}`}
+        aria-label={`${slot.start}, ${summary}${overlapping ? `, ${t("conflictShort")}` : ""}. ${t("seeAllGroups")}`}
         aria-haspopup="dialog"
         onClick={(event) => onOpen(event.currentTarget.getBoundingClientRect())}
         className="group flex min-w-0 flex-1 flex-col gap-1.25 rounded-session text-left"
@@ -52,21 +64,10 @@ export function SlotRow({ slot, group, status, changed, onOpen }: SlotRowProps) 
             tone={mainTone(session)}
             status={status}
             statusLabel={status && t(status)}
+            conflict={labels.conflict(conflicts.get(sessionKey(session)))}
             flash={changed.has(sessionKey(session))}
           />
         ))}
-
-        {slot.mains.length > 1 && (
-          <span className="flex items-center gap-1.5 self-stretch pl-4 text-xs text-warning">
-            <TriangleAlert
-              size={12}
-              strokeWidth={1.75}
-              aria-hidden="true"
-              className="shrink-0"
-            />
-            {t("conflict", { count: slot.mains.length })}
-          </span>
-        )}
 
         {slot.mains.length === 0 && (
           <span className="flex h-9 items-center self-stretch rounded-full border border-dashed border-border px-4 text-note text-foreground-muted group-active:bg-muted">

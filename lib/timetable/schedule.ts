@@ -1,3 +1,4 @@
+import { minutesOf as toMinutes } from "@/lib/dates";
 import { DAYS, type Day, type Session, type SessionType } from "./types";
 
 export type Slot = { start: string; end: string };
@@ -32,8 +33,6 @@ export const forGroup =
 export const mainTone = (session: Session): Exclude<Tone, "other"> =>
   session.type === "cours" ? "cours" : "mine";
 
-export const toneOf = (session: Session, mine: Matcher): Tone =>
-  mine(session) ? mainTone(session) : "other";
 
 export function slotsOf(sessions: Session[]): Slot[] {
   const slots = new Map<string, Slot>();
@@ -101,8 +100,29 @@ export function nextSessionAfter(
 }
 
 const STOP_WORDS = new Set([
-  "de", "des", "du", "d", "la", "le", "les", "l", "et", "en", "à", "au",
-  "aux", "pour", "of", "and", "the", "for", "to", "in", "sur", "un", "une",
+  "de",
+  "des",
+  "du",
+  "d",
+  "la",
+  "le",
+  "les",
+  "l",
+  "et",
+  "en",
+  "à",
+  "au",
+  "aux",
+  "pour",
+  "of",
+  "and",
+  "the",
+  "for",
+  "to",
+  "in",
+  "sur",
+  "un",
+  "une",
 ]);
 
 export function abbreviate(module: string) {
@@ -143,8 +163,6 @@ export type SlotStatus = "now" | "next";
 
 export function slotStatuses(slots: SlotSessions[], minutes: number) {
   const statuses = new Map<string, SlotStatus>();
-  const toMinutes = (time: string) =>
-    Number(time.slice(0, 2)) * 60 + Number(time.slice(3));
   const busy = slots.filter((slot) => slot.mains.length > 0);
   const current = busy.find(
     (slot) => toMinutes(slot.start) <= minutes && minutes < toMinutes(slot.end),
@@ -153,4 +171,148 @@ export function slotStatuses(slots: SlotSessions[], minutes: number) {
   if (current) statuses.set(current.start, "now");
   if (upcoming) statuses.set(upcoming.start, "next");
   return statuses;
+}
+
+const overlaps = (a: Session, b: Session) =>
+  a.day === b.day &&
+  toMinutes(a.start) < toMinutes(b.end) &&
+  toMinutes(b.start) < toMinutes(a.end);
+
+export type Conflicts = ReadonlyMap<string, Session[]>;
+
+export function conflictsOf(sessions: Session[], mine: Matcher): Conflicts {
+  const conflicts = new Map<string, Session[]>();
+  const add = (session: Session, other: Session) => {
+    const key = sessionKey(session);
+    conflicts.set(key, [...(conflicts.get(key) ?? []), other]);
+  };
+  for (const day of DAYS) {
+    const list = sessions.filter(
+      (session) => session.day === day && mine(session),
+    );
+    list.forEach((a, index) => {
+      for (const b of list.slice(index + 1)) {
+        if (!overlaps(a, b)) continue;
+        add(a, b);
+        add(b, a);
+      }
+    });
+  }
+  return conflicts;
+}
+
+export const conflictPairs = (conflicts: Conflicts) =>
+  [...conflicts.values()].reduce((total, list) => total + list.length, 0) / 2;
+
+export type Gap = { start: string; end: string; minutes: number };
+
+export function freeGaps(
+  sessions: Session[],
+  day: Day,
+  mine: Matcher,
+  minimum = 30,
+): Gap[] {
+  const busy = sessions
+    .filter((session) => session.day === day && mine(session))
+    .map(({ start, end }) => ({ start, end }))
+    .sort((a, b) => a.start.localeCompare(b.start));
+
+  const merged: Slot[] = [];
+  for (const interval of busy) {
+    const last = merged.at(-1);
+    if (last && toMinutes(interval.start) <= toMinutes(last.end)) {
+      if (interval.end > last.end) last.end = interval.end;
+    } else {
+      merged.push({ ...interval });
+    }
+  }
+
+  return merged.slice(1).flatMap((interval, index) => {
+    const start = merged[index].end;
+    const minutes = toMinutes(interval.start) - toMinutes(start);
+    return minutes >= minimum ? [{ start, end: interval.start, minutes }] : [];
+  });
+}
+
+export type DayStatus =
+  | {
+      kind: "now";
+      current: Session[];
+      endsAt: string;
+      progress: number;
+      remaining: number;
+      next: Session | null;
+      nextIn: number;
+    }
+  | { kind: "free"; started: boolean; next: Session; nextIn: number }
+  | { kind: "done"; next: NextSession | null };
+
+export function dayStatus(
+  sessions: Session[],
+  dayIndex: number,
+  mine: Matcher,
+  minutes: number,
+): DayStatus | null {
+  const today = sessions.filter(
+    (session) => session.day === DAYS[dayIndex] && mine(session),
+  );
+  if (today.length === 0) return null;
+
+  const current = today.filter(
+    (session) =>
+      toMinutes(session.start) <= minutes && minutes < toMinutes(session.end),
+  );
+  const next = today.find((session) => toMinutes(session.start) > minutes);
+  const nextIn = next ? toMinutes(next.start) - minutes : 0;
+
+  if (current.length > 0) {
+    const start = Math.min(
+      ...current.map((session) => toMinutes(session.start)),
+    );
+    const end = Math.max(...current.map((session) => toMinutes(session.end)));
+    return {
+      kind: "now",
+      current,
+      endsAt: current.find((session) => toMinutes(session.end) === end)!.end,
+      progress: (minutes - start) / (end - start),
+      remaining: end - minutes,
+      next: next ?? null,
+      nextIn,
+    };
+  }
+
+  if (next) {
+    return {
+      kind: "free",
+      started: today.some((session) => toMinutes(session.end) <= minutes),
+      next,
+      nextIn,
+    };
+  }
+
+  return { kind: "done", next: nextSessionAfter(sessions, mine, dayIndex) };
+}
+
+export const forGroups =
+  (groups: string[]): Matcher =>
+  (session) =>
+    session.groups.length === 0 ||
+    session.groups.some((group) => groups.includes(group));
+
+export function daySpan(
+  sessions: Session[],
+  day: Day,
+  mine: Matcher,
+): Slot | null {
+  const today = sessions.filter(
+    (session) => session.day === day && mine(session),
+  );
+  if (today.length === 0) return null;
+  return {
+    start: today.reduce(
+      (min, { start }) => (start < min ? start : min),
+      today[0].start,
+    ),
+    end: today.reduce((max, { end }) => (end > max ? end : max), today[0].end),
+  };
 }

@@ -7,7 +7,7 @@ import {
   nextSessionAfter,
   slotStatuses,
   sortSessions,
-  toneOf,
+  mainTone,
   weekRows,
 } from "@/lib/timetable/schedule";
 import type { Session } from "@/lib/timetable/types";
@@ -34,16 +34,18 @@ const sessions = sortSessions([
 describe("highlight rules", () => {
   test("a section lecture is always highlighted as cours", () => {
     const lecture = sessions.find(({ type }) => type === "cours")!;
-    expect(toneOf(lecture, forGroup("G1"))).toBe("cours");
-    expect(toneOf(lecture, forGroup("G4"))).toBe("cours");
-    expect(toneOf(lecture, forGroup(null))).toBe("cours");
+    expect(mainTone(lecture)).toBe("cours");
+    expect(forGroup("G1")(lecture)).toBe(true);
+    expect(forGroup("G4")(lecture)).toBe(true);
+    expect(forGroup(null)(lecture)).toBe(true);
   });
 
   test("TD and TP are highlighted only for the selected group", () => {
     const td = sessions.find(({ groups }) => groups[0] === "G1")!;
-    expect(toneOf(td, forGroup("G1"))).toBe("mine");
-    expect(toneOf(td, forGroup("G2"))).toBe("other");
-    expect(toneOf(td, forGroup(null))).toBe("other");
+    expect(mainTone(td)).toBe("mine");
+    expect(forGroup("G1")(td)).toBe(true);
+    expect(forGroup("G2")(td)).toBe(false);
+    expect(forGroup(null)(td)).toBe(false);
   });
 });
 

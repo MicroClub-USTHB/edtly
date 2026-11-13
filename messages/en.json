@@ -79,7 +79,13 @@
     "legendOthersCount": "Other groups (+n)",
     "updatedOn": "Updated {date}",
     "officialPdf": "Official PDF",
-    "conflict": "{count} sessions at the same time"
+    "conflictWith": "Overlaps {module} ({start} – {end})",
+    "conflictCount": "{count, plural, one {# overlap} other {# overlaps}}",
+    "conflictShort": "overlap",
+    "freeGap": "Free time · {duration}",
+    "freeShort": "Free",
+    "weeksAhead": "{count, plural, one {Next week} other {In # weeks}}",
+    "weeksBehind": "{count, plural, one {Last week} other {# weeks ago}}"
   },
   "Session": {
     "title": "Session details",
@@ -188,5 +194,39 @@
     "emptyTitle": "No modules in your timetable",
     "emptyBody": "You have hidden every module. Customise your timetable to show them again.",
     "legend": "My sessions"
+  },
+  "Now": {
+    "region": "Right now",
+    "now": "Now",
+    "until": "until {time}",
+    "remaining": "{duration} left",
+    "next": "Next",
+    "first": "First class",
+    "freeUntil": "Free until {time}",
+    "in": "in {duration}",
+    "last": "Last class of the day",
+    "done": "Done for today",
+    "doneNext": "Next class: {day} at {time}, {module}",
+    "doneNone": "No other classes this week"
+  },
+  "Duration": {
+    "minutes": "{minutes} min",
+    "hours": "{hours} h",
+    "hoursMinutes": "{hours} h {minutes} min"
+  },
+  "Filters": {
+    "title": "Filters",
+    "open": "Filters",
+    "openActive": "{count, plural, one {Filters, # active} other {Filters, # active}}",
+    "types": "Session type",
+    "days": "Days",
+    "groups": "Groups",
+    "modules": "Modules",
+    "clear": "Clear",
+    "clearAll": "Clear filters",
+    "show": "{count, plural, =0 {No sessions} one {Show # session} other {Show # sessions}}",
+    "active": "Filters: {list}",
+    "noMatch": "No sessions match the filters",
+    "noMatchBody": "Change or clear the filters to see your timetable again."
   }
 }
