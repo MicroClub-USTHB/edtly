@@ -13,6 +13,7 @@ const sessionSchema = z
     type: z.enum(SESSION_TYPES),
     module: z.string().min(1),
     room: z.string(),
+    teacher: z.string(),
     groups: z.array(z.string().min(1)),
   })
   .refine((session) => session.start < session.end, {

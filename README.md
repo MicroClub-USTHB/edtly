@@ -35,8 +35,8 @@ There is one JSON file per programme, at `data/<system>/<level>/<speciality>.jso
       "name": "A",
       "groups": ["G1", "G2", "G3", "G4"],
       "sessions": [
-        { "day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "SEM300", "room": "162", "groups": ["G1"] },
-        { "day": "mon", "start": "11:20", "end": "12:50", "type": "cours", "module": "ALGO2", "room": "149T", "groups": [] }
+        { "day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "SEM300", "room": "162", "teacher": "HEDJAZI-DELLAL", "groups": ["G1"] },
+        { "day": "mon", "start": "11:20", "end": "12:50", "type": "cours", "module": "ALGO2", "room": "149T", "teacher": "LAICHI", "groups": [] }
       ]
     }
   ]
