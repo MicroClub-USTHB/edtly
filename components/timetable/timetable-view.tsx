@@ -3,17 +3,23 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { useEffect, useState } from "react";
+import { CalendarSheet } from "@/components/calendar/calendar-sheet";
 import { FilterSheet } from "@/components/filters/filter-sheet";
 import { PersonalSheet } from "@/components/personal/personal-sheet";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { usePathname } from "@/i18n/navigation";
-import { minutesNow, todayIndex } from "@/lib/dates";
+import { eventText } from "@/lib/calendar/event";
+import { googleEventUrl } from "@/lib/calendar/links";
+import { termEnd } from "@/lib/calendar/term";
+import { encodeFeed, feedLocale } from "@/lib/calendar/token";
+import { addDays, minutesNow, todayIndex } from "@/lib/dates";
 import { useKeyboardNavigation } from "@/lib/hooks/use-keyboard-navigation";
 import { usePersonalSummary } from "@/lib/hooks/use-personal-summary";
 import { usePersonalTimetable } from "@/lib/hooks/use-personal-timetable";
 import { useResetPersonal } from "@/lib/hooks/use-reset-personal";
 import { useWeek } from "@/lib/hooks/use-week";
 import { cachePages } from "@/lib/pwa/cache-pages";
+import { site } from "@/lib/site";
 import { trackSessions, useChangedSessions } from "@/lib/stores/changes-store";
 import {
   readParcours,
@@ -59,6 +65,7 @@ import {
   type Parcours,
   type ProgrammeInfo,
   type Section,
+  type Session,
 } from "@/lib/timetable/types";
 import { ParcoursSheet } from "./parcours-sheet";
 import { SessionSheet } from "./session-sheet";
@@ -94,6 +101,7 @@ export function TimetableView({
   const t = useTranslations("Timetable");
   const types = useTranslations("SessionTypes");
   const short = useTranslations("Days.short");
+  const root = useTranslations();
   const locale = useLocale();
   const router = useTransitionRouter();
   const saved = useSavedParcours();
@@ -109,6 +117,7 @@ export function TimetableView({
   const [pickerAnchor, setPickerAnchor] = useState<SheetAnchor | null>(null);
   const [personalSheet, setPersonalSheet] = useState<SheetRequest | null>(null);
   const [filterSheet, setFilterSheet] = useState<SheetRequest | null>(null);
+  const [calendarSheet, setCalendarSheet] = useState<SheetRequest | null>(null);
 
   const { system, level, speciality, source } = programme;
   const { id: sectionId, groups, sessions } = section;
@@ -174,6 +183,36 @@ export function TimetableView({
     ...active.modules,
   ];
   const daysKey = days.join(",");
+  const programmeSection = [programmeLabel, sectionLabel]
+    .filter(Boolean)
+    .join(" · ");
+  const feedToken = encodeFeed({
+    locale: feedLocale(locale),
+    section: base,
+    group,
+    personal,
+  });
+  const until = termEnd(programme.academicYear, programme.semester);
+  const pageUrl = site.url + localized(locale, parcoursPath(parcours));
+
+  const classUrl = (session: Session) => {
+    const current = week.dates?.[DAYS.indexOf(session.day)];
+    if (!current || !week.now) return null;
+    const today = new Date(
+      week.now.getFullYear(),
+      week.now.getMonth(),
+      week.now.getDate(),
+    );
+    return googleEventUrl(
+      eventText(session, root, { sectionName, pageUrl, pdfUrl: source.url }),
+      {
+        date: current < today ? addDays(current, 7) : current,
+        start: session.start,
+        end: session.end,
+        until,
+      },
+    );
+  };
 
   useEffect(() => {
     if (readParcours()) return;
@@ -315,6 +354,7 @@ export function TimetableView({
     onCustomize: (anchor) => setPersonalSheet({ anchor: anchor ?? null }),
     onReset: resetPersonal,
     onFilters: (anchor) => setFilterSheet({ anchor: anchor ?? null }),
+    onCalendar: (anchor) => setCalendarSheet({ anchor: anchor ?? null }),
     onClearFilters: () => setFilters(NO_FILTERS),
     onOpen: openSlot,
     onShiftWeek: shiftWeek,
@@ -343,6 +383,7 @@ export function TimetableView({
         sectionName={sectionName}
         pdfUrl={source.url}
         conflicts={conflicts}
+        classUrl={classUrl}
         onFocus={(focus) => setDetail(detail && { ...detail, focus })}
         onClose={() => setDetail(null)}
       />
@@ -378,6 +419,16 @@ export function TimetableView({
         count={visible.length}
         onChange={setFilters}
         onClose={() => setFilterSheet(null)}
+      />
+
+      <CalendarSheet
+        open={calendarSheet !== null}
+        anchor={calendarSheet?.anchor ?? null}
+        token={feedToken}
+        label={programmeSection}
+        summary={summarize(personal, group)}
+        count={extrasLoading ? null : mySessions.length}
+        onClose={() => setCalendarSheet(null)}
       />
     </>
   );

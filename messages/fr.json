@@ -229,5 +229,31 @@
     "active": "Filtres : {list}",
     "noMatch": "Aucune séance ne correspond aux filtres",
     "noMatchBody": "Modifiez ou effacez les filtres pour revoir votre emploi du temps."
+  },
+  "Calendar": {
+    "open": "Ajouter à mon agenda",
+    "title": "Ajouter à mon agenda",
+    "perWeek": "{count, plural, one {# séance par semaine} other {# séances par semaine}}",
+    "google": "Ajouter à Google Agenda",
+    "link": "Lien d'abonnement",
+    "copy": "Copier",
+    "copied": "Copié",
+    "copiedAnnounce": "Lien copié",
+    "copyFailed": "Copie impossible. Le lien est sélectionné, copiez-le manuellement.",
+    "autoUpdate": "Se met à jour tout seul quand l'emploi du temps change.",
+    "snapshot": "Changement de groupe ou de modules ? Ajoutez-le à nouveau.",
+    "settingsHint": "Google Agenda, mise à jour automatique",
+    "addClass": "Google Agenda",
+    "addClassLabel": "Ajouter {module} à Google Agenda",
+    "event": {
+      "teacher": "Enseignant : {name}",
+      "retake": "Module en dette · {origin}",
+      "page": "Emploi du temps : {url}",
+      "pdf": "PDF officiel : {url}"
+    },
+    "feed": {
+      "description": "Emploi du temps {programme}, semestre {semester}, {year}. Généré par Edtly d'après le PDF officiel de la Faculté d'Informatique de l'USTHB. Edtly n'est pas un service officiel.",
+      "missing": "Cet emploi du temps n'est plus publié. Ouvrez Edtly, choisissez votre parcours et ajoutez le nouveau lien."
+    }
   }
 }

@@ -39,6 +39,7 @@ export type TimetableModel = {
   onReset: () => void;
   onFilters: (anchor?: SheetAnchor) => void;
   onClearFilters: () => void;
+  onCalendar: (anchor?: SheetAnchor) => void;
   onOpen: OpenSlot;
   onShiftWeek: (delta: number) => void;
   onToday: () => void;

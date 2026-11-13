@@ -40,6 +40,10 @@
   @media (max-width: 359px) {
     --gutter: 12px;
   }
+
+  @media (min-width: 640px) {
+    --gutter: 32px;
+  }
 }
 
 .dark {
@@ -74,6 +78,10 @@
   --warning-tint: #382c11;
   --error: #f7849a;
   --error-tint: #3d1420;
+}
+
+@theme {
+  --breakpoint-lg: 80rem;
 }
 
 @theme inline {

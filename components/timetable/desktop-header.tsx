@@ -19,7 +19,7 @@ export function DesktopHeader({ updated, pdfUrl, children }: DesktopHeaderProps)
   const t = useTranslations("Timetable");
 
   return (
-    <header className="flex flex-wrap items-center gap-3">
+    <header className="flex flex-wrap items-center gap-2">
       <Logo className="mt-1.5 h-8 w-auto shrink-0 [view-transition-name:edtly-logo]" />
 
       {children}

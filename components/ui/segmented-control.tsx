@@ -23,7 +23,7 @@ type SegmentedControlProps<T extends string> = {
 
 const sizes = {
   md: "h-11 min-w-0 flex-1 text-label",
-  sm: "h-9 w-15 text-sm",
+  sm: "h-9 w-12 text-sm",
   compact: "h-9 px-4 text-sm",
   icon: "size-9",
 } as const;

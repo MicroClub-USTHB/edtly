@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   outputFileTracingIncludes: {
     "/sw.js": ["./lib/pwa/sw.js"],
+    "/api/calendar/[feed]": ["./data/**/*.json"],
     "/[locale]/[system]/[level]/[speciality]/[section]": ["./data/**/*.json"],
     "/[locale]/[system]/[level]/[speciality]/[section]/[group]": [
       "./data/**/*.json",

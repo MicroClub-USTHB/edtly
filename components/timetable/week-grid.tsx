@@ -41,7 +41,7 @@ export function WeekGrid({
   };
 
   return (
-    <div data-view-panel="week" className="flex-col gap-1 px-4 pt-3.5 pb-4">
+    <div data-view-panel="week" className="flex-col gap-1 px-4 pt-3.5 pb-4 sm:px-gutter">
       <div className="grid gap-1" style={columns}>
         <span />
         {days.map((index) => {
