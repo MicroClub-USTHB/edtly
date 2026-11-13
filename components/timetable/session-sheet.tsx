@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight, CalendarPlus, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
 import { Sheet, type SheetAnchor } from "@/components/ui/sheet";
@@ -12,7 +12,7 @@ import {
   type SlotSessions,
   type SlotStatus,
 } from "@/lib/timetable/schedule";
-import type { Day } from "@/lib/timetable/types";
+import type { Day, Session } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
 import { ConflictNote } from "./conflict-note";
 
@@ -30,6 +30,7 @@ type SessionSheetProps = {
   sectionName: string;
   pdfUrl: string;
   conflicts: Conflicts;
+  classUrl: (session: Session) => string | null;
   onFocus: (key: string) => void;
   onClose: () => void;
 };
@@ -46,11 +47,13 @@ export function SessionSheet({
   sectionName,
   pdfUrl,
   conflicts,
+  classUrl,
   onFocus,
   onClose,
 }: SessionSheetProps) {
   const t = useTranslations("Session");
   const timetable = useTranslations("Timetable");
+  const calendar = useTranslations("Calendar");
   const days = useTranslations("Days.long");
   const labels = useSessionLabels();
 
@@ -85,6 +88,7 @@ export function SessionSheet({
           : []),
       ]
     : [];
+  const addUrl = focused ? classUrl(focused) : null;
 
   return (
     <Sheet
@@ -181,15 +185,36 @@ export function SessionSheet({
         </div>
       )}
 
-      <a
-        href={focused?.originUrl ?? pdfUrl}
-        target="_blank"
-        rel="noreferrer"
-        className={cn(buttonVariants({ variant: "outline" }))}
-      >
-        {t("openPdf")}
-        <ArrowUpRight size={14} strokeWidth={1.6} aria-hidden="true" />
-      </a>
+      <div className={cn("grid gap-2", addUrl && "min-[400px]:grid-cols-2")}>
+        {addUrl && focused && (
+          <a
+            href={addUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={calendar("addClassLabel", { module: focused.module })}
+            className={cn(
+              buttonVariants({ variant: "outline" }),
+              "px-4 whitespace-nowrap",
+            )}
+          >
+            <CalendarPlus size={16} strokeWidth={1.6} aria-hidden="true" />
+            {calendar("addClass")}
+          </a>
+        )}
+
+        <a
+          href={focused?.originUrl ?? pdfUrl}
+          target="_blank"
+          rel="noreferrer"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "px-4 whitespace-nowrap",
+          )}
+        >
+          {addUrl ? timetable("officialPdf") : t("openPdf")}
+          <ArrowUpRight size={14} strokeWidth={1.6} aria-hidden="true" />
+        </a>
+      </div>
     </Sheet>
   );
 }

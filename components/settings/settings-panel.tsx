@@ -1,6 +1,6 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
+import { CalendarPlus, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LangToggle } from "@/components/shared/lang-toggle";
 import { ModeToggle } from "@/components/shared/mode-toggle";
@@ -21,6 +21,7 @@ type SettingsPanelProps = {
   onEditParcours: (anchor: SheetAnchor) => void;
   onCustomize: (anchor: SheetAnchor) => void;
   onReset: () => void;
+  onCalendar?: (anchor: SheetAnchor) => void;
 };
 
 const ROW =
@@ -34,8 +35,10 @@ export function SettingsPanel({
   onEditParcours,
   onCustomize,
   onReset,
+  onCalendar,
 }: SettingsPanelProps) {
   const t = useTranslations("Settings");
+  const calendar = useTranslations("Calendar");
   const tabs = useTranslations("Tabs");
   const startView = useStartView();
 
@@ -96,6 +99,30 @@ export function SettingsPanel({
             </span>
             <span className="shrink-0 text-primary">{t("customize")}</span>
           </button>
+
+          {onCalendar && (
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              onClick={(event) =>
+                onCalendar(event.currentTarget.getBoundingClientRect())
+              }
+              className={`${ROW} min-h-14`}
+            >
+              <span className="flex min-w-0 flex-col gap-0.5">
+                <span>{calendar("open")}</span>
+                <span className="text-meta wrap-anywhere text-foreground-muted">
+                  {calendar("settingsHint")}
+                </span>
+              </span>
+              <CalendarPlus
+                size={18}
+                strokeWidth={1.6}
+                aria-hidden="true"
+                className="shrink-0 text-primary"
+              />
+            </button>
+          )}
 
           <button
             type="button"

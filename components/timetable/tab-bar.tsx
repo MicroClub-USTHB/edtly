@@ -18,7 +18,7 @@ export function TabBar() {
   return (
     <nav
       aria-label={t("label")}
-      className="sticky bottom-0 mt-auto flex border-t border-divider bg-background px-3 pt-1.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
+      className="sticky bottom-0 mt-auto flex justify-center border-t border-divider bg-background px-3 pt-1.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
     >
       {tabs.map(({ view, Icon }) => {
         const active = view === current;
@@ -32,7 +32,7 @@ export function TabBar() {
               window.scrollTo({ top: 0 });
             }}
             className={cn(
-              "flex h-14 flex-1 flex-col items-center justify-center gap-0.75 rounded-chip transition-colors duration-120 ease-out motion-reduce:transition-none",
+              "flex h-14 flex-1 flex-col items-center justify-center gap-0.75 rounded-chip sm:max-w-44 transition-colors duration-120 ease-out motion-reduce:transition-none",
               active
                 ? "text-primary"
                 : "text-foreground-muted hover:text-foreground active:text-foreground",

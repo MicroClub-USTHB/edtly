@@ -3,6 +3,7 @@
 import { SlidersHorizontal } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ActiveFilters } from "@/components/filters/active-filters";
+import { CalendarButton } from "@/components/calendar/calendar-button";
 import { FilterButton } from "@/components/filters/filter-button";
 import { MineEmpty } from "@/components/personal/mine-empty";
 import { ModeSwitch } from "@/components/personal/mode-switch";
@@ -86,6 +87,7 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
               onClear={model.onClearFilters}
               className="mr-2"
             />
+            <CalendarButton variant="label" onOpen={model.onCalendar} />
             <FilterButton
               variant="label"
               count={model.filterCount}

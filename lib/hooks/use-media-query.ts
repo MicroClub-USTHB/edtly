@@ -16,4 +16,4 @@ export function useMediaQuery(query: string) {
   );
 }
 
-export const DESKTOP_QUERY = "(min-width: 1024px)";
+export const DESKTOP_QUERY = "(min-width: 1280px)";

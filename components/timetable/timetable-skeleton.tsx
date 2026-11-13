@@ -6,7 +6,7 @@ export function TimetableSkeleton() {
   return (
     <div
       aria-busy="true"
-      className="mx-auto flex min-h-dvh w-full max-w-140 flex-col lg:max-w-none lg:px-3"
+      className="flex min-h-dvh w-full flex-col"
     >
       <div className="flex items-center justify-between px-gutter pt-4">
         <Logo className="mt-1.5 h-7.5 w-auto [view-transition-name:edtly-logo]" />

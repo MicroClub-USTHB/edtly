@@ -39,7 +39,7 @@ export function TimetableUnreadable({
   };
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-140 flex-col lg:max-w-none lg:px-3">
+    <main className="flex min-h-dvh w-full flex-col">
       <MobileHeader>
         <ParcoursButton label={programmeLabel} onOpen={setAnchor} />
       </MobileHeader>

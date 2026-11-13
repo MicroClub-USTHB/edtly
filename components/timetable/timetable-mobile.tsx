@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { ActiveFilters } from "@/components/filters/active-filters";
+import { CalendarButton } from "@/components/calendar/calendar-button";
 import { FilterButton } from "@/components/filters/filter-button";
 import { MineEmpty } from "@/components/personal/mine-empty";
 import { StatusBanner } from "@/components/pwa/status-banner";
@@ -26,15 +27,22 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
   const mineMode = model.mode === "mine";
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-140 flex-col lg:hidden">
+    <div className="flex min-h-dvh w-full flex-col lg:hidden">
       <MobileHeader>
         <div className="flex min-w-0 items-center gap-2">
           {!model.empty && (
-            <FilterButton
-              variant="icon"
-              count={model.filterCount}
-              onOpen={model.onFilters}
-            />
+            <>
+              <CalendarButton
+                variant="icon"
+                onOpen={model.onCalendar}
+                className="max-[359px]:hidden"
+              />
+              <FilterButton
+                variant="icon"
+                count={model.filterCount}
+                onOpen={model.onFilters}
+              />
+            </>
           )}
           <ParcoursButton
             label={[model.programmeLabel, model.sectionName]
@@ -147,6 +155,7 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
         onEditParcours={model.onParcours}
         onCustomize={() => model.onCustomize()}
         onReset={model.onReset}
+        onCalendar={model.empty ? undefined : model.onCalendar}
       />
 
       <TabBar />
