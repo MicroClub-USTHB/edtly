@@ -64,6 +64,7 @@ describe("timetable data", () => {
       type: "td",
       module: "SEM300",
       room: "162",
+      teacher: "HEDJAZI-DELLAL",
       groups: ["G1"],
     });
     expect(section?.sessions).toContainEqual({
@@ -73,6 +74,7 @@ describe("timetable data", () => {
       type: "cours",
       module: "POO",
       room: "X",
+      teacher: "ABDELLAHOUM",
       groups: [],
     });
     expect(

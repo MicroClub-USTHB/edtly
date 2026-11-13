@@ -12,20 +12,20 @@
       "name": "A",
       "groups": ["G1"],
       "sessions": [
-        {"day": "sat", "start": "08:00", "end": "09:30", "type": "cours", "module": "ANGLAIS 2", "room": "SIGL2", "groups": []},
-        {"day": "sat", "start": "13:00", "end": "14:30", "type": "cours", "module": "THOR", "room": "SIGL2", "groups": []},
-        {"day": "sun", "start": "11:20", "end": "12:50", "type": "cours", "module": "ALGO 2", "room": "SIGL2", "groups": []},
-        {"day": "sun", "start": "13:00", "end": "14:30", "type": "cours", "module": "ALGO 2", "room": "SIGL2", "groups": []},
-        {"day": "sun", "start": "14:40", "end": "16:10", "type": "td", "module": "ALGO 2", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "sun", "start": "16:20", "end": "17:50", "type": "td", "module": "ALGO 2", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "mon", "start": "09:40", "end": "11:10", "type": "cours", "module": "ARCH", "room": "SIGL2", "groups": []},
-        {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "ARCH", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "ARCH", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "wed", "start": "08:00", "end": "09:30", "type": "cours", "module": "MOPD 2", "room": "SIGL2", "groups": []},
-        {"day": "wed", "start": "09:40", "end": "11:10", "type": "td", "module": "MOPD 2", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "wed", "start": "11:20", "end": "12:50", "type": "td", "module": "MOPD 2", "room": "SIGL2", "groups": ["G1"]},
-        {"day": "thu", "start": "13:00", "end": "14:30", "type": "cours", "module": "ACSI", "room": "SIGL2", "groups": []},
-        {"day": "thu", "start": "14:40", "end": "16:10", "type": "td", "module": "ACSI", "room": "SIGL2", "groups": ["G1"]}
+        {"day": "sat", "start": "08:00", "end": "09:30", "type": "cours", "module": "ANGLAIS 2", "room": "SIGL2", "teacher": "", "groups": []},
+        {"day": "sat", "start": "13:00", "end": "14:30", "type": "cours", "module": "THOR", "room": "SIGL2", "teacher": "MEKAHLIA", "groups": []},
+        {"day": "sun", "start": "11:20", "end": "12:50", "type": "cours", "module": "ALGO 2", "room": "SIGL2", "teacher": "BOUCHEKIR", "groups": []},
+        {"day": "sun", "start": "13:00", "end": "14:30", "type": "cours", "module": "ALGO 2", "room": "SIGL2", "teacher": "BOUCHEKIR", "groups": []},
+        {"day": "sun", "start": "14:40", "end": "16:10", "type": "td", "module": "ALGO 2", "room": "SIGL2", "teacher": "BOUCHEKIR", "groups": ["G1"]},
+        {"day": "sun", "start": "16:20", "end": "17:50", "type": "td", "module": "ALGO 2", "room": "SIGL2", "teacher": "BOUCHEKIR", "groups": ["G1"]},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "cours", "module": "ARCH", "room": "SIGL2", "teacher": "FEREDJ Mohamed", "groups": []},
+        {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "ARCH", "room": "SIGL2", "teacher": "FEREDJ", "groups": ["G1"]},
+        {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "ARCH", "room": "SIGL2", "teacher": "FEREDJ", "groups": ["G1"]},
+        {"day": "wed", "start": "08:00", "end": "09:30", "type": "cours", "module": "MOPD 2", "room": "SIGL2", "teacher": "MAHDAOUI", "groups": []},
+        {"day": "wed", "start": "09:40", "end": "11:10", "type": "td", "module": "MOPD 2", "room": "SIGL2", "teacher": "MAHDAOUI", "groups": ["G1"]},
+        {"day": "wed", "start": "11:20", "end": "12:50", "type": "td", "module": "MOPD 2", "room": "SIGL2", "teacher": "MAHDAOUI", "groups": ["G1"]},
+        {"day": "thu", "start": "13:00", "end": "14:30", "type": "cours", "module": "ACSI", "room": "SIGL2", "teacher": "HANK", "groups": []},
+        {"day": "thu", "start": "14:40", "end": "16:10", "type": "td", "module": "ACSI", "room": "SIGL2", "teacher": "HANK", "groups": ["G1"]}
       ]
     }
   ]

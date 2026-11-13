@@ -25,6 +25,7 @@ const session = (patch: Partial<Session>): Session => ({
   type: "td",
   module: "ALGO2",
   room: "134",
+  teacher: "LAICHI",
   groups: ["G1"],
   ...patch,
 });

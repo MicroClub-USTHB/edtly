@@ -18,6 +18,7 @@ export type Session = {
   type: SessionType;
   module: string;
   room: string;
+  teacher: string;
   groups: string[];
   origin?: string;
   originUrl?: string;
