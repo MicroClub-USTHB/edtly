@@ -5,20 +5,20 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps L3 ACAD", "url": "https://finfo.usthb.dz/storage/disk/32DCdcz2KLz99y2R3gBAYEVCI4Pp0XNTz5JAL0Eq.pdf", "updatedAt": "2026-11-05"},
+  "source": {"title": "Emploi du temps L3 ACAD", "url": "https://finfo.usthb.dz/storage/disk/muxdneAXUXWRCHGqAn4VW6mzcVX121vS3ABKEhSw.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "a",
       "name": "A",
       "groups": ["G1", "G2", "G3", "G4"],
       "sessions": [
-        {"day": "sun", "start": "08:00", "end": "09:30", "type": "td", "module": "SYS.EXP2", "room": "Espace-Internet", "teacher": "BELGUERCHE", "groups": ["G1"]},
+        {"day": "sun", "start": "08:00", "end": "09:30", "type": "td", "module": "SYS.EXP2", "room": "Espace-Internet", "teacher": "BELGUERCHE", "groups": ["G2"]},
         {"day": "sun", "start": "09:40", "end": "11:10", "type": "cours", "module": "COMPIL", "room": "SC", "teacher": "IOUALALEN-BOUKALA", "groups": []},
         {"day": "sun", "start": "11:20", "end": "12:50", "type": "cours", "module": "ROP", "room": "D", "teacher": "BENKAOUHA", "groups": []},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "cours", "module": "SYS.EXP2", "room": "D", "teacher": "BELGUERCHE", "groups": []},
+        {"day": "sun", "start": "14:40", "end": "16:10", "type": "td", "module": "SYS.EXP2", "room": "303D", "teacher": "BELGUERCHE", "groups": ["G1"]},
         {"day": "sun", "start": "14:40", "end": "16:10", "type": "td", "module": "GL", "room": "336D", "teacher": "AHMED BACHA", "groups": ["G3"]},
         {"day": "sun", "start": "14:40", "end": "16:10", "type": "td", "module": "ROP", "room": "332D", "teacher": "BENKAOUHA", "groups": ["G4"]},
-        {"day": "sun", "start": "16:20", "end": "17:50", "type": "td", "module": "SYS.EXP2", "room": "326D", "teacher": "BELGUERCHE", "groups": ["G2"]},
         {"day": "sun", "start": "16:20", "end": "17:50", "type": "td", "module": "ROP", "room": "336D", "teacher": "BENKAOUHA", "groups": ["G3"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "tp", "module": "RESEAUX", "room": "TP122", "teacher": "ABDERRAHMANE", "groups": ["G2"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "tp", "module": "SYS.EXP2", "room": "TP130", "teacher": "Hachemane", "groups": ["G3"]},
@@ -48,7 +48,7 @@
         {"day": "wed", "start": "09:40", "end": "11:10", "type": "td", "module": "GL", "room": "BM3-13", "teacher": "AHMED BACHA", "groups": ["G4"]},
         {"day": "wed", "start": "11:20", "end": "12:50", "type": "cours", "module": "RESEAUX", "room": "D1", "teacher": "ABDERRAHMANE", "groups": []},
         {"day": "wed", "start": "13:00", "end": "14:30", "type": "cours", "module": "GL", "room": "B", "teacher": "HAMMAL", "groups": []},
-        {"day": "thu", "start": "09:40", "end": "11:10", "type": "cours", "module": "EXTR INFOR", "room": "En ligne", "teacher": "ZELLAL", "groups": []}
+        {"day": "thu", "start": "09:40", "end": "11:10", "type": "cours", "module": "EXTR INFOR", "room": "en ligne", "teacher": "ZELLAL", "groups": []}
       ]
     },
     {
@@ -58,7 +58,7 @@
       "sessions": [
         {"day": "sat", "start": "08:00", "end": "09:30", "type": "cours", "module": "ROP", "room": "SC", "teacher": "DJOUADI", "groups": []},
         {"day": "sat", "start": "09:40", "end": "11:10", "type": "td", "module": "ROP", "room": "SC", "teacher": "DJOUADI", "groups": ["G1"]},
-        {"day": "sat", "start": "14:40", "end": "16:10", "type": "cours", "module": "EXTR INFOR", "room": "En ligne", "teacher": "ZELLAL", "groups": []},
+        {"day": "sat", "start": "14:40", "end": "16:10", "type": "cours", "module": "EXTR INFOR", "room": "en ligne", "teacher": "ZELLAL", "groups": []},
         {"day": "sun", "start": "08:00", "end": "09:30", "type": "cours", "module": "RESEAUX", "room": "V", "teacher": "KHEROUA", "groups": []},
         {"day": "sun", "start": "09:40", "end": "11:10", "type": "td", "module": "GL", "room": "C5", "teacher": "BERKANI", "groups": ["G2"]},
         {"day": "sun", "start": "09:40", "end": "11:10", "type": "td", "module": "ROP", "room": "154", "teacher": "KERKACHE", "groups": ["G4"]},
@@ -114,7 +114,7 @@
         {"day": "sun", "start": "11:20", "end": "12:50", "type": "tp", "module": "RESEAUX", "room": "TP122", "teacher": "BOUAGAR", "groups": ["G4"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "tp", "module": "SYS.EXP2", "room": "TP131", "teacher": "BELKHIR", "groups": ["G1"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "tp", "module": "RESEAUX", "room": "TP122", "teacher": "BOUAGAR", "groups": ["G3"]},
-        {"day": "sun", "start": "13:00", "end": "14:30", "type": "tp", "module": "COMPIL", "room": "TP128", "teacher": "BENSALAH", "groups": ["G4"]},
+        {"day": "sun", "start": "13:00", "end": "14:30", "type": "tp", "module": "COMPIL", "room": "TP129", "teacher": "BENSALAH", "groups": ["G4"]},
         {"day": "sun", "start": "14:40", "end": "16:10", "type": "tp", "module": "COMPIL", "room": "TP129", "teacher": "BENSALAH", "groups": ["G2"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "COMPIL", "room": "134", "teacher": "HIMRANE", "groups": ["G1"]},
         {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "ROP", "room": "Espace-Internet", "teacher": "BOUKALA", "groups": ["G1"]},
@@ -123,7 +123,7 @@
         {"day": "mon", "start": "13:00", "end": "14:30", "type": "cours", "module": "COMPIL", "room": "C7", "teacher": "HIMRANE", "groups": []},
         {"day": "mon", "start": "14:40", "end": "16:10", "type": "td", "module": "SYS.EXP2", "room": "225D", "teacher": "", "groups": ["G4"]},
         {"day": "mon", "start": "16:20", "end": "17:50", "type": "td", "module": "SYS.EXP2", "room": "225D", "teacher": "", "groups": ["G3"]},
-        {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "EXTR INFOR", "room": "En ligne", "teacher": "ZELLAL", "groups": []},
+        {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "EXTR INFOR", "room": "en ligne", "teacher": "ZELLAL", "groups": []},
         {"day": "wed", "start": "08:00", "end": "09:30", "type": "cours", "module": "SYS.EXP2", "room": "426D", "teacher": "NEMOUCHI", "groups": []},
         {"day": "wed", "start": "09:40", "end": "11:10", "type": "td", "module": "GL", "room": "241D", "teacher": "OULEFKI", "groups": ["G1"]},
         {"day": "wed", "start": "09:40", "end": "11:10", "type": "td", "module": "SYS.EXP2", "room": "237D", "teacher": "NEMOUCHI", "groups": ["G2"]},

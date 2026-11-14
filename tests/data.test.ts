@@ -54,7 +54,7 @@ describe("timetable data", () => {
     const section = programme.sections.find(({ id }) => id === "a");
 
     expect(programme.academicYear).toBe("2026/2027");
-    expect(programme.source.updatedAt).toBe("2026-11-05");
+    expect(programme.source.updatedAt).toBe("2026-11-12");
     expect(section?.groups).toEqual(["G1", "G2", "G3", "G4"]);
     expect(section?.sessions).toHaveLength(32);
     expect(section?.sessions).toContainEqual({
@@ -62,9 +62,9 @@ describe("timetable data", () => {
       start: "08:00",
       end: "09:30",
       type: "td",
-      module: "SEM300",
-      room: "162",
-      teacher: "HEDJAZI-DELLAL",
+      module: "ALGO2",
+      room: "BM3-7",
+      teacher: "LAICHI",
       groups: ["G1"],
     });
     expect(section?.sessions).toContainEqual({

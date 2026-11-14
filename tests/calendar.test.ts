@@ -247,11 +247,11 @@ describe("calendar feed", () => {
 
     expect(events(body)).toBe(14);
     expect(filename).toBe("edtly-l2-isil-a-g1.ics");
-    expect(updatedAt).toBe("2026-11-05");
+    expect(updatedAt).toBe("2026-11-12");
     expect(text).toContain("X-WR-CALNAME:Edtly · L2 ISIL · A · G1");
     expect(text).toContain("SUMMARY:SEM300 · TD");
     expect(text).toContain("SUMMARY:ALGO2 · Cours");
-    expect(text).toContain("LOCATION:Salle 162\\, USTHB");
+    expect(text).toContain("LOCATION:Salle 336D\\, USTHB");
     expect(text).toContain("Enseignant : HEDJAZI-DELLAL");
     expect(text).toContain("URL:https://edtly.vercel.app/fr/lmd/l2/isil/a/g1");
 
@@ -308,7 +308,7 @@ describe("calendar feed", () => {
 });
 
 describe("calendar feed overrides", () => {
-  const key = "mon|08:00|td|SEM300|162|G1";
+  const key = "mon|08:00|td|ALGO2|BM3-7|G1";
   const moved = stateOf({ day: "tue", start: "13:00", end: "14:30", room: "210" });
 
   test("moves a class every week from a given week", async () => {
@@ -332,7 +332,7 @@ describe("calendar feed overrides", () => {
           key,
           scope: "week",
           week: "2026-11-14",
-          state: stateOf({ day: "mon", start: "08:00", end: "09:30", room: "162" }, true),
+          state: stateOf({ day: "mon", start: "08:00", end: "09:30", room: "BM3-7" }, true),
         },
       ],
       new Set([key]),

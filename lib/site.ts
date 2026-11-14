@@ -5,6 +5,7 @@ export const site = {
     "",
   ),
   ogImage: { url: "/og.png", width: 1200, height: 630 },
+  author: { name: "3imad", url: "https://github.com/imadeddineF" },
   colors: {
     primary: "#D03232",
     background: { light: "#FFFFFF", dark: "#110D0D" },

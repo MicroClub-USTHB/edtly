@@ -78,7 +78,7 @@ export default async function HomePage() {
             {t("footnote")}
           </p>
 
-          <Disclaimer className="hidden pt-2 lg:block" />
+          <Disclaimer className="hidden pt-2 lg:flex" />
         </main>
       </div>
     </>

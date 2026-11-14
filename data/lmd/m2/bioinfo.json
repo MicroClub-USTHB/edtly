@@ -5,7 +5,7 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps M2 BIOINFO", "url": "https://finfo.usthb.dz/storage/disk/ZvIRade76ym6x8vIJQSwUGDbRHXeKVvXKT5sEt02.pdf", "updatedAt": "2026-11-05"},
+  "source": {"title": "Emploi du temps M2 BIOINFO", "url": "https://finfo.usthb.dz/storage/disk/FhrIY87hywf1I2wvwNsPhZHzkD4RKbHUj5zFXYen.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "a",
@@ -17,7 +17,7 @@
         {"day": "sun", "start": "11:20", "end": "12:50", "type": "tp", "module": "CalPar-Arc", "room": "TP.C5", "teacher": "MEHDI", "groups": ["G3"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "td", "module": "CalPar-Arc", "room": "BM3-14", "teacher": "MEHDI", "groups": ["G1"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "td", "module": "MCA", "room": "D3", "teacher": "NEMOUCHI", "groups": ["G2"]},
-        {"day": "sun", "start": "14:40", "end": "16:10", "type": "cours", "module": "Bio", "room": "D", "teacher": "", "groups": []},
+        {"day": "sun", "start": "14:40", "end": "16:10", "type": "cours", "module": "Bio", "room": "D", "teacher": "Hannoun", "groups": []},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "SystEmb", "room": "BM4-25", "teacher": "GUEBLI", "groups": ["G1"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "td", "module": "FouilleDeD", "room": "BM4-26", "teacher": "BABA ALI", "groups": ["G2"]},
         {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "FouilleDeD", "room": "BM4-25", "teacher": "BABA ALI", "groups": ["G1"]},

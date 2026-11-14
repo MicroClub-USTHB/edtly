@@ -161,7 +161,8 @@
     "upToDate": "Timetable is up to date"
   },
   "Legal": {
-    "disclaimer": "Edtly is an independent project. It is not an official USTHB service."
+    "disclaimer": "Edtly is an independent project. It is not an official USTHB service.",
+    "madeBy": "Made by <link>{name}</link>"
   },
   "Personal": {
     "view": "View",

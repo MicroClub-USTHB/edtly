@@ -5,13 +5,14 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps M2 SII", "url": "https://finfo.usthb.dz/storage/disk/lMCig82ltAzUhRC6GLNKVhm99LMifoqsVWPCAv0n.pdf", "updatedAt": "2026-11-05"},
+  "source": {"title": "Emploi du temps M2 SII", "url": "https://finfo.usthb.dz/storage/disk/w0R9Qez24FHDuCvGDSV2giLolthXeWSUovrnFMff.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "a",
       "name": "A",
       "groups": ["G1", "G2", "G3"],
       "sessions": [
+        {"day": "sun", "start": "08:00", "end": "09:30", "type": "tp", "module": "P .CONTR", "room": "TP128", "teacher": "ISLI", "groups": ["G1"]},
         {"day": "sun", "start": "08:00", "end": "09:30", "type": "tp", "module": "TAL", "room": "TP.C3B", "teacher": "KHENNAK", "groups": ["G2"]},
         {"day": "sun", "start": "09:40", "end": "11:10", "type": "tp", "module": "TAL", "room": "TP130", "teacher": "KHENNAK", "groups": ["G1"]},
         {"day": "sun", "start": "11:20", "end": "12:50", "type": "cours", "module": "TAL", "room": "E1", "teacher": "KHENNAK", "groups": []},
@@ -29,7 +30,6 @@
         {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "D.MINING", "room": "E1", "teacher": "HOUACINE", "groups": []},
         {"day": "tue", "start": "13:00", "end": "14:30", "type": "cours", "module": "P .CONTR", "room": "E1", "teacher": "ISLI", "groups": []},
         {"day": "tue", "start": "14:40", "end": "16:10", "type": "td", "module": "Anglais", "room": "CRI", "teacher": "ZENOUN", "groups": ["G3"]},
-        {"day": "tue", "start": "14:40", "end": "16:10", "type": "tp", "module": "P .CONTR", "room": "TP.C5", "teacher": "ISLI", "groups": ["G1"]},
         {"day": "wed", "start": "08:00", "end": "09:30", "type": "td", "module": "P .CONTR", "room": "BM3-11", "teacher": "ISLI", "groups": ["G1"]},
         {"day": "wed", "start": "08:00", "end": "09:30", "type": "tp", "module": "D.MINING", "room": "TP.C5", "teacher": "HOUACINE", "groups": ["G2"]},
         {"day": "wed", "start": "08:00", "end": "09:30", "type": "tp", "module": "RI", "room": "TP.C6", "teacher": "SAHNOUNE", "groups": ["G3"]},

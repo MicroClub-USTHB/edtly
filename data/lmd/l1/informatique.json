@@ -5,7 +5,7 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps L1 Informatique LMD", "url": "https://finfo.usthb.dz/storage/disk/CXI08IjN1DxWCqQirnbqlYV8L0kysqm778j5iwth.pdf", "updatedAt": "2026-11-05"},
+  "source": {"title": "Emploi du temps L1 Informatique LMD", "url": "https://finfo.usthb.dz/storage/disk/pGGkoklMxospeMZ0J7DabyJNQofcyAYAc9T4JtO9.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "1",
@@ -23,8 +23,8 @@
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "td", "module": "STR M", "room": "120", "teacher": "BENATIA", "groups": ["G2"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "td", "module": "ANALY", "room": "132", "teacher": "DAHMANI", "groups": ["G3"]},
         {"day": "sun", "start": "13:00", "end": "14:30", "type": "td", "module": "ANALY", "room": "144", "teacher": "DAHMANI_A", "groups": ["G4"]},
-        {"day": "sun", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "-E2.09", "teacher": "BOUZARA", "groups": ["G1"]},
-        {"day": "sun", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "-E2.09", "teacher": "BOUZARA", "groups": ["G2"]},
+        {"day": "sun", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "TP.C8", "teacher": "BOUZARA", "groups": ["G1"]},
+        {"day": "sun", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "TP.C8", "teacher": "BOUZARA", "groups": ["G2"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "cours", "module": "ALG", "room": "125T", "teacher": "BELLAGH", "groups": []},
         {"day": "mon", "start": "09:40", "end": "11:10", "type": "cours", "module": "ALGO", "room": "125T", "teacher": "Gueraichi", "groups": []},
         {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "ALG", "room": "118", "teacher": "BELLAGH", "groups": ["G1"]},
@@ -35,8 +35,8 @@
         {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "ALGO", "room": "120", "teacher": "Gueraichi", "groups": ["G2"]},
         {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "ALG", "room": "146", "teacher": "BELLAGH", "groups": ["G3"]},
         {"day": "mon", "start": "13:00", "end": "14:30", "type": "td", "module": "ALG", "room": "148", "teacher": "AIDER", "groups": ["G4"]},
-        {"day": "mon", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "-E2.08", "teacher": "BOUZARA", "groups": ["G3"]},
-        {"day": "mon", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "-E2.09", "teacher": "BOUZARA", "groups": ["G4"]},
+        {"day": "mon", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "TP.C8", "teacher": "BOUZARA", "groups": ["G3"]},
+        {"day": "mon", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "TP.C8", "teacher": "BOUZARA", "groups": ["G4"]},
         {"day": "tue", "start": "08:00", "end": "09:30", "type": "cours", "module": "ANALY", "room": "143T", "teacher": "DAHMANI_A", "groups": []},
         {"day": "tue", "start": "09:40", "end": "11:10", "type": "cours", "module": "STR M", "room": "143T", "teacher": "BENATIA", "groups": []},
         {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "MP", "room": "143T", "teacher": "BOUZIT", "groups": []},
@@ -228,6 +228,10 @@
       "groups": ["G1", "G2", "G3", "G4"],
       "sessions": [
         {"day": "sat", "start": "09:40", "end": "11:10", "type": "cours", "module": "Histoire d'Algérie", "room": "À distance", "teacher": "", "groups": []},
+        {"day": "mon", "start": "08:00", "end": "09:30", "type": "tp", "module": "ALGO", "room": "TP.C6", "teacher": "BESSAI", "groups": ["G1"]},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "tp", "module": "ALGO", "room": "TP.C10", "teacher": "BESSAI", "groups": ["G2"]},
+        {"day": "mon", "start": "13:00", "end": "14:30", "type": "tp", "module": "ALGO", "room": "TP.C6", "teacher": "BESSAI", "groups": ["G3"]},
+        {"day": "mon", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "TP.C6", "teacher": "BESSAI", "groups": ["G4"]},
         {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "ALG", "room": "379", "teacher": "ABBACI", "groups": ["G1"]},
         {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "ALG", "room": "381", "teacher": "HAMIOUD", "groups": ["G2"]},
         {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "MP", "room": "383", "teacher": "OUHACHI", "groups": ["G3"]},
@@ -238,8 +242,6 @@
         {"day": "tue", "start": "09:40", "end": "11:10", "type": "td", "module": "ALG", "room": "385", "teacher": "HAMIOUD", "groups": ["G4"]},
         {"day": "tue", "start": "11:20", "end": "12:50", "type": "cours", "module": "ALG", "room": "155T", "teacher": "ABBACI", "groups": []},
         {"day": "tue", "start": "13:00", "end": "14:30", "type": "cours", "module": "MP", "room": "155T", "teacher": "OUHACHI", "groups": []},
-        {"day": "tue", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "-E2.08", "teacher": "BESSAI", "groups": ["G1"]},
-        {"day": "tue", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "-E2.08", "teacher": "BESSAI", "groups": ["G2"]},
         {"day": "wed", "start": "08:00", "end": "09:30", "type": "cours", "module": "ALGO", "room": "161T", "teacher": "DERDER", "groups": []},
         {"day": "wed", "start": "09:40", "end": "11:10", "type": "cours", "module": "ANALY", "room": "161T", "teacher": "RIHANI", "groups": []},
         {"day": "wed", "start": "11:20", "end": "12:50", "type": "cours", "module": "STR M", "room": "161T", "teacher": "AMROUNI", "groups": []},
@@ -260,9 +262,7 @@
         {"day": "thu", "start": "09:40", "end": "11:10", "type": "td", "module": "ANALY", "room": "248", "teacher": "Rihani", "groups": ["G3"]},
         {"day": "thu", "start": "09:40", "end": "11:10", "type": "td", "module": "ANALY", "room": "251", "teacher": "RIHANI", "groups": ["G4"]},
         {"day": "thu", "start": "11:20", "end": "12:50", "type": "cours", "module": "ANALY", "room": "149T", "teacher": "Rihani", "groups": []},
-        {"day": "thu", "start": "13:00", "end": "14:30", "type": "cours", "module": "ALGO", "room": "149T", "teacher": "DERDER", "groups": []},
-        {"day": "thu", "start": "14:40", "end": "16:10", "type": "tp", "module": "ALGO", "room": "-E2.08", "teacher": "BESSAI", "groups": ["G3"]},
-        {"day": "thu", "start": "16:20", "end": "17:50", "type": "tp", "module": "ALGO", "room": "-E2.08", "teacher": "BESSAI", "groups": ["G4"]}
+        {"day": "thu", "start": "13:00", "end": "14:30", "type": "cours", "module": "ALGO", "room": "149T", "teacher": "DERDER", "groups": []}
       ]
     },
     {
@@ -346,8 +346,8 @@
         {"day": "tue", "start": "14:40", "end": "16:10", "type": "td", "module": "ALGO", "room": "134", "teacher": "SOLTANI", "groups": ["G2"]},
         {"day": "tue", "start": "14:40", "end": "16:10", "type": "td", "module": "MP", "room": "142", "teacher": "", "groups": ["G3"]},
         {"day": "tue", "start": "14:40", "end": "16:10", "type": "td", "module": "MP", "room": "144", "teacher": "", "groups": ["G4"]},
-        {"day": "wed", "start": "11:20", "end": "12:50", "type": "tp", "module": "ALGO", "room": "E0.06", "teacher": "Serradj", "groups": ["G3"]},
-        {"day": "wed", "start": "13:00", "end": "14:30", "type": "tp", "module": "ALGO", "room": "-E2.09", "teacher": "Serradj", "groups": ["G4"]}
+        {"day": "wed", "start": "13:00", "end": "14:30", "type": "tp", "module": "ALGO", "room": "-E2.09", "teacher": "Serradj", "groups": ["G4"]},
+        {"day": "thu", "start": "08:00", "end": "09:30", "type": "tp", "module": "ALGO", "room": "TP.C8", "teacher": "Serradj", "groups": ["G3"]}
       ]
     },
     {
