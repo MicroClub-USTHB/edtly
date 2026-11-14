@@ -1,10 +1,20 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { DropSegments } from "@/components/overrides/drop-segments";
 import { useDuration } from "@/lib/hooks/use-duration";
-import type { Gap } from "@/lib/timetable/schedule";
+import type { Gap, Slot } from "@/lib/timetable/schedule";
+import type { Day } from "@/lib/timetable/types";
 
-export function GapRow({ gap }: { gap: Gap }) {
+type GapRowProps = {
+  gap: Gap;
+  day: Day;
+  dayName: string;
+  zones: Slot[] | null;
+  active: boolean;
+};
+
+export function GapRow({ gap, day, dayName, zones, active }: GapRowProps) {
   const t = useTranslations("Timetable");
   const duration = useDuration();
 
@@ -14,9 +24,19 @@ export function GapRow({ gap }: { gap: Gap }) {
         {gap.start}
       </span>
 
-      <span className="flex min-h-9 flex-1 items-center rounded-full border border-dashed border-border px-4 text-note text-foreground-muted">
-        {t("freeGap", { duration: duration(gap.minutes) })}
-      </span>
+      {zones ? (
+        <DropSegments
+          day={day}
+          dayName={dayName}
+          slots={zones}
+          active={active}
+          className="flex-1"
+        />
+      ) : (
+        <span className="flex min-h-9 flex-1 items-center rounded-full border border-dashed border-border px-4 text-note text-foreground-muted">
+          {t("freeGap", { duration: duration(gap.minutes) })}
+        </span>
+      )}
     </li>
   );
 }

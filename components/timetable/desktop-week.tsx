@@ -1,11 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useDragState } from "@/components/overrides/timetable-dnd";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { minutesNow, minutesOf } from "@/lib/dates";
 import type { Week } from "@/lib/hooks/use-week";
 import {
   daySpan,
+  gridSlots,
   weekRows,
   type Conflicts,
   type Matcher,
@@ -23,6 +25,7 @@ type DesktopWeekProps = {
   days: number[];
   conflicts: Conflicts;
   changed: ReadonlySet<string>;
+  editable: Matcher;
   onOpen: (
     dayIndex: number,
     slot: Slot,
@@ -39,10 +42,12 @@ export function DesktopWeek({
   days,
   conflicts,
   changed,
+  editable,
   onOpen,
 }: DesktopWeekProps) {
   const names = useTranslations("Days.long");
-  const rows = weekRows(sessions, mine);
+  const dragging = useDragState().source !== null;
+  const rows = weekRows(sessions, mine, gridSlots(sessions, dragging));
   const spans = DAYS.map((day) => daySpan(sessions, day, mine));
   const minutes = week.now && week.today !== null ? minutesNow(week.now) : null;
   const columns = {
@@ -50,7 +55,7 @@ export function DesktopWeek({
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="-mx-1 overflow-x-auto px-1">
       <div
         className="flex flex-col"
         style={{ minWidth: `${Math.max(480, 56 + days.length * 150)}px` }}
@@ -89,7 +94,7 @@ export function DesktopWeek({
             minutes < minutesOf(row.end);
           return (
             <div
-              key={row.start}
+              key={`${row.start}-${row.end}`}
               className="grid min-h-27 gap-2 border-t border-divider py-2"
               style={columns}
             >
@@ -104,6 +109,8 @@ export function DesktopWeek({
                 return (
                   <DesktopCell
                     key={DAYS[index]}
+                    day={DAYS[index]}
+                    dayName={names(DAYS[index])}
                     cell={cell}
                     group={group}
                     current={running && week.today === index}
@@ -115,6 +122,7 @@ export function DesktopWeek({
                     }
                     conflicts={conflicts}
                     changed={changed}
+                    editable={editable}
                     onOpen={(anchor, focus) =>
                       onOpen(index, row, anchor, focus)
                     }

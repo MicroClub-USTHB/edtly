@@ -3,24 +3,45 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useTransitionRouter } from "next-view-transitions";
 import { useEffect, useState } from "react";
-import { CalendarSheet } from "@/components/calendar/calendar-sheet";
+import {
+  CalendarSheet,
+  type CalendarIntent,
+} from "@/components/calendar/calendar-sheet";
 import { FilterSheet } from "@/components/filters/filter-sheet";
+import { ChangesSheet } from "@/components/overrides/changes-sheet";
+import { EditSheet } from "@/components/overrides/edit-sheet";
+import type { ScopeContext } from "@/components/overrides/scope-options";
+import {
+  ScopeSheet,
+  type ScopeRequest,
+} from "@/components/overrides/scope-sheet";
+import type { MoveRequest } from "@/components/overrides/timetable-dnd";
 import { PersonalSheet } from "@/components/personal/personal-sheet";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { usePathname } from "@/i18n/navigation";
 import { eventText } from "@/lib/calendar/event";
 import { googleEventUrl } from "@/lib/calendar/links";
 import { termEnd } from "@/lib/calendar/term";
-import { encodeFeed, feedLocale } from "@/lib/calendar/token";
-import { addDays, minutesNow, todayIndex } from "@/lib/dates";
+import { encodeFeed, feedLocale, feedOverrides } from "@/lib/calendar/token";
+import { addDays, isoDate, minutesNow, todayIndex } from "@/lib/dates";
+import {
+  formatLongDate,
+  formatShortDate,
+  formatWeekRange,
+  parseIsoDate,
+} from "@/lib/format";
+import { useChangeLabels } from "@/lib/hooks/use-change-labels";
 import { useKeyboardNavigation } from "@/lib/hooks/use-keyboard-navigation";
 import { usePersonalSummary } from "@/lib/hooks/use-personal-summary";
+import { useOverrideActions } from "@/lib/hooks/use-override-actions";
 import { usePersonalTimetable } from "@/lib/hooks/use-personal-timetable";
 import { useResetPersonal } from "@/lib/hooks/use-reset-personal";
+import { useSessionLabels } from "@/lib/hooks/use-session-labels";
 import { useWeek } from "@/lib/hooks/use-week";
 import { cachePages } from "@/lib/pwa/cache-pages";
 import { site } from "@/lib/site";
 import { trackSessions, useChangedSessions } from "@/lib/stores/changes-store";
+import { useOverrides } from "@/lib/stores/overrides-store";
 import {
   readParcours,
   saveParcours,
@@ -42,6 +63,16 @@ import {
   sectionPath,
 } from "@/lib/timetable/paths";
 import {
+  applyOverrides,
+  isCancelled,
+  originalOf,
+  originKey,
+  previewMove,
+  slotOf,
+  stateOf,
+  type SessionState,
+} from "@/lib/timetable/overrides";
+import {
   isCustomized,
   matcherFor,
   mergeSessions,
@@ -54,13 +85,16 @@ import {
   daySlots,
   forGroup,
   forGroups,
+  overlapping,
   sessionKey,
   slotSessions,
   slotStatuses,
+  type Matcher,
   type Slot,
 } from "@/lib/timetable/schedule";
 import {
   DAYS,
+  type OverrideScope,
   type CatalogueProgramme,
   type Parcours,
   type ProgrammeInfo,
@@ -89,6 +123,7 @@ type DetailRequest = Slot & {
 };
 
 type SheetRequest = { anchor: SheetAnchor | null };
+type CalendarRequest = SheetRequest & { intent: CalendarIntent };
 
 export function TimetableView({
   programme,
@@ -102,7 +137,10 @@ export function TimetableView({
   const types = useTranslations("SessionTypes");
   const short = useTranslations("Days.short");
   const root = useTranslations();
+  const changesT = useTranslations("Overrides");
   const locale = useLocale();
+  const labels = useSessionLabels();
+  const changeLabels = useChangeLabels();
   const router = useTransitionRouter();
   const saved = useSavedParcours();
   const changed = useChangedSessions();
@@ -117,7 +155,13 @@ export function TimetableView({
   const [pickerAnchor, setPickerAnchor] = useState<SheetAnchor | null>(null);
   const [personalSheet, setPersonalSheet] = useState<SheetRequest | null>(null);
   const [filterSheet, setFilterSheet] = useState<SheetRequest | null>(null);
-  const [calendarSheet, setCalendarSheet] = useState<SheetRequest | null>(null);
+  const [calendarSheet, setCalendarSheet] = useState<CalendarRequest | null>(
+    null,
+  );
+  const [changesSheet, setChangesSheet] = useState<SheetRequest | null>(null);
+  const [pending, setPending] = useState<MoveRequest | null>(null);
+  const [scopeRequest, setScopeRequest] = useState<ScopeRequest | null>(null);
+  const [editing, setEditing] = useState<Session | null>(null);
 
   const { system, level, speciality, source } = programme;
   const { id: sectionId, groups, sessions } = section;
@@ -140,9 +184,25 @@ export function TimetableView({
     sessions,
     group,
   );
+  const overrides = useOverrides(basePath);
+  const actions = useOverrideActions(basePath, () =>
+    setCalendarSheet({ anchor: null, intent: "update" }),
+  );
+  const until = termEnd(programme.academicYear, programme.semester);
+  const viewWeek = shiftedWeek.dates ? isoDate(shiftedWeek.dates[0]) : null;
+  const currentWeek = week.dates ? isoDate(week.dates[0]) : null;
+  const resolve = (list: Session[], at: string | null) =>
+    applyOverrides(list, overrides, at, until);
   const mineMode = mode === "mine";
-  const ownSessions = mineMode ? mySessions : sessions;
-  const ownMatcher = mineMode ? matcherFor(mySessions) : forGroup(group);
+  const officialOwn = mineMode ? mySessions : sessions;
+  const resolvedOwn = resolve(officialOwn, viewWeek);
+  const ownSessions = pending
+    ? previewMove(resolvedOwn, originKey(pending.session), pending.target)
+    : resolvedOwn;
+  const ownMatcher = mineMode ? matcherFor(ownSessions) : forGroup(group);
+  const inTerm = viewWeek !== null && (until === null || viewWeek <= until);
+  const editable: Matcher = (session) =>
+    inTerm && !session.change?.preview && ownMatcher(session);
   const moduleNames = modulesOf(ownSessions).map(({ name }) => name);
   const filterGroups = mineMode ? [] : groups;
   const active = pruneFilters(filters, moduleNames, filterGroups);
@@ -161,10 +221,41 @@ export function TimetableView({
         : null
       : group;
   const conflicts = conflictsOf(ownSessions, ownMatcher);
+  const todayOwn =
+    weekOffset === 0 ? ownSessions : resolve(officialOwn, currentWeek);
   const status =
     week.now && week.today !== null
-      ? dayStatus(ownSessions, week.today, ownMatcher, minutesNow(week.now))
+      ? dayStatus(
+          todayOwn,
+          week.today,
+          mineMode ? matcherFor(todayOwn) : forGroup(group),
+          minutesNow(week.now),
+        )
       : null;
+  const conflictAt = (session: Session, target: Slot & Pick<Session, "day">) =>
+    overlapping(
+      ownSessions,
+      ownMatcher,
+      target,
+      (other) => originKey(other) === originKey(session),
+    );
+  const known = new Map(
+    [...sessions, ...mySessions].map((item) => [sessionKey(item), item]),
+  );
+  const changeEntries = overrides
+    .flatMap((override) => {
+      const official = known.get(override.key);
+      return official ? [{ override, session: official }] : [];
+    })
+    .sort(
+      (a, b) =>
+        b.override.week.localeCompare(a.override.week) ||
+        a.session.module.localeCompare(b.session.module),
+    );
+  const calendarOverrides = feedOverrides(
+    overrides,
+    new Set(mySessions.map(sessionKey)),
+  );
   const extrasLoading = personal.extras.some(
     (extra) => entries.get(sectionPath(extra))?.status !== "ready",
   );
@@ -191,28 +282,121 @@ export function TimetableView({
     section: base,
     group,
     personal,
+    overrides: calendarOverrides,
   });
-  const until = termEnd(programme.academicYear, programme.semester);
   const pageUrl = site.url + localized(locale, parcoursPath(parcours));
+  const scopeContext: ScopeContext = {
+    current: weekOffset === 0,
+    range: shiftedWeek.dates
+      ? formatWeekRange(shiftedWeek.dates[0], shiftedWeek.dates[5], locale)
+      : { start: "", end: "" },
+    from: shiftedWeek.dates ? formatShortDate(shiftedWeek.dates[0], locale) : "",
+    until: until
+      ? changesT("until", { date: formatLongDate(parseIsoDate(until), locale) })
+      : changesT("untilEnd"),
+  };
 
   const classUrl = (session: Session) => {
-    const current = week.dates?.[DAYS.indexOf(session.day)];
-    if (!current || !week.now) return null;
+    const change = session.change;
+    if (isCancelled(session) || change?.preview || !week.now) return null;
+    const index = DAYS.indexOf(session.day);
+    const once = change?.scope === "week";
+    let date = (once ? shiftedWeek : week).dates?.[index];
+    if (!date) return null;
     const today = new Date(
       week.now.getFullYear(),
       week.now.getMonth(),
       week.now.getDate(),
     );
+    if (!once && date < today) date = addDays(date, 7);
+    if (change?.scope === "series" && change.week) {
+      const first = addDays(parseIsoDate(change.week), index);
+      if (date < first) date = first;
+    }
     return googleEventUrl(
-      eventText(session, root, { sectionName, pageUrl, pdfUrl: source.url }),
+      eventText(
+        session,
+        root,
+        { sectionName, pageUrl, pdfUrl: source.url },
+        change?.original,
+      ),
       {
-        date: current < today ? addDays(current, 7) : current,
+        date,
         start: session.start,
         end: session.end,
-        until,
+        until: once ? null : until,
       },
     );
   };
+
+  const saveChange = (
+    session: Session,
+    scope: OverrideScope,
+    state: SessionState,
+    message: string,
+  ) => {
+    if (viewWeek) actions.save(session, viewWeek, scope, state, message);
+  };
+
+  const closeScope = () => {
+    setPending(null);
+    setScopeRequest(null);
+  };
+
+  const scopeSheet: ScopeRequest | null = pending
+    ? { kind: "move", ...pending }
+    : scopeRequest;
+
+  const chooseScope = (scope: OverrideScope) => {
+    const request = scopeSheet;
+    closeScope();
+    if (!request) return;
+    const every = scope === "series";
+    if (request.kind === "move") {
+      saveChange(
+        request.session,
+        scope,
+        stateOf(request.target),
+        changesT(every ? "toast.movedSeries" : "toast.movedWeek", {
+          target: changeLabels.target(request.target),
+        }),
+      );
+    } else if (request.kind === "cancel") {
+      saveChange(
+        request.session,
+        scope,
+        stateOf(slotOf(request.session), true),
+        changesT(every ? "toast.cancelledSeries" : "toast.cancelledWeek"),
+      );
+    } else {
+      saveChange(
+        request.session,
+        scope,
+        stateOf(originalOf(request.session)),
+        changesT("toast.restored"),
+      );
+    }
+  };
+
+  const restoreSession = (session: Session) => {
+    setDetail(null);
+    if (session.change?.scope === "series") {
+      setScopeRequest({ kind: "restore", session, anchor: null });
+      return;
+    }
+    saveChange(
+      session,
+      "week",
+      stateOf(originalOf(session)),
+      changesT("toast.restored"),
+    );
+  };
+
+  const pendingConflict = pending
+    ? labels.conflict(
+        conflicts.get(sessionKey({ ...pending.session, ...pending.target })),
+      )
+    : undefined;
 
   useEffect(() => {
     if (readParcours()) return;
@@ -305,8 +489,8 @@ export function TimetableView({
 
   const detailDay = detail ? DAYS[detail.dayIndex] : null;
   const detailSessions = mineMode
-    ? mergeSessions(mySessions, sessions)
-    : sessions;
+    ? mergeSessions(ownSessions, resolve(sessions, viewWeek))
+    : ownSessions;
   const detailStatus =
     detail &&
     detailDay &&
@@ -354,7 +538,14 @@ export function TimetableView({
     onCustomize: (anchor) => setPersonalSheet({ anchor: anchor ?? null }),
     onReset: resetPersonal,
     onFilters: (anchor) => setFilterSheet({ anchor: anchor ?? null }),
-    onCalendar: (anchor) => setCalendarSheet({ anchor: anchor ?? null }),
+    onCalendar: (anchor) =>
+      setCalendarSheet({ anchor: anchor ?? null, intent: "add" }),
+    onChanges: (anchor) => setChangesSheet({ anchor: anchor ?? null }),
+    changeCount: changeEntries.length,
+    editable,
+    dndEnabled: inTerm && pending === null,
+    conflictAt,
+    onMove: setPending,
     onClearFilters: () => setFilters(NO_FILTERS),
     onOpen: openSlot,
     onShiftWeek: shiftWeek,
@@ -384,6 +575,16 @@ export function TimetableView({
         pdfUrl={source.url}
         conflicts={conflicts}
         classUrl={classUrl}
+        editable={editable}
+        onEdit={(session) => {
+          setDetail(null);
+          setEditing(session);
+        }}
+        onCancelClass={(session) => {
+          setDetail(null);
+          setScopeRequest({ kind: "cancel", session, anchor: null });
+        }}
+        onRestore={restoreSession}
         onFocus={(focus) => setDetail(detail && { ...detail, focus })}
         onClose={() => setDetail(null)}
       />
@@ -424,11 +625,52 @@ export function TimetableView({
       <CalendarSheet
         open={calendarSheet !== null}
         anchor={calendarSheet?.anchor ?? null}
+        intent={calendarSheet?.intent ?? "add"}
+        path={basePath}
         token={feedToken}
         label={programmeSection}
         summary={summarize(personal, group)}
         count={extrasLoading ? null : mySessions.length}
+        changes={calendarOverrides.length}
         onClose={() => setCalendarSheet(null)}
+      />
+
+      <ScopeSheet
+        request={scopeSheet}
+        context={scopeContext}
+        conflict={pendingConflict}
+        onChoose={chooseScope}
+        onClose={closeScope}
+      />
+
+      <EditSheet
+        session={editing}
+        context={scopeContext}
+        conflictFor={(session, slot) => conflictAt(session, slot)}
+        onSave={(session, scope, state) => {
+          setEditing(null);
+          saveChange(
+            session,
+            scope,
+            state,
+            changesT(
+              scope === "series" ? "toast.editedSeries" : "toast.editedWeek",
+            ),
+          );
+        }}
+        onClose={() => setEditing(null)}
+      />
+
+      <ChangesSheet
+        open={changesSheet !== null}
+        anchor={changesSheet?.anchor ?? null}
+        entries={changeEntries}
+        onRemove={actions.remove}
+        onRestoreAll={() => {
+          setChangesSheet(null);
+          actions.restoreAll();
+        }}
+        onClose={() => setChangesSheet(null)}
       />
     </>
   );

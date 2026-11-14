@@ -1,11 +1,12 @@
 "use client";
 
+import { useDndMonitor } from "@dnd-kit/core";
 import { animate } from "motion/mini";
 import { useEffect, useRef, type TouchEvent } from "react";
 import { minutesNow } from "@/lib/dates";
 import type { Week } from "@/lib/hooks/use-week";
 import { DURATION, EASE_OUT } from "@/lib/motion";
-import { useSelectedDay } from "@/lib/stores/view-store";
+import { useSelectedDay, useView } from "@/lib/stores/view-store";
 import type { Conflicts, DayStatus, Matcher } from "@/lib/timetable/schedule";
 import { DAYS, type Session } from "@/lib/timetable/types";
 import { DayPanel, type OpenSlot } from "./day-panel";
@@ -21,6 +22,7 @@ type DayPanelsProps = {
   showGaps: boolean;
   filtered: boolean;
   changed: ReadonlySet<string>;
+  editable: Matcher;
   onOpen: OpenSlot;
   onStep: (direction: 1 | -1) => void;
   onClearFilters: () => void;
@@ -39,11 +41,13 @@ export function DayPanels({
   showGaps,
   filtered,
   changed,
+  editable,
   onOpen,
   onStep,
   onClearFilters,
 }: DayPanelsProps) {
   const selected = useSelectedDay();
+  const view = useView();
   const container = useRef<HTMLDivElement>(null);
   const previous = useRef<number | null>(null);
   const touch = useRef<{ x: number; y: number } | null>(null);
@@ -80,6 +84,12 @@ export function DayPanels({
       { duration: reduced ? DURATION.reduced : DURATION.base, ease: EASE_OUT },
     );
   }, [position, selected]);
+
+  useDndMonitor({
+    onDragStart: () => {
+      touch.current = null;
+    },
+  });
 
   const onTouchStart = (event: TouchEvent) => {
     const { clientX, clientY } = event.touches[0];
@@ -123,6 +133,8 @@ export function DayPanels({
             showGaps={showGaps}
             filtered={filtered}
             changed={changed}
+            editable={editable}
+            active={view === "day" && selected === index}
             onOpen={onOpen}
             onClearFilters={onClearFilters}
           />

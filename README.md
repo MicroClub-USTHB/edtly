@@ -56,6 +56,14 @@ Students can add their timetable to Google Calendar from the calendar button. Th
 
 Classes repeat weekly from the week of `source.updatedAt` until the end of the semester: 31 January for semester 1 and 30 June for semester 2 (`lib/calendar/term.ts`). Change these dates there once the faculty publishes its calendar.
 
+## Session overrides
+
+Students can move, edit or cancel their own classes. They drag a class to another day or time slot (mouse, touch with a long press, or keyboard: Space to pick up, arrow keys, Space to drop), or open it and choose Edit or Cancel. Each change applies to one week only or to every week from that week until the end of the semester (`lib/calendar/term.ts`).
+
+Overrides are stored in `localStorage` (`edtly:overrides`), per section, keyed by the official session (`sessionKey`). The timetable JSON is never modified. `lib/timetable/overrides.ts` resolves them for the week on screen before filters, conflicts, the now/next card and free periods are computed. A one-week change wins over an every-week change, and a new every-week change replaces the changes after it. When the faculty publishes a new timetable, overrides whose session no longer exists stop applying.
+
+The calendar token also carries the overrides (hashed session keys, at most 40), so the feed includes moved, edited and cancelled classes (`lib/calendar/occurrences.ts`). Google Calendar keeps the URL it was given, so after a change the student has to add the updated calendar and remove the old one. Edtly only records that the Google link was opened, never that the sync succeeded.
+
 ## Deployment
 
 On Vercel, the `bun.lock` file selects Bun for the install. Do not set `bunVersion` in `vercel.json`. Set `NEXT_PUBLIC_SITE_URL` to the production URL; it is used for canonical links, the sitemap and Open Graph.

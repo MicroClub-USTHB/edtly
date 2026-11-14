@@ -6,3 +6,5 @@ export const LOCALE_KEY = "edtly:locale";
 export const VIEW_ONCE_KEY = "edtly:view-once";
 export const MODE_KEY = "edtly:mode";
 export const PERSONAL_KEY = "edtly:personal";
+export const OVERRIDES_KEY = "edtly:overrides";
+export const CALENDAR_KEY = "edtly:calendar";

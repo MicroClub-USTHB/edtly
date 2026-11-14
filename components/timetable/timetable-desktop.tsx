@@ -5,11 +5,14 @@ import { useTranslations } from "next-intl";
 import { ActiveFilters } from "@/components/filters/active-filters";
 import { CalendarButton } from "@/components/calendar/calendar-button";
 import { FilterButton } from "@/components/filters/filter-button";
+import { ChangesButton } from "@/components/overrides/changes-button";
+import { TimetableDnd } from "@/components/overrides/timetable-dnd";
 import { MineEmpty } from "@/components/personal/mine-empty";
 import { ModeSwitch } from "@/components/personal/mode-switch";
 import { StatusBanner } from "@/components/pwa/status-banner";
 import { Disclaimer } from "@/components/shared/disclaimer";
 import { Button } from "@/components/ui/button";
+import { DESKTOP_QUERY, useMediaQuery } from "@/lib/hooks/use-media-query";
 import { DesktopHeader } from "./desktop-header";
 import { DesktopToolbar } from "./desktop-toolbar";
 import { DesktopWeek } from "./desktop-week";
@@ -23,9 +26,15 @@ import { WeekLegend } from "./week-legend";
 export function TimetableDesktop({ model }: { model: TimetableModel }) {
   const t = useTranslations("Timetable");
   const personal = useTranslations("Personal");
+  const desktop = useMediaQuery(DESKTOP_QUERY);
   const mineMode = model.mode === "mine";
 
   return (
+    <TimetableDnd
+      enabled={desktop && model.dndEnabled}
+      conflictAt={model.conflictAt}
+      onMove={model.onMove}
+    >
     <div className="hidden min-h-dvh flex-col gap-5 px-8 pt-5 pb-8 lg:flex">
       <DesktopHeader updated={model.updatedShort} pdfUrl={model.pdfUrl}>
         <ParcoursButton
@@ -87,6 +96,7 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
               onClear={model.onClearFilters}
               className="mr-2"
             />
+            <ChangesButton count={model.changeCount} onOpen={model.onChanges} />
             <CalendarButton variant="label" onOpen={model.onCalendar} />
             <FilterButton
               variant="label"
@@ -121,6 +131,7 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
                 days={model.days}
                 conflicts={model.conflicts}
                 changed={model.changed}
+                editable={model.editable}
                 onOpen={model.onOpen}
               />
 
@@ -146,5 +157,6 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
 
       <Disclaimer className="mt-auto border-t border-divider pt-5" />
     </div>
+    </TimetableDnd>
   );
 }

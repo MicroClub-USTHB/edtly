@@ -23,6 +23,18 @@ export const minutesOf = (time: string) => {
   return hours * 60 + minutes;
 };
 
+export const timeOf = (minutes: number) => {
+  const clamped = Math.min(Math.max(Math.round(minutes), 0), 23 * 60 + 59);
+  return `${String(Math.floor(clamped / 60)).padStart(2, "0")}:${String(clamped % 60).padStart(2, "0")}`;
+};
+
+export const isoDate = (date: Date) =>
+  [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+
 export const minutesNow = (date: Date) =>
   date.getHours() * 60 + date.getMinutes();
 

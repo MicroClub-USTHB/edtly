@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarPlus, RotateCcw } from "lucide-react";
+import { CalendarClock, CalendarPlus, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LangToggle } from "@/components/shared/lang-toggle";
 import { ModeToggle } from "@/components/shared/mode-toggle";
@@ -22,6 +22,8 @@ type SettingsPanelProps = {
   onCustomize: (anchor: SheetAnchor) => void;
   onReset: () => void;
   onCalendar?: (anchor: SheetAnchor) => void;
+  changeCount: number;
+  onChanges?: (anchor: SheetAnchor) => void;
 };
 
 const ROW =
@@ -36,8 +38,11 @@ export function SettingsPanel({
   onCustomize,
   onReset,
   onCalendar,
+  changeCount,
+  onChanges,
 }: SettingsPanelProps) {
   const t = useTranslations("Settings");
+  const overrides = useTranslations("Overrides");
   const calendar = useTranslations("Calendar");
   const tabs = useTranslations("Tabs");
   const startView = useStartView();
@@ -116,6 +121,32 @@ export function SettingsPanel({
                 </span>
               </span>
               <CalendarPlus
+                size={18}
+                strokeWidth={1.6}
+                aria-hidden="true"
+                className="shrink-0 text-primary"
+              />
+            </button>
+          )}
+
+          {onChanges && (
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              onClick={(event) =>
+                onChanges(event.currentTarget.getBoundingClientRect())
+              }
+              className={`${ROW} min-h-14`}
+            >
+              <span className="flex min-w-0 flex-col gap-0.5">
+                <span>{overrides("changesTitle")}</span>
+                <span className="text-meta wrap-anywhere text-foreground-muted">
+                  {changeCount > 0
+                    ? overrides("changesCount", { count: changeCount })
+                    : overrides("changesHint")}
+                </span>
+              </span>
+              <CalendarClock
                 size={18}
                 strokeWidth={1.6}
                 aria-hidden="true"

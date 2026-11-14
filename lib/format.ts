@@ -26,3 +26,6 @@ export const parseIsoDate = (iso: string) => {
   const [year, month, day] = iso.split("-").map(Number);
   return new Date(year, month - 1, day);
 };
+
+export const formatLongDate = (date: Date, locale: string) =>
+  formatter(locale, { day: "numeric", month: "long" }).format(date);

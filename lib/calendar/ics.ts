@@ -12,6 +12,10 @@ export type CalendarEvent = {
   description: string;
   category: string;
   url: string;
+  from?: string;
+  until?: string | null;
+  once?: boolean;
+  exclude?: string[];
 };
 
 export type CalendarMeta = {
@@ -83,17 +87,23 @@ function fold(line: string) {
 }
 
 function eventLines(event: CalendarEvent, meta: CalendarMeta, stamp: string) {
-  const date = firstOccurrence(meta.anchor, event.day);
-  if (meta.until && date > compactUtcDate(isoToUtc(meta.until))) return [];
+  const until = event.until === undefined ? meta.until : event.until;
+  const date = firstOccurrence(event.from ?? meta.anchor, event.day);
+  if (until && date > compactUtcDate(isoToUtc(until))) return [];
+  const start = compactTime(event.start);
 
   return [
     "BEGIN:VEVENT",
     `UID:${event.uid}`,
     `DTSTAMP:${stamp}`,
     `LAST-MODIFIED:${stamp}`,
-    `DTSTART;TZID=${TIME_ZONE}:${date}T${compactTime(event.start)}`,
+    `DTSTART;TZID=${TIME_ZONE}:${date}T${start}`,
     `DTEND;TZID=${TIME_ZONE}:${date}T${compactTime(event.end)}`,
-    weeklyRule(meta.until),
+    ...(event.once ? [] : [weeklyRule(until)]),
+    ...(event.exclude ?? []).map(
+      (week) =>
+        `EXDATE;TZID=${TIME_ZONE}:${firstOccurrence(week, event.day)}T${start}`,
+    ),
     `SUMMARY:${escapeText(event.summary)}`,
     ...(event.location ? [`LOCATION:${escapeText(event.location)}`] : []),
     `DESCRIPTION:${escapeText(event.description)}`,
