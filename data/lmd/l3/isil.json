@@ -5,7 +5,7 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps L3 ISIL", "url": "https://finfo.usthb.dz/storage/disk/YeDK38HXsDqvyZCOzb92Tw2E4MbRBqX8Fcmp7UY4.pdf", "updatedAt": "2026-11-05"},
+  "source": {"title": "Emploi du temps L3 ISIL", "url": "https://finfo.usthb.dz/storage/disk/GzcgR4LqLGsgwQohw3latxrXpeNGRn5ijz8Bj4Qs.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "a",
@@ -79,6 +79,7 @@
         {"day": "sat", "start": "13:00", "end": "14:30", "type": "tp", "module": "GL2", "room": "TP128", "teacher": "Essid", "groups": ["G2"]},
         {"day": "sat", "start": "13:00", "end": "14:30", "type": "tp", "module": "SI2", "room": "TP131", "teacher": "KHELIFATI", "groups": ["G4"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "cours", "module": "COMPIL", "room": "L", "teacher": "NACER", "groups": []},
+        {"day": "mon", "start": "09:40", "end": "11:10", "type": "td", "module": "GL2", "room": "160", "teacher": "Aberbour", "groups": ["G3"]},
         {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "COMPIL", "room": "346", "teacher": "NACER", "groups": ["G1"]},
         {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "GL2", "room": "352", "teacher": "Aberbour", "groups": ["G2"]},
         {"day": "mon", "start": "11:20", "end": "12:50", "type": "td", "module": "RESEAUX", "room": "350", "teacher": "ATIF", "groups": ["G3"]},
@@ -95,7 +96,6 @@
         {"day": "tue", "start": "11:20", "end": "12:50", "type": "td", "module": "GL2", "room": "414", "teacher": "Aberbour", "groups": ["G4"]},
         {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "SYS02", "room": "410", "teacher": "ZEBBANE", "groups": ["G1"]},
         {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "RESEAUX", "room": "412", "teacher": "ATIF", "groups": ["G2"]},
-        {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "GL2", "room": "414", "teacher": "Aberbour", "groups": ["G3"]},
         {"day": "tue", "start": "13:00", "end": "14:30", "type": "td", "module": "COMPIL", "room": "416", "teacher": "NACER", "groups": ["G4"]},
         {"day": "tue", "start": "14:40", "end": "16:10", "type": "cours", "module": "RESEAUX", "room": "O", "teacher": "ATIF", "groups": []},
         {"day": "tue", "start": "16:20", "end": "17:50", "type": "cours", "module": "COMPIL", "room": "O", "teacher": "NACER", "groups": []},

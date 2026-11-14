@@ -5,14 +5,14 @@
   "academicYear": "2026/2027",
   "semester": 1,
   "status": "published",
-  "source": {"title": "Emploi du temps 4eme année ING IA", "url": "https://finfo.usthb.dz/storage/disk/ToR94LOTUBq2nwZS95XPSCBp19EEAnOPi79qtUds.pdf", "updatedAt": "2026-11-08"},
+  "source": {"title": "Emploi du temps 4eme année ING IA", "url": "https://finfo.usthb.dz/storage/disk/fWIHO2l1lJm7QdkHZz8xdB6N9GXSpejXi7rAPdh4.pdf", "updatedAt": "2026-11-12"},
   "sections": [
     {
       "id": "a",
       "name": "A",
       "groups": ["G1", "G2", "G3"],
       "sessions": [
-        {"day": "sat", "start": "14:40", "end": "16:10", "type": "cours", "module": "TECH REDACTION", "room": "En ligne", "teacher": "BESSAI", "groups": []},
+        {"day": "sat", "start": "14:40", "end": "16:10", "type": "cours", "module": "TECH REDACTION", "room": "-en ligne", "teacher": "BESSAI", "groups": []},
         {"day": "sun", "start": "08:00", "end": "09:30", "type": "tp", "module": "CAL HAUT P", "room": "TP.C7", "teacher": "SAADI", "groups": ["G1"]},
         {"day": "sun", "start": "08:00", "end": "09:30", "type": "tp", "module": "MOD SIM", "room": "TP130", "teacher": "SAIFI", "groups": ["G2"]},
         {"day": "sun", "start": "09:40", "end": "11:10", "type": "tp", "module": "MOD SIM", "room": "TP.C3B", "teacher": "SAIFI", "groups": ["G1"]},
@@ -25,7 +25,7 @@
         {"day": "sun", "start": "14:40", "end": "16:10", "type": "tp", "module": "REPT CON R", "room": "TP.C5", "teacher": "BESSAI", "groups": ["G2"]},
         {"day": "sun", "start": "16:20", "end": "17:50", "type": "td", "module": "MOD SIM", "room": "C2", "teacher": "SAIFI", "groups": ["G3"]},
         {"day": "mon", "start": "08:00", "end": "09:30", "type": "cours", "module": "RECH OPER", "room": "C5", "teacher": "BOUIBEDE", "groups": []},
-        {"day": "mon", "start": "11:20", "end": "12:50", "type": "cours", "module": "MACH LEARNING", "room": "430D", "teacher": "BIDA", "groups": []},
+        {"day": "mon", "start": "11:20", "end": "12:50", "type": "cours", "module": "MACH LEARNING", "room": "Espace-Internet", "teacher": "BIDA", "groups": []},
         {"day": "mon", "start": "14:40", "end": "16:10", "type": "cours", "module": "MACH LEARNING", "room": "E1", "teacher": "BIDA", "groups": []},
         {"day": "tue", "start": "08:00", "end": "09:30", "type": "td", "module": "REPT CON R", "room": "R1", "teacher": "FLICI", "groups": ["G3"]},
         {"day": "tue", "start": "09:40", "end": "11:10", "type": "td", "module": "REPT CON R", "room": "Espace-Internet", "teacher": "FLICI", "groups": ["G2"]},

@@ -3,6 +3,7 @@
 import { CalendarClock, CalendarPlus, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { LangToggle } from "@/components/shared/lang-toggle";
+import { MadeBy } from "@/components/shared/made-by";
 import { ModeToggle } from "@/components/shared/mode-toggle";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { SheetAnchor } from "@/components/ui/sheet";
@@ -173,7 +174,7 @@ export function SettingsPanel({
       </div>
 
       <p className="mt-auto px-gutter pt-8 pb-3.5 text-meta leading-4.25 text-foreground-muted">
-        {t("disclaimer", { version })}
+        {t("disclaimer", { version })} · <MadeBy />
       </p>
     </div>
   );

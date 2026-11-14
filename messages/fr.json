@@ -161,7 +161,8 @@
     "upToDate": "Emploi du temps à jour"
   },
   "Legal": {
-    "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB."
+    "disclaimer": "Edtly est un projet indépendant. Ce n'est pas un service officiel de l'USTHB.",
+    "madeBy": "Réalisé par <link>{name}</link>"
   },
   "Personal": {
     "view": "Affichage",
