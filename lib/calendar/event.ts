@@ -1,6 +1,7 @@
-import type { Session } from "@/lib/timetable/types";
+import type { Day, Session, SessionSlot } from "@/lib/timetable/types";
 
 type EventKey =
+  | `Days.long.${Day}`
   | "SessionTypes.cours"
   | "SessionTypes.td"
   | "SessionTypes.tp"
@@ -10,6 +11,7 @@ type EventKey =
   | "Session.wholeSection"
   | "Calendar.event.teacher"
   | "Calendar.event.retake"
+  | "Calendar.event.changed"
   | "Calendar.event.page"
   | "Calendar.event.pdf";
 
@@ -50,6 +52,7 @@ export function eventText(
   session: Session,
   t: EventTranslate,
   { sectionName, pageUrl, pdfUrl }: EventContext,
+  official?: SessionSlot,
 ): EventText {
   const type = t(`SessionTypes.${session.type}`);
   const room = /^\d/.test(session.room)
@@ -63,6 +66,15 @@ export function eventText(
   }
   if (session.origin) {
     lines.push(t("Calendar.event.retake", { origin: session.origin }));
+  }
+  if (official) {
+    lines.push(
+      t("Calendar.event.changed", {
+        day: t(`Days.long.${official.day}`),
+        start: official.start,
+        end: official.end,
+      }),
+    );
   }
   lines.push(
     "",

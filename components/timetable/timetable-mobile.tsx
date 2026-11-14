@@ -4,9 +4,12 @@ import { useTranslations } from "next-intl";
 import { ActiveFilters } from "@/components/filters/active-filters";
 import { CalendarButton } from "@/components/calendar/calendar-button";
 import { FilterButton } from "@/components/filters/filter-button";
+import { TimetableDnd } from "@/components/overrides/timetable-dnd";
 import { MineEmpty } from "@/components/personal/mine-empty";
 import { StatusBanner } from "@/components/pwa/status-banner";
 import { SettingsPanel } from "@/components/settings/settings-panel";
+import { DESKTOP_QUERY, useMediaQuery } from "@/lib/hooks/use-media-query";
+import { setDay } from "@/lib/stores/view-store";
 import { DayPanels } from "./day-panels";
 import { DayStrip } from "./day-strip";
 import { DayTitle } from "./day-title";
@@ -24,9 +27,16 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
   const t = useTranslations("Timetable");
   const types = useTranslations("SessionTypes");
   const personal = useTranslations("Personal");
+  const desktop = useMediaQuery(DESKTOP_QUERY);
   const mineMode = model.mode === "mine";
 
   return (
+    <TimetableDnd
+      enabled={!desktop && model.dndEnabled}
+      conflictAt={model.conflictAt}
+      onMove={model.onMove}
+      onHoverDay={setDay}
+    >
     <div className="flex min-h-dvh w-full flex-col lg:hidden">
       <MobileHeader>
         <div className="flex min-w-0 items-center gap-2">
@@ -116,6 +126,7 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
                   showGaps={!model.filtered}
                   filtered={model.filtered}
                   changed={model.changed}
+                  editable={model.editable}
                   onOpen={model.onOpen}
                   onStep={model.onStepDay}
                   onClearFilters={model.onClearFilters}
@@ -127,6 +138,7 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
                   week={model.week}
                   days={model.days}
                   conflicts={model.conflicts}
+                  editable={model.editable}
                   onOpen={model.onOpen}
                 />
                 <div data-view-panel="week" className="px-gutter pb-3">
@@ -156,9 +168,12 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
         onCustomize={() => model.onCustomize()}
         onReset={model.onReset}
         onCalendar={model.empty ? undefined : model.onCalendar}
+        changeCount={model.changeCount}
+        onChanges={model.empty ? undefined : model.onChanges}
       />
 
       <TabBar />
     </div>
+    </TimetableDnd>
   );
 }

@@ -12,12 +12,21 @@ import {
   sectionPath,
   type SectionRef,
 } from "@/lib/timetable/paths";
+import {
+  hashKey,
+  sameSlot,
+  slotOf,
+  stateOf,
+  type Override,
+} from "@/lib/timetable/overrides";
 import { personalSessions, type RemoteSection } from "@/lib/timetable/personal";
 import { sessionKey } from "@/lib/timetable/schedule";
+import type { Session } from "@/lib/timetable/types";
 import { eventText, type EventTranslate } from "./event";
 import { buildCalendar } from "./ics";
+import { occurrencesOf } from "./occurrences";
 import { termEnd } from "./term";
-import type { FeedSpec } from "./token";
+import type { FeedOverride, FeedSpec } from "./token";
 
 type Resolve = (ref: SectionRef) => Promise<SectionLookup | null>;
 
@@ -32,6 +41,22 @@ const EPOCH = "1970-01-01";
 
 const hash = (text: string) =>
   createHash("sha1").update(text).digest("hex").slice(0, 24);
+
+function overridesFor(session: Session, key: string, list: FeedOverride[]) {
+  const ref = hashKey(key);
+  return list.flatMap((override): Override[] =>
+    override.ref === ref
+      ? [
+          {
+            key,
+            scope: override.scope,
+            week: override.week,
+            state: override.state ?? stateOf(slotOf(session), true),
+          },
+        ]
+      : [],
+  );
+}
 
 export async function feedCalendar(
   spec: FeedSpec,
@@ -101,19 +126,42 @@ export async function feedCalendar(
       parcoursPath({ ...spec.section, system: programme.system, group }),
     );
   const context = { sectionName, pageUrl, pdfUrl: programme.source.url };
+  const anchor = programme.source.updatedAt || EPOCH;
+  const until = termEnd(programme.academicYear, programme.semester);
   const events = personalSessions(
     section.sessions,
     spec.personal,
     group,
     remote,
-  ).map((session) => ({
-    uid: `${hash(`${token}|${sessionKey(session)}`)}@edtly`,
-    day: session.day,
-    start: session.start,
-    end: session.end,
-    url: pageUrl,
-    ...eventText(session, translate, context),
-  }));
+  ).flatMap((session) => {
+    const key = sessionKey(session);
+    const official = slotOf(session);
+    return occurrencesOf(
+      session,
+      overridesFor(session, key, spec.overrides ?? []),
+      anchor,
+      until,
+    ).map(({ id, from, until: last, once, exclude, state }) => {
+      const shown = { ...session, ...slotOf({ ...session, ...state }) };
+      return {
+        uid: `${hash(`${token}|${key}${id ? `|${id}` : ""}`)}@edtly`,
+        day: state.day,
+        start: state.start,
+        end: state.end,
+        url: pageUrl,
+        from,
+        until: last,
+        once,
+        exclude,
+        ...eventText(
+          shown,
+          translate,
+          context,
+          sameSlot(state, official) ? undefined : official,
+        ),
+      };
+    });
+  });
 
   const label = [
     programmeLabel,
@@ -135,9 +183,9 @@ export async function feedCalendar(
           year: programme.academicYear,
         }),
         locale: spec.locale,
-        anchor: programme.source.updatedAt || EPOCH,
+        anchor,
         updatedAt,
-        until: termEnd(programme.academicYear, programme.semester),
+        until,
       },
       events,
     ),

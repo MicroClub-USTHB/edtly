@@ -33,6 +33,21 @@ export const forGroup =
 export const mainTone = (session: Session): Exclude<Tone, "other"> =>
   session.type === "cours" ? "cours" : "mine";
 
+export const occupies = (session: Session) =>
+  !session.change?.cancelled && session.change?.preview !== "source";
+
+export const STANDARD_SLOTS: readonly Slot[] = [
+  { start: "08:00", end: "09:30" },
+  { start: "09:40", end: "11:10" },
+  { start: "11:20", end: "12:50" },
+  { start: "13:00", end: "14:30" },
+  { start: "14:40", end: "16:10" },
+  { start: "16:20", end: "17:50" },
+];
+
+export const slotOverlaps = (a: Slot, b: Slot) =>
+  toMinutes(a.start) < toMinutes(b.end) &&
+  toMinutes(b.start) < toMinutes(a.end);
 
 export function slotsOf(sessions: Session[]): Slot[] {
   const slots = new Map<string, Slot>();
@@ -73,10 +88,39 @@ export function daySlots(
   );
 }
 
+const bySlot = (a: Slot, b: Slot) =>
+  a.start.localeCompare(b.start) || a.end.localeCompare(b.end);
+
+export function gridSlots(sessions: Session[], dragging = false): Slot[] {
+  const data = slotsOf(sessions);
+  if (data.length === 0) return dragging ? [...STANDARD_SLOTS] : data;
+  const first = data[0].start;
+  const last = data.reduce((max, { end }) => (end > max ? end : max), "00:00");
+  const fill = STANDARD_SLOTS.filter(
+    (slot) =>
+      !data.some((taken) => slotOverlaps(taken, slot)) &&
+      slot.start >= first &&
+      (dragging || slot.end <= last),
+  );
+  return [...data, ...fill].sort(bySlot);
+}
+
+export function freeSlots(taken: Slot[], within?: Slot): Slot[] {
+  return STANDARD_SLOTS.filter(
+    (slot) =>
+      !taken.some((busy) => slotOverlaps(busy, slot)) &&
+      (!within || (slot.start >= within.start && slot.end <= within.end)),
+  );
+}
+
 export type WeekRow = Slot & { cells: SlotSessions[] };
 
-export function weekRows(sessions: Session[], mine: Matcher): WeekRow[] {
-  return slotsOf(sessions).map((slot) => ({
+export function weekRows(
+  sessions: Session[],
+  mine: Matcher,
+  slots: Slot[] = slotsOf(sessions),
+): WeekRow[] {
+  return slots.map((slot) => ({
     ...slot,
     cells: DAYS.map((day) => slotSessions(sessions, day, slot, mine)),
   }));
@@ -92,7 +136,8 @@ export function nextSessionAfter(
   for (let offset = 1; offset <= DAYS.length; offset += 1) {
     const dayIndex = (fromDayIndex + offset) % DAYS.length;
     const session = sessions.find(
-      (candidate) => candidate.day === DAYS[dayIndex] && mine(candidate),
+      (candidate) =>
+        candidate.day === DAYS[dayIndex] && mine(candidate) && occupies(candidate),
     );
     if (session) return { session, dayIndex };
   }
@@ -163,7 +208,7 @@ export type SlotStatus = "now" | "next";
 
 export function slotStatuses(slots: SlotSessions[], minutes: number) {
   const statuses = new Map<string, SlotStatus>();
-  const busy = slots.filter((slot) => slot.mains.length > 0);
+  const busy = slots.filter((slot) => slot.mains.some(occupies));
   const current = busy.find(
     (slot) => toMinutes(slot.start) <= minutes && minutes < toMinutes(slot.end),
   );
@@ -174,9 +219,25 @@ export function slotStatuses(slots: SlotSessions[], minutes: number) {
 }
 
 const overlaps = (a: Session, b: Session) =>
-  a.day === b.day &&
-  toMinutes(a.start) < toMinutes(b.end) &&
-  toMinutes(b.start) < toMinutes(a.end);
+  a.day === b.day && slotOverlaps(a, b);
+
+export function overlapping(
+  sessions: Session[],
+  mine: Matcher,
+  target: { day: Day } & Slot,
+  except: (session: Session) => boolean,
+) {
+  return (
+    sessions.find(
+      (session) =>
+        session.day === target.day &&
+        mine(session) &&
+        occupies(session) &&
+        !except(session) &&
+        slotOverlaps(session, target),
+    ) ?? null
+  );
+}
 
 export type Conflicts = ReadonlyMap<string, Session[]>;
 
@@ -188,7 +249,7 @@ export function conflictsOf(sessions: Session[], mine: Matcher): Conflicts {
   };
   for (const day of DAYS) {
     const list = sessions.filter(
-      (session) => session.day === day && mine(session),
+      (session) => session.day === day && mine(session) && occupies(session),
     );
     list.forEach((a, index) => {
       for (const b of list.slice(index + 1)) {
@@ -213,7 +274,9 @@ export function freeGaps(
   minimum = 30,
 ): Gap[] {
   const busy = sessions
-    .filter((session) => session.day === day && mine(session))
+    .filter(
+      (session) => session.day === day && mine(session) && occupies(session),
+    )
     .map(({ start, end }) => ({ start, end }))
     .sort((a, b) => a.start.localeCompare(b.start));
 
@@ -254,7 +317,8 @@ export function dayStatus(
   minutes: number,
 ): DayStatus | null {
   const today = sessions.filter(
-    (session) => session.day === DAYS[dayIndex] && mine(session),
+    (session) =>
+      session.day === DAYS[dayIndex] && mine(session) && occupies(session),
   );
   if (today.length === 0) return null;
 
@@ -305,7 +369,7 @@ export function daySpan(
   mine: Matcher,
 ): Slot | null {
   const today = sessions.filter(
-    (session) => session.day === day && mine(session),
+    (session) => session.day === day && mine(session) && occupies(session),
   );
   if (today.length === 0) return null;
   return {

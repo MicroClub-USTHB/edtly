@@ -53,11 +53,20 @@ function popoverStyle(anchor: SheetAnchor, width: number) {
 function showModal(dialog: HTMLDialogElement | null) {
   if (!dialog || dialog.open) return;
   const { scrollX, scrollY } = window;
+  const opener = document.activeElement;
   dialog.showModal();
   dialog.scrollTop = 0;
   if (window.scrollX !== scrollX || window.scrollY !== scrollY) {
     window.scrollTo(scrollX, scrollY);
   }
+  return () => {
+    const otherOpen = [...document.querySelectorAll("dialog[open]")].some(
+      (other) => other !== dialog,
+    );
+    if (!otherOpen && opener instanceof HTMLElement && opener.isConnected) {
+      opener.focus({ preventScroll: true });
+    }
+  };
 }
 
 export function Sheet({

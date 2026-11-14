@@ -1,10 +1,19 @@
 "use client";
 
-import { ArrowUpRight, CalendarPlus, ChevronRight } from "lucide-react";
+import {
+  ArrowUpRight,
+  Ban,
+  CalendarPlus,
+  ChevronRight,
+  PencilLine,
+  RotateCcw,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
-import { buttonVariants } from "@/components/ui/button";
+import { ChangeNote } from "@/components/overrides/change-note";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, type SheetAnchor } from "@/components/ui/sheet";
 import { useSessionLabels } from "@/lib/hooks/use-session-labels";
+import { isCancelled } from "@/lib/timetable/overrides";
 import {
   mainTone,
   sessionKey,
@@ -31,6 +40,10 @@ type SessionSheetProps = {
   pdfUrl: string;
   conflicts: Conflicts;
   classUrl: (session: Session) => string | null;
+  editable: (session: Session) => boolean;
+  onEdit: (session: Session) => void;
+  onCancelClass: (session: Session) => void;
+  onRestore: (session: Session) => void;
   onFocus: (key: string) => void;
   onClose: () => void;
 };
@@ -48,10 +61,15 @@ export function SessionSheet({
   pdfUrl,
   conflicts,
   classUrl,
+  editable,
+  onEdit,
+  onCancelClass,
+  onRestore,
   onFocus,
   onClose,
 }: SessionSheetProps) {
   const t = useTranslations("Session");
+  const overrides = useTranslations("Overrides");
   const timetable = useTranslations("Timetable");
   const calendar = useTranslations("Calendar");
   const days = useTranslations("Days.long");
@@ -62,10 +80,12 @@ export function SessionSheet({
     all.find((session) => sessionKey(session) === detail?.focus) ??
     detail?.slot.mains[0];
   const rest = all.filter((session) => session !== focused);
+  const cancelled = focused ? isCancelled(focused) : false;
   const tone =
-    focused && detail?.slot.mains.includes(focused)
+    focused && detail?.slot.mains.includes(focused) && !cancelled
       ? mainTone(focused)
       : "other";
+  const canEdit = focused ? editable(focused) : false;
   const audience = !focused
     ? ""
     : focused.groups.length > 0
@@ -75,7 +95,7 @@ export function SessionSheet({
         : t("wholeSection");
 
   const conflict =
-    focused && tone !== "other"
+    focused && tone !== "other" && !cancelled
       ? labels.conflict(conflicts.get(sessionKey(focused)))
       : undefined;
 
@@ -83,7 +103,7 @@ export function SessionSheet({
     ? [
         { label: t("room"), value: focused.room || "—" },
         { label: t("teacher"), value: focused.teacher || "—" },
-        ...(detail?.status && tone !== "other"
+        ...(detail?.status && tone !== "other" && !cancelled
           ? [{ label: t("status"), value: timetable(detail.status) }]
           : []),
       ]
@@ -112,13 +132,22 @@ export function SessionSheet({
           )}
         >
           <div className="flex flex-col gap-0.5">
-            <h2 className="text-heading wrap-anywhere">{focused.module}</h2>
+            <h2
+              className={cn(
+                "text-heading wrap-anywhere",
+                cancelled && "line-through decoration-1",
+              )}
+            >
+              {focused.module}
+            </h2>
             <p className="text-note">
               {[labels.type(focused), audience, focused.origin]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
           </div>
+
+          <ChangeNote session={focused} detail className="text-note" />
 
           <dl className="grid grid-cols-[repeat(auto-fit,minmax(88px,1fr))] gap-3">
             {facts.map((fact) => (
@@ -135,6 +164,42 @@ export function SessionSheet({
         <p className="flex h-9 items-center rounded-full border border-dashed border-border px-4 text-note text-foreground-muted">
           {group ? timetable("freeFor", { group }) : timetable("free")}
         </p>
+      )}
+
+      {focused && canEdit && (
+        <div className="flex flex-wrap gap-2">
+          {cancelled ? (
+            <Button variant="soft" size="sm" onClick={() => onRestore(focused)}>
+              <RotateCcw size={15} strokeWidth={1.75} aria-hidden="true" />
+              {overrides("restoreClass")}
+            </Button>
+          ) : (
+            <>
+              <Button variant="soft" size="sm" onClick={() => onEdit(focused)}>
+                <PencilLine size={15} strokeWidth={1.75} aria-hidden="true" />
+                {overrides("edit")}
+              </Button>
+              <Button
+                variant="soft"
+                size="sm"
+                onClick={() => onCancelClass(focused)}
+              >
+                <Ban size={15} strokeWidth={1.75} aria-hidden="true" />
+                {overrides("cancelClass")}
+              </Button>
+              {focused.change && (
+                <Button
+                  variant="soft"
+                  size="sm"
+                  onClick={() => onRestore(focused)}
+                >
+                  <RotateCcw size={15} strokeWidth={1.75} aria-hidden="true" />
+                  {overrides("restoreOfficial")}
+                </Button>
+              )}
+            </>
+          )}
+        </div>
       )}
 
       {rest.length > 0 && (

@@ -11,6 +11,24 @@ export type SessionType = (typeof SESSION_TYPES)[number];
 export type SystemId = (typeof SYSTEMS)[number];
 export type ProgrammeStatus = "published" | "unsupported";
 
+export type OverrideScope = "week" | "series";
+
+export type SessionSlot = {
+  day: Day;
+  start: string;
+  end: string;
+  room: string;
+};
+
+export type SessionChange = {
+  key: string;
+  original: SessionSlot;
+  scope: OverrideScope | null;
+  week: string | null;
+  cancelled: boolean;
+  preview?: "source" | "target";
+};
+
 export type Session = {
   day: Day;
   start: string;
@@ -22,6 +40,7 @@ export type Session = {
   groups: string[];
   origin?: string;
   originUrl?: string;
+  change?: SessionChange;
 };
 
 export type Section = {

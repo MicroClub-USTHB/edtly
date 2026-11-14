@@ -18,9 +18,15 @@ import {
   webcalUrl,
 } from "@/lib/calendar/links";
 import { termEnd } from "@/lib/calendar/term";
-import { decodeFeed, encodeFeed, type FeedSpec } from "@/lib/calendar/token";
+import {
+  decodeFeed,
+  encodeFeed,
+  feedOverrides,
+  type FeedSpec,
+} from "@/lib/calendar/token";
 import type { SectionLookup } from "@/lib/timetable/data";
 import type { SectionRef } from "@/lib/timetable/paths";
+import { stateOf } from "@/lib/timetable/overrides";
 import { EMPTY_PERSONAL } from "@/lib/timetable/personal";
 import { programmeSchema } from "@/lib/timetable/schema";
 import type { Session } from "@/lib/timetable/types";
@@ -298,6 +304,53 @@ describe("calendar feed", () => {
     expect(events(body)).toBe(0);
     expect(updatedAt).toBeNull();
     expect(body).toContain("X-WR-CALNAME:Edtly");
+  });
+});
+
+describe("calendar feed overrides", () => {
+  const key = "mon|08:00|td|SEM300|162|G1";
+  const moved = stateOf({ day: "tue", start: "13:00", end: "14:30", room: "210" });
+
+  test("moves a class every week from a given week", async () => {
+    const overrides = feedOverrides(
+      [{ key, scope: "series", week: "2026-11-14", state: moved }],
+      new Set([key]),
+    );
+    const body = unfold((await feed(spec({ overrides }))).body);
+    const plain = unfold((await feed(spec())).body);
+    expect(events(body)).toBe(events(plain) + 1);
+    expect(body).toContain("DTSTART;TZID=Africa/Algiers:20261117T130000");
+    expect(body).toContain("RRULE:FREQ=WEEKLY;UNTIL=20261113T225959Z");
+    expect(body).toContain("LOCATION:Salle 210\\, USTHB");
+    expect(body).toContain("Modifié dans Edtly. Horaire officiel : Lundi 08:00 – 09:30");
+  });
+
+  test("cancels a single week with EXDATE", async () => {
+    const overrides = feedOverrides(
+      [
+        {
+          key,
+          scope: "week",
+          week: "2026-11-14",
+          state: stateOf({ day: "mon", start: "08:00", end: "09:30", room: "162" }, true),
+        },
+      ],
+      new Set([key]),
+    );
+    const body = unfold((await feed(spec({ overrides }))).body);
+    expect(body).toContain("EXDATE;TZID=Africa/Algiers:20261116T080000");
+    expect(events(body)).toBe(events(unfold((await feed(spec())).body)));
+  });
+
+  test("ignores overrides for classes outside the feed", async () => {
+    const overrides = feedOverrides(
+      [{ key: "mon|08:00|td|NOPE|1|G9", scope: "week", week: "2026-11-14", state: moved }],
+      new Set(["mon|08:00|td|NOPE|1|G9"]),
+    );
+    const withoutUids = (body: string) => body.replace(/UID:[^\r]+/g, "UID");
+    expect(withoutUids((await feed(spec({ overrides }))).body)).toBe(
+      withoutUids((await feed(spec())).body),
+    );
   });
 });
 

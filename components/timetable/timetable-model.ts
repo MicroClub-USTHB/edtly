@@ -1,8 +1,9 @@
+import type { MoveRequest } from "@/components/overrides/timetable-dnd";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import type { Week } from "@/lib/hooks/use-week";
 import type { TimetableMode } from "@/lib/stores/mode-store";
 import type { Conflicts, DayStatus, Matcher } from "@/lib/timetable/schedule";
-import type { Session } from "@/lib/timetable/types";
+import type { Session, SessionSlot } from "@/lib/timetable/types";
 import type { OpenSlot } from "./day-panel";
 
 export type TimetableModel = {
@@ -40,6 +41,12 @@ export type TimetableModel = {
   onFilters: (anchor?: SheetAnchor) => void;
   onClearFilters: () => void;
   onCalendar: (anchor?: SheetAnchor) => void;
+  onChanges: (anchor?: SheetAnchor) => void;
+  changeCount: number;
+  editable: Matcher;
+  dndEnabled: boolean;
+  conflictAt: (session: Session, target: SessionSlot) => Session | null;
+  onMove: (request: MoveRequest) => void;
   onOpen: OpenSlot;
   onShiftWeek: (delta: number) => void;
   onToday: () => void;

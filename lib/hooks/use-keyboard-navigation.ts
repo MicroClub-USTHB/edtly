@@ -19,6 +19,7 @@ export function useKeyboardNavigation({
       event.ctrlKey ||
       event.metaKey ||
       event.shiftKey ||
+      document.documentElement.dataset.dragging !== undefined ||
       document.querySelector("dialog[open]")
     ) {
       return;
