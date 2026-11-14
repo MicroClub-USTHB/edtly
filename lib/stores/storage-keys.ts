@@ -8,3 +8,4 @@ export const MODE_KEY = "edtly:mode";
 export const PERSONAL_KEY = "edtly:personal";
 export const OVERRIDES_KEY = "edtly:overrides";
 export const CALENDAR_KEY = "edtly:calendar";
+export const FILTERS_KEY = "edtly:filters";

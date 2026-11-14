@@ -41,6 +41,7 @@ import { useWeek } from "@/lib/hooks/use-week";
 import { cachePages } from "@/lib/pwa/cache-pages";
 import { site } from "@/lib/site";
 import { trackSessions, useChangedSessions } from "@/lib/stores/changes-store";
+import { saveFilters, useFilters } from "@/lib/stores/filters-store";
 import { useOverrides } from "@/lib/stores/overrides-store";
 import {
   readParcours,
@@ -150,7 +151,6 @@ export function TimetableView({
   const [weekOffset, setWeekOffset] = useState(0);
   const week = useWeek();
   const shiftedWeek = useWeek(weekOffset);
-  const [filters, setFilters] = useState<Filters>(NO_FILTERS);
   const [detail, setDetail] = useState<DetailRequest | null>(null);
   const [pickerAnchor, setPickerAnchor] = useState<SheetAnchor | null>(null);
   const [personalSheet, setPersonalSheet] = useState<SheetRequest | null>(null);
@@ -167,6 +167,8 @@ export function TimetableView({
   const { id: sectionId, groups, sessions } = section;
   const base = { system, level, speciality: speciality.id, section: sectionId };
   const basePath = sectionPath(base);
+  const filters = useFilters(basePath);
+  const setFilters = (next: Filters) => saveFilters(basePath, next);
   const resetPersonal = useResetPersonal(basePath);
   const savedHere = saved && sectionPath(saved) === basePath ? saved : null;
   const savedGroup =
