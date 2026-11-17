@@ -4,14 +4,17 @@ import { ModeSwitch } from "@/components/personal/mode-switch";
 import { PersonalSummary } from "@/components/personal/personal-summary";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import type { TimetableMode } from "@/lib/stores/mode-store";
-import { GroupSwitch } from "./group-switch";
+import { GroupSwitches } from "./group-switches";
 
 type MobileControlsProps = {
   mode: TimetableMode;
   groups: string[];
   group: string | null;
+  tpGroups: string[];
+  tpGroup: string | null;
   summary: string;
   onGroupChange: (group: string) => void;
+  onTpGroupChange: (group: string) => void;
   onCustomize: (anchor: SheetAnchor) => void;
 };
 
@@ -19,8 +22,11 @@ export function MobileControls({
   mode,
   groups,
   group,
+  tpGroups,
+  tpGroup,
   summary,
   onGroupChange,
+  onTpGroupChange,
   onCustomize,
 }: MobileControlsProps) {
   return (
@@ -30,11 +36,14 @@ export function MobileControls({
       {mode === "mine" ? (
         <PersonalSummary summary={summary} onCustomize={onCustomize} />
       ) : (
-        <GroupSwitch
+        <GroupSwitches
           id="group-mobile"
           groups={groups}
-          value={group}
-          onChange={onGroupChange}
+          group={group}
+          tpGroups={tpGroups}
+          tpGroup={tpGroup}
+          onGroupChange={onGroupChange}
+          onTpGroupChange={onTpGroupChange}
         />
       )}
     </div>

@@ -16,7 +16,7 @@ import { DESKTOP_QUERY, useMediaQuery } from "@/lib/hooks/use-media-query";
 import { DesktopHeader } from "./desktop-header";
 import { DesktopToolbar } from "./desktop-toolbar";
 import { DesktopWeek } from "./desktop-week";
-import { GroupSwitch } from "./group-switch";
+import { GroupSwitches } from "./group-switches";
 import { NowNext } from "./now-next";
 import { ParcoursButton } from "./parcours-button";
 import { SectionEmpty } from "./section-empty";
@@ -63,12 +63,15 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
             {personal("customize")}
           </Button>
         ) : (
-          <GroupSwitch
+          <GroupSwitches
             id="group-desktop"
             size="sm"
             groups={model.groups}
-            value={model.group}
-            onChange={model.onGroupChange}
+            group={model.group}
+            tpGroups={model.tpGroups}
+            tpGroup={model.tpGroup}
+            onGroupChange={model.onGroupChange}
+            onTpGroupChange={model.onTpGroupChange}
           />
         )}
       </DesktopHeader>
@@ -140,8 +143,8 @@ export function TimetableDesktop({ model }: { model: TimetableModel }) {
                 mine={
                   mineMode
                     ? personal("legend")
-                    : model.labelGroup &&
-                      t("legendMine", { group: model.labelGroup })
+                    : model.mineLabel &&
+                      t("legendMine", { group: model.mineLabel })
                 }
                 cours={t("legendCours")}
                 others={

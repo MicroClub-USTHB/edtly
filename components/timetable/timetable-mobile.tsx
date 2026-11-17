@@ -93,8 +93,11 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
             mode={model.mode}
             groups={model.groups}
             group={model.group}
+            tpGroups={model.tpGroups}
+            tpGroup={model.tpGroup}
             summary={model.summary}
             onGroupChange={model.onGroupChange}
+            onTpGroupChange={model.onTpGroupChange}
             onCustomize={() => model.onCustomize()}
           />
 
@@ -144,7 +147,7 @@ export function TimetableMobile({ model }: { model: TimetableModel }) {
                 <div data-view-panel="week" className="px-gutter pb-3">
                   <WeekLegend
                     className="gap-x-3.5 gap-y-1 text-xs"
-                    mine={mineMode ? personal("legend") : model.labelGroup}
+                    mine={mineMode ? personal("legend") : model.mineLabel}
                     cours={types("cours")}
                     others={
                       !mineMode && model.groups.length > 1

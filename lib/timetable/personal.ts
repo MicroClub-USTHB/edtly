@@ -1,5 +1,10 @@
 import { sectionPath, type SectionRef } from "./paths";
-import { sessionKey, sortSessions, type Matcher } from "./schedule";
+import {
+  groupOfType,
+  sessionKey,
+  sortSessions,
+  type Matcher,
+} from "./schedule";
 import { SESSION_TYPES, type Session, type SessionType } from "./types";
 
 export type Extra = SectionRef & { module: string; group: string | null };
@@ -55,14 +60,25 @@ export const isCustomized = (personal: Personal) =>
   Object.keys(personal.groups).length > 0 ||
   personal.extras.length > 0;
 
-export function groupFor(
+function moduleOverride(module: ModuleInfo, personal: Personal) {
+  const override = personal.groups[module.name];
+  return override && module.groups.includes(override) ? override : null;
+}
+
+export const defaultGroupFor = (
+  module: ModuleInfo,
+  mainGroup: string | null,
+  tpGroup: string | null = mainGroup,
+) => (module.types.every((type) => type === "tp") ? tpGroup : mainGroup);
+
+export const groupFor = (
   module: ModuleInfo,
   personal: Personal,
   mainGroup: string | null,
-) {
-  const override = personal.groups[module.name];
-  return override && module.groups.includes(override) ? override : mainGroup;
-}
+  tpGroup: string | null = mainGroup,
+) =>
+  moduleOverride(module, personal) ??
+  defaultGroupFor(module, mainGroup, tpGroup);
 
 const attends = (session: Session, group: string | null) =>
   session.groups.length === 0 ||
@@ -73,19 +89,24 @@ export function personalSessions(
   personal: Personal,
   mainGroup: string | null,
   remote: ReadonlyMap<string, RemoteSection>,
+  tpGroup: string | null = mainGroup,
 ): Session[] {
   const hidden = new Set(personal.hidden);
-  const groups = new Map(
-    modulesOf(base).map((module) => [
-      module.name,
-      groupFor(module, personal, mainGroup),
-    ]),
+  const overrides = new Map(
+    modulesOf(base).flatMap((module) => {
+      const override = moduleOverride(module, personal);
+      return override ? [[module.name, override] as const] : [];
+    }),
   );
 
   const own = base.filter(
     (session) =>
       !hidden.has(session.module) &&
-      attends(session, groups.get(session.module) ?? mainGroup),
+      attends(
+        session,
+        overrides.get(session.module) ??
+          groupOfType(session, mainGroup, tpGroup),
+      ),
   );
 
   const extras = personal.extras.flatMap((extra) => {

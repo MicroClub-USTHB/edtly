@@ -8,7 +8,7 @@ import {
   groupSlug,
   levelLabel,
   localized,
-  parcoursPath,
+  parcoursUrl,
   sectionPath,
   type SectionRef,
 } from "@/lib/timetable/paths";
@@ -20,7 +20,11 @@ import {
   type Override,
 } from "@/lib/timetable/overrides";
 import { personalSessions, type RemoteSection } from "@/lib/timetable/personal";
-import { sessionKey } from "@/lib/timetable/schedule";
+import {
+  groupsOfType,
+  resolveTpGroup,
+  sessionKey,
+} from "@/lib/timetable/schedule";
 import type { Session } from "@/lib/timetable/types";
 import { eventText, type EventTranslate } from "./event";
 import { buildCalendar } from "./ics";
@@ -92,6 +96,15 @@ export async function feedCalendar(
   const { programme } = lookup;
   const group =
     spec.group && section.groups.includes(spec.group) ? spec.group : null;
+  const tpGroup = resolveTpGroup(
+    groupsOfType(section, "tp"),
+    spec.tpGroup,
+    group,
+  );
+  const groupsName =
+    group && tpGroup && tpGroup !== group
+      ? t("Timetable.groupsLabel", { td: group, tp: tpGroup })
+      : group;
   const programmeLabel = `${levelLabel(programme.level)} ${programme.speciality.name}`;
   const sectionName = programme.sectionCount > 1 ? section.name : "";
 
@@ -123,7 +136,12 @@ export async function feedCalendar(
     site.url +
     localized(
       spec.locale,
-      parcoursPath({ ...spec.section, system: programme.system, group }),
+      parcoursUrl({
+        ...spec.section,
+        system: programme.system,
+        group,
+        tpGroup,
+      }),
     );
   const context = { sectionName, pageUrl, pdfUrl: programme.source.url };
   const anchor = programme.source.updatedAt || EPOCH;
@@ -133,6 +151,7 @@ export async function feedCalendar(
     spec.personal,
     group,
     remote,
+    tpGroup,
   ).flatMap((session) => {
     const key = sessionKey(session);
     const official = slotOf(session);
@@ -174,7 +193,7 @@ export async function feedCalendar(
   return {
     body: buildCalendar(
       {
-        name: ["Edtly", programmeLabel, sectionName, group]
+        name: ["Edtly", programmeLabel, sectionName, groupsName]
           .filter(Boolean)
           .join(" · "),
         description: t("Calendar.feed.description", {

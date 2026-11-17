@@ -13,6 +13,7 @@ export type Selection = {
   speciality: string | null;
   section: string | null;
   group: string | null;
+  tpGroup: string | null;
 };
 
 export type PickerField = keyof Selection;
@@ -23,6 +24,7 @@ export const EMPTY_SELECTION: Selection = {
   speciality: null,
   section: null,
   group: null,
+  tpGroup: null,
 };
 
 const FIELDS: PickerField[] = [
@@ -31,6 +33,7 @@ const FIELDS: PickerField[] = [
   "speciality",
   "section",
   "group",
+  "tpGroup",
 ];
 
 export const systemsOf = (catalogue: CatalogueProgramme[]) =>
@@ -65,13 +68,26 @@ export const sectionsOf = (
   selection: Selection,
 ) => programmeOf(catalogue, selection)?.sections ?? [];
 
-export const groupsOf = (
-  catalogue: CatalogueProgramme[],
-  selection: Selection,
-) =>
+const sectionOf = (catalogue: CatalogueProgramme[], selection: Selection) =>
   sectionsOf(catalogue, selection).find(
     (section) => section.id === selection.section,
-  )?.groups ?? [];
+  );
+
+export function groupsOf(catalogue: CatalogueProgramme[], selection: Selection) {
+  const section = sectionOf(catalogue, selection);
+  if (!section) return [];
+  return section.tdGroups.length > 0 ? section.tdGroups : section.groups;
+}
+
+export const tpGroupsOf = (
+  catalogue: CatalogueProgramme[],
+  selection: Selection,
+) => sectionOf(catalogue, selection)?.tpGroups ?? [];
+
+export const selectionOf = (parcours: Parcours): Selection => ({
+  ...parcours,
+  tpGroup: parcours.tpGroup ?? null,
+});
 
 export function fillSingles(
   catalogue: CatalogueProgramme[],
@@ -89,6 +105,10 @@ export function fillSingles(
   if (next.section && !next.group) {
     const groups = groupsOf(catalogue, next);
     if (groups.length === 1) next.group = groups[0];
+  }
+  if (next.group && !next.tpGroup) {
+    const tpGroups = tpGroupsOf(catalogue, next);
+    if (tpGroups.length === 1) next.tpGroup = tpGroups[0];
   }
   return next;
 }
@@ -110,12 +130,20 @@ export function resolve(
   selection: Selection,
 ): Parcours | null {
   const programme = programmeOf(catalogue, selection);
-  const { system, level, speciality, section, group } = selection;
+  const { system, level, speciality, section, group, tpGroup } = selection;
   if (!programme || !system || !level || !speciality) return null;
   if (programme.status === "unsupported") {
-    return { system, level, speciality, section: "unique", group: null };
+    return {
+      system,
+      level,
+      speciality,
+      section: "unique",
+      group: null,
+      tpGroup: null,
+    };
   }
   if (!section) return null;
   if (groupsOf(catalogue, selection).length > 0 && !group) return null;
-  return { system, level, speciality, section, group };
+  if (tpGroupsOf(catalogue, selection).length > 1 && !tpGroup) return null;
+  return { system, level, speciality, section, group, tpGroup };
 }

@@ -22,6 +22,7 @@ export type FeedSpec = {
   locale: FeedLocale;
   section: SectionRef;
   group: string | null;
+  tpGroup?: string | null;
   personal: Personal;
   overrides?: FeedOverride[];
 };
@@ -43,6 +44,7 @@ const wireSchema = z.object({
   l: z.enum(routing.locales),
   s: path,
   g: name.optional(),
+  t: name.optional(),
   h: z.array(name).max(100).optional(),
   m: z.record(name, name).optional(),
   x: z
@@ -132,6 +134,7 @@ export function encodeFeed({
   locale,
   section,
   group,
+  tpGroup,
   personal,
   overrides = [],
 }: FeedSpec) {
@@ -142,6 +145,7 @@ export function encodeFeed({
     l: locale,
     s: toPath(section),
     ...(group ? { g: group } : {}),
+    ...(tpGroup && tpGroup !== group ? { t: tpGroup } : {}),
     ...(personal.hidden.length > 0
       ? { h: [...new Set(personal.hidden)].sort(byCodePoint) }
       : {}),
@@ -186,11 +190,12 @@ export function decodeFeed(token: string): FeedSpec | null {
   const result = wireSchema.safeParse(raw);
   if (!result.success) return null;
 
-  const { l, s, g, h, m, x, o } = result.data;
+  const { l, s, g, t, h, m, x, o } = result.data;
   return {
     locale: l,
     section: toRef(s),
     group: g ?? null,
+    ...(t ? { tpGroup: t } : {}),
     personal: {
       hidden: h ?? [],
       groups: m ?? {},

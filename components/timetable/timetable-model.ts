@@ -19,7 +19,10 @@ export type TimetableModel = {
   pdfUrl: string;
   groups: string[];
   group: string | null;
+  tpGroups: string[];
+  tpGroup: string | null;
   labelGroup: string | null;
+  mineLabel: string | null;
   sessions: Session[];
   mine: Matcher;
   conflicts: Conflicts;
@@ -35,6 +38,7 @@ export type TimetableModel = {
   summary: string;
   customized: boolean;
   onGroupChange: (group: string) => void;
+  onTpGroupChange: (group: string) => void;
   onParcours: (anchor: SheetAnchor) => void;
   onCustomize: (anchor?: SheetAnchor) => void;
   onReset: () => void;

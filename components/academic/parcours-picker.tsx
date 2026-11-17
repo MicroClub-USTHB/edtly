@@ -12,8 +12,10 @@ import {
   pick,
   resolve,
   sectionsOf,
+  selectionOf,
   specialitiesOf,
   systemsOf,
+  tpGroupsOf,
   type PickerField,
   type Selection,
 } from "@/lib/timetable/picker";
@@ -36,7 +38,7 @@ export function ParcoursPicker({
   const t = useTranslations("Picker");
   const systems = useTranslations("Systems");
   const [selection, setSelection] = useState<Selection>(
-    initial ?? EMPTY_SELECTION,
+    initial ? selectionOf(initial) : EMPTY_SELECTION,
   );
   const { system, level } = selection;
   const parcours = resolve(catalogue, selection);
@@ -45,6 +47,7 @@ export function ParcoursPicker({
     system && level ? specialitiesOf(catalogue, system, level) : [];
   const sections = sectionsOf(catalogue, selection);
   const groups = groupsOf(catalogue, selection);
+  const tpGroups = selection.group ? tpGroupsOf(catalogue, selection) : [];
 
   const rows: { field: PickerField; options: PickerOption[] }[] = [
     {
@@ -85,6 +88,13 @@ export function ParcoursPicker({
       options:
         groups.length > 1
           ? groups.map((value) => ({ value, label: value }))
+          : [],
+    },
+    {
+      field: "tpGroup",
+      options:
+        tpGroups.length > 1
+          ? tpGroups.map((value) => ({ value, label: value }))
           : [],
     },
   ];

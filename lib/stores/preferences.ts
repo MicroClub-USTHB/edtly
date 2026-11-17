@@ -43,7 +43,10 @@ function isSavedParcours(value: unknown): value is SavedParcours {
     ["system", "level", "speciality", "section", "path"].every(
       (key) => typeof record[key] === "string",
     ) &&
-    (record.group === null || typeof record.group === "string")
+    (record.group === null || typeof record.group === "string") &&
+    (record.tpGroup === undefined ||
+      record.tpGroup === null ||
+      typeof record.tpGroup === "string")
   );
 }
 

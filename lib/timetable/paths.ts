@@ -18,6 +18,19 @@ export function parcoursPath(parcours: Parcours) {
   return parcours.group ? `${base}/${groupSlug(parcours.group)}` : base;
 }
 
+export const TP_PARAM = "tp";
+
+export function parcoursUrl(parcours: Parcours) {
+  const path = parcoursPath(parcours);
+  const { group, tpGroup } = parcours;
+  return group && tpGroup && tpGroup !== group
+    ? `${path}?${TP_PARAM}=${groupSlug(tpGroup)}`
+    : path;
+}
+
+export const groupFromSlug = (groups: string[], slug: string | null) =>
+  slug ? (groups.find((group) => groupSlug(group) === slug) ?? null) : null;
+
 export const localized = (locale: string, path: string) =>
   `/${locale}${path === "/" ? "" : path}`;
 

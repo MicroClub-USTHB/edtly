@@ -13,8 +13,11 @@ type PersonalSheetProps = {
   sessions: Session[];
   groups: string[];
   mainGroup: string | null;
+  tpGroups: string[];
+  tpGroup: string | null;
   catalogue: CatalogueProgramme[];
   onMainGroupChange: (group: string) => void;
+  onTpGroupChange: (group: string) => void;
   onClose: () => void;
 };
 
