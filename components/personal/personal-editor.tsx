@@ -11,11 +11,13 @@ import { updatePersonal, usePersonal } from "@/lib/stores/personal-store";
 import { useRemoteSections } from "@/lib/stores/section-store";
 import { sectionPath } from "@/lib/timetable/paths";
 import {
+  defaultGroupFor,
   extraKey,
   groupFor,
   isCustomized,
   modulesOf,
   type Extra,
+  type ModuleInfo,
   type Personal,
 } from "@/lib/timetable/personal";
 import type { CatalogueProgramme, Session } from "@/lib/timetable/types";
@@ -30,8 +32,11 @@ type PersonalEditorProps = {
   sessions: Session[];
   groups: string[];
   mainGroup: string | null;
+  tpGroups: string[];
+  tpGroup: string | null;
   catalogue: CatalogueProgramme[];
   onMainGroupChange: (group: string) => void;
+  onTpGroupChange: (group: string) => void;
 };
 
 export function PersonalEditor({
@@ -40,8 +45,11 @@ export function PersonalEditor({
   sessions,
   groups,
   mainGroup,
+  tpGroups,
+  tpGroup,
   catalogue,
   onMainGroupChange,
+  onTpGroupChange,
 }: PersonalEditorProps) {
   const t = useTranslations("Personal");
   const [adding, setAdding] = useState(false);
@@ -65,12 +73,16 @@ export function PersonalEditor({
         : [...current.hidden, module],
     }));
 
-  const setModuleGroup = (module: string, group: string) =>
+  const setModuleGroup = (module: ModuleInfo, group: string) =>
     update((current) => ({
       ...current,
       groups: Object.fromEntries([
-        ...Object.entries(current.groups).filter(([name]) => name !== module),
-        ...(group === mainGroup ? [] : [[module, group]]),
+        ...Object.entries(current.groups).filter(
+          ([name]) => name !== module.name,
+        ),
+        ...(group === defaultGroupFor(module, mainGroup, tpGroup)
+          ? []
+          : [[module.name, group]]),
       ]),
     }));
 
@@ -121,6 +133,18 @@ export function PersonalEditor({
         </SettingsSection>
       )}
 
+      {tpGroups.length > 1 && (
+        <SettingsSection level="h3" label={t("tpGroup")}>
+          <GroupChips
+            dense
+            label={t("tpGroup")}
+            groups={tpGroups}
+            value={tpGroup}
+            onChange={onTpGroupChange}
+          />
+        </SettingsSection>
+      )}
+
       <SettingsSection
         level="h3"
         label={t("modules", { section: sectionLabel })}
@@ -132,11 +156,11 @@ export function PersonalEditor({
               key={module.name}
               module={module}
               included={!personal.hidden.includes(module.name)}
-              group={groupFor(module, personal, mainGroup)}
+              group={groupFor(module, personal, mainGroup, tpGroup)}
               onIncludedChange={(included) =>
                 setIncluded(module.name, included)
               }
-              onGroupChange={(group) => setModuleGroup(module.name, group)}
+              onGroupChange={(group) => setModuleGroup(module, group)}
             />
           ))}
         </ul>

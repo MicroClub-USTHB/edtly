@@ -4,7 +4,9 @@ import {
   compactLabel,
   daySlots,
   forGroup,
+  groupsOfType,
   nextSessionAfter,
+  resolveTpGroup,
   slotStatuses,
   sortSessions,
   mainTone,
@@ -47,6 +49,42 @@ describe("highlight rules", () => {
     expect(forGroup("G1")(td)).toBe(true);
     expect(forGroup("G2")(td)).toBe(false);
     expect(forGroup(null)(td)).toBe(false);
+  });
+
+  test("TP follows the TP group, which can differ from the TD group", () => {
+    const tp = sessions.find(({ type }) => type === "tp")!;
+    const td = sessions.find(({ groups }) => groups[0] === "G1")!;
+    expect(forGroup("G1")(tp)).toBe(false);
+    expect(forGroup("G1", "G3")(tp)).toBe(true);
+    expect(forGroup("G1", "G3")(td)).toBe(true);
+    expect(forGroup("G3", "G1")(tp)).toBe(false);
+  });
+});
+
+describe("TD and TP groups", () => {
+  const section = {
+    groups: ["G1", "G2", "G3"],
+    sessions: [
+      session({ groups: ["G1"] }),
+      session({ groups: ["G2"] }),
+      session({ type: "tp", groups: ["G1"] }),
+      session({ type: "tp", groups: ["G3"] }),
+    ],
+  };
+
+  test("lists the groups that have each kind of session", () => {
+    expect(groupsOfType(section, "td")).toEqual(["G1", "G2"]);
+    expect(groupsOfType(section, "tp")).toEqual(["G1", "G3"]);
+  });
+
+  test("uses the chosen TP group, else the TD group when it has TP", () => {
+    const tpGroups = ["G1", "G3"];
+    expect(resolveTpGroup(tpGroups, "G3", "G1")).toBe("G3");
+    expect(resolveTpGroup(tpGroups, null, "G1")).toBe("G1");
+    expect(resolveTpGroup(tpGroups, "G9", "G1")).toBe("G1");
+    expect(resolveTpGroup(tpGroups, null, "G2")).toBeNull();
+    expect(resolveTpGroup(["G1"], null, "G2")).toBe("G1");
+    expect(resolveTpGroup([], "G1", "G1")).toBeNull();
   });
 });
 

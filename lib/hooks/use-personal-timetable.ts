@@ -13,6 +13,7 @@ export function usePersonalTimetable(
   path: string,
   sessions: Session[],
   mainGroup: string | null,
+  tpGroup: string | null,
 ) {
   const label = useSectionLabel();
   const mode = useMode();
@@ -41,6 +42,12 @@ export function usePersonalTimetable(
     mode,
     personal,
     entries,
-    mySessions: personalSessions(sessions, personal, mainGroup, remote),
+    mySessions: personalSessions(
+      sessions,
+      personal,
+      mainGroup,
+      remote,
+      tpGroup,
+    ),
   };
 }

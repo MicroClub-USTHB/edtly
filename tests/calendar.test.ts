@@ -113,6 +113,12 @@ describe("feed token", () => {
     });
   });
 
+  test("carries a TP group that differs from the TD group", () => {
+    const value = spec({ tpGroup: "G3" });
+    expect(decodeFeed(encodeFeed(value))?.tpGroup).toBe("G3");
+    expect(encodeFeed(spec({ tpGroup: value.group }))).toBe(encodeFeed(spec()));
+  });
+
   test("is the same for the same choices in any order", () => {
     const a = spec({
       personal: {

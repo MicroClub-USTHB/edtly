@@ -69,6 +69,31 @@ describe("modules", () => {
 });
 
 describe("my timetable", () => {
+  test("takes TP from the TP group and TD from the TD group", () => {
+    const withTp = [
+      ...base,
+      session({ type: "tp", groups: ["G1"], day: "sat" }),
+      session({ type: "tp", groups: ["G2"], day: "sun" }),
+    ];
+    const mine = personalSessions(withTp, EMPTY_PERSONAL, "G1", remote, "G2");
+    expect(
+      mine
+        .filter(({ type }) => type !== "cours")
+        .map(({ module, type, groups }) => `${module}:${type}:${groups.join("")}`),
+    ).toEqual(["ALGO2:tp:G2", "ALGO2:td:G1", "ARCH1:td:G1"]);
+  });
+
+  test("a module group applies to both its TD and its TP", () => {
+    const withTp = [...base, session({ type: "tp", groups: ["G2"], day: "sun" })];
+    const personal = { ...EMPTY_PERSONAL, groups: { ALGO2: "G2" } };
+    const mine = personalSessions(withTp, personal, "G1", remote, "G1");
+    expect(
+      mine
+        .filter(({ module, type }) => module === "ALGO2" && type !== "cours")
+        .map(({ type, groups }) => `${type}:${groups.join("")}`),
+    ).toEqual(["tp:G2", "td:G2"]);
+  });
+
   test("defaults to the section lectures and the main group", () => {
     const mine = personalSessions(base, EMPTY_PERSONAL, "G1", remote);
     expect(mine.map(({ module, groups }) => `${module}:${groups.join("")}`)).toEqual([

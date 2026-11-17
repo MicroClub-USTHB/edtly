@@ -3,7 +3,7 @@ import path from "node:path";
 import { cacheLife } from "next/cache";
 import { groupSlug } from "./paths";
 import { programmeSchema } from "./schema";
-import { sortSessions } from "./schedule";
+import { groupsOfType, sortSessions } from "./schedule";
 import {
   LEVELS,
   SYSTEMS,
@@ -109,7 +109,13 @@ export async function getCatalogue(): Promise<CatalogueProgramme[]> {
     level,
     speciality,
     status,
-    sections: sections.map(({ id, name, groups }) => ({ id, name, groups })),
+    sections: sections.map((section) => ({
+      id: section.id,
+      name: section.name,
+      groups: section.groups,
+      tdGroups: groupsOfType(section, "td"),
+      tpGroups: groupsOfType(section, "tp"),
+    })),
   }));
 }
 

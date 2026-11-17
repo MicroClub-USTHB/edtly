@@ -42,6 +42,7 @@ import { cachePages } from "@/lib/pwa/cache-pages";
 import { site } from "@/lib/site";
 import { trackSessions, useChangedSessions } from "@/lib/stores/changes-store";
 import { saveFilters, useFilters } from "@/lib/stores/filters-store";
+import { replaceUrl, useSearchParam } from "@/lib/stores/location-store";
 import { useOverrides } from "@/lib/stores/overrides-store";
 import {
   readParcours,
@@ -58,10 +59,13 @@ import {
   type Filters,
 } from "@/lib/timetable/filters";
 import {
+  groupFromSlug,
   groupSlug,
   localized,
   parcoursPath,
+  parcoursUrl,
   sectionPath,
+  TP_PARAM,
 } from "@/lib/timetable/paths";
 import {
   applyOverrides,
@@ -86,7 +90,9 @@ import {
   daySlots,
   forGroup,
   forGroups,
+  groupsOfType,
   overlapping,
+  resolveTpGroup,
   sessionKey,
   slotSessions,
   slotStatuses,
@@ -179,12 +185,19 @@ export function TimetableView({
     groups.find((name) => pathname === `${basePath}/${groupSlug(name)}`) ??
     null;
   const group = urlGroup ?? savedGroup ?? groups[0] ?? null;
-  const parcours: Parcours = { ...base, group };
+  const tdGroups = groupsOfType(section, "td");
+  const groupChoices = tdGroups.length > 0 ? tdGroups : groups;
+  const tpGroups = groupsOfType(section, "tp");
+  const urlTp = groupFromSlug(tpGroups, useSearchParam(TP_PARAM));
+  const chosenTp = urlTp ?? savedHere?.tpGroup ?? null;
+  const tpGroup = resolveTpGroup(tpGroups, chosenTp, group);
+  const parcours: Parcours = { ...base, group, tpGroup };
 
   const { mode, personal, entries, mySessions } = usePersonalTimetable(
     basePath,
     sessions,
     group,
+    tpGroup,
   );
   const overrides = useOverrides(basePath);
   const actions = useOverrideActions(basePath, () =>
@@ -201,7 +214,9 @@ export function TimetableView({
   const ownSessions = pending
     ? previewMove(resolvedOwn, originKey(pending.session), pending.target)
     : resolvedOwn;
-  const ownMatcher = mineMode ? matcherFor(ownSessions) : forGroup(group);
+  const ownMatcher = mineMode
+    ? matcherFor(ownSessions)
+    : forGroup(group, tpGroup);
   const inTerm = viewWeek !== null && (until === null || viewWeek <= until);
   const editable: Matcher = (session) =>
     inTerm && !session.change?.preview && ownMatcher(session);
@@ -230,7 +245,7 @@ export function TimetableView({
       ? dayStatus(
           todayOwn,
           week.today,
-          mineMode ? matcherFor(todayOwn) : forGroup(group),
+          mineMode ? matcherFor(todayOwn) : forGroup(group, tpGroup),
           minutesNow(week.now),
         )
       : null;
@@ -266,9 +281,16 @@ export function TimetableView({
   const sectionName = programme.sectionCount > 1 ? section.name : "";
   const sectionLabel = sectionName && t("sectionLabel", { name: sectionName });
   const groupNumber = group?.match(/^G(\d+)$/)?.[1];
-  const groupLabel = groupNumber
-    ? t("groupLabel", { name: groupNumber })
+  const splitGroups = group !== null && tpGroup !== null && tpGroup !== group;
+  const groupsText = splitGroups
+    ? t("groupsLabel", { td: group, tp: tpGroup })
     : group;
+  const groupLabel = splitGroups
+    ? groupsText
+    : groupNumber
+      ? t("groupLabel", { name: groupNumber })
+      : group;
+  const mineLabel = labelGroup === group ? groupsText : labelGroup;
   const filterLabels = [
     ...active.types.map((type) => types(type)),
     ...DAYS.filter((day) => active.days.includes(day)).map((day) => short(day)),
@@ -283,10 +305,11 @@ export function TimetableView({
     locale: feedLocale(locale),
     section: base,
     group,
+    tpGroup,
     personal,
     overrides: calendarOverrides,
   });
-  const pageUrl = site.url + localized(locale, parcoursPath(parcours));
+  const pageUrl = site.url + localized(locale, parcoursUrl(parcours));
   const scopeContext: ScopeContext = {
     current: weekOffset === 0,
     range: shiftedWeek.dates
@@ -437,23 +460,29 @@ export function TimetableView({
     }
   }, [daysKey, selectedDay]);
 
-  const selectGroup = (next: string) => {
-    const nextParcours = { ...base, group: next };
-    if (!saved || savedHere) saveParcours(nextParcours);
-    window.history.replaceState(
-      null,
-      "",
-      localized(locale, parcoursPath(nextParcours)),
-    );
+  const ownsSaved = !saved || savedHere !== null;
+
+  const showParcours = (next: Parcours) =>
+    replaceUrl(localized(locale, parcoursUrl(next)));
+
+  const choose = (next: Parcours) => {
+    if (ownsSaved) saveParcours(next);
+    showParcours(next);
   };
+
+  const selectGroup = (next: string) =>
+    choose({ ...base, group: next, tpGroup: chosenTp });
+
+  const selectTpGroup = (next: string) =>
+    choose({ ...base, group, tpGroup: next });
 
   const submitParcours = (next: Parcours) => {
     setPickerAnchor(null);
     saveParcours(next);
     if (sectionPath(next) !== basePath) {
-      router.push(localized(locale, parcoursPath(next)));
-    } else if (next.group && next.group !== group) {
-      selectGroup(next.group);
+      router.push(localized(locale, parcoursUrl(next)));
+    } else {
+      showParcours(next);
     }
   };
 
@@ -518,9 +547,12 @@ export function TimetableView({
     updatedShort,
     version,
     pdfUrl: source.url,
-    groups,
+    groups: groupChoices,
     group,
+    tpGroups,
+    tpGroup,
     labelGroup,
+    mineLabel,
     sessions: visible,
     mine,
     conflicts,
@@ -533,9 +565,10 @@ export function TimetableView({
     filtered: filterCount > 0,
     filterCount,
     filterLabels,
-    summary: summarize(personal, group, conflictPairs(conflicts)),
+    summary: summarize(personal, groupsText, conflictPairs(conflicts)),
     customized: isCustomized(personal),
     onGroupChange: selectGroup,
+    onTpGroupChange: selectTpGroup,
     onParcours: setPickerAnchor,
     onCustomize: (anchor) => setPersonalSheet({ anchor: anchor ?? null }),
     onReset: resetPersonal,
@@ -606,10 +639,13 @@ export function TimetableView({
         path={basePath}
         sectionLabel={[programmeLabel, sectionLabel].filter(Boolean).join(", ")}
         sessions={sessions}
-        groups={groups}
+        groups={groupChoices}
         mainGroup={group}
+        tpGroups={tpGroups}
+        tpGroup={tpGroup}
         catalogue={catalogue}
         onMainGroupChange={selectGroup}
+        onTpGroupChange={selectTpGroup}
         onClose={() => setPersonalSheet(null)}
       />
 
@@ -631,7 +667,7 @@ export function TimetableView({
         path={basePath}
         token={feedToken}
         label={programmeSection}
-        summary={summarize(personal, group)}
+        summary={summarize(personal, groupsText)}
         count={extrasLoading ? null : mySessions.length}
         changes={calendarOverrides.length}
         onClose={() => setCalendarSheet(null)}

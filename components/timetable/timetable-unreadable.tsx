@@ -9,7 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import type { SheetAnchor } from "@/components/ui/sheet";
 import { StateBlock } from "@/components/ui/state-block";
 import { saveParcours } from "@/lib/stores/preferences";
-import { localized, parcoursPath } from "@/lib/timetable/paths";
+import { localized, parcoursUrl } from "@/lib/timetable/paths";
 import type { CatalogueProgramme, Parcours } from "@/lib/timetable/types";
 import { cn } from "@/lib/utils";
 import { MobileHeader } from "./mobile-header";
@@ -35,7 +35,7 @@ export function TimetableUnreadable({
   const submit = (next: Parcours) => {
     setAnchor(null);
     saveParcours(next);
-    router.push(localized(locale, parcoursPath(next)));
+    router.push(localized(locale, parcoursUrl(next)));
   };
 
   return (

@@ -1,5 +1,11 @@
 import { minutesOf as toMinutes } from "@/lib/dates";
-import { DAYS, type Day, type Session, type SessionType } from "./types";
+import {
+  DAYS,
+  type Day,
+  type Section,
+  type Session,
+  type SessionType,
+} from "./types";
 
 export type Slot = { start: string; end: string };
 export type SlotSessions = Slot & { mains: Session[]; others: Session[] };
@@ -24,11 +30,42 @@ export function sortSessions(sessions: Session[]) {
   );
 }
 
+export const groupOfType = (
+  session: Session,
+  group: string | null,
+  tpGroup: string | null,
+) => (session.type === "tp" ? tpGroup : group);
+
 export const forGroup =
-  (group: string | null): Matcher =>
-  (session) =>
-    session.groups.length === 0 ||
-    (group !== null && session.groups.includes(group));
+  (group: string | null, tpGroup: string | null = group): Matcher =>
+  (session) => {
+    const own = groupOfType(session, group, tpGroup);
+    return (
+      session.groups.length === 0 || (own !== null && session.groups.includes(own))
+    );
+  };
+
+export function groupsOfType(
+  section: Pick<Section, "groups" | "sessions">,
+  type: Exclude<SessionType, "cours">,
+) {
+  const used = new Set(
+    section.sessions
+      .filter((session) => session.type === type)
+      .flatMap((session) => session.groups),
+  );
+  return section.groups.filter((group) => used.has(group));
+}
+
+export function resolveTpGroup(
+  tpGroups: string[],
+  chosen: string | null | undefined,
+  group: string | null,
+) {
+  if (chosen && tpGroups.includes(chosen)) return chosen;
+  if (group && tpGroups.includes(group)) return group;
+  return tpGroups.length === 1 ? tpGroups[0] : null;
+}
 
 export const mainTone = (session: Session): Exclude<Tone, "other"> =>
   session.type === "cours" ? "cours" : "mine";

@@ -67,7 +67,10 @@ export type Programme = {
   sections: Section[];
 };
 
-export type CatalogueSection = Pick<Section, "id" | "name" | "groups">;
+export type CatalogueSection = Pick<Section, "id" | "name" | "groups"> & {
+  tdGroups: string[];
+  tpGroups: string[];
+};
 
 export type CatalogueProgramme = Pick<
   Programme,
@@ -80,6 +83,7 @@ export type Parcours = {
   speciality: string;
   section: string;
   group: string | null;
+  tpGroup?: string | null;
 };
 
 export type ProgrammeInfo = Omit<Programme, "sections"> & {
