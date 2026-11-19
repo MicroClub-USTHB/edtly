@@ -11,13 +11,13 @@ import { updatePersonal, usePersonal } from "@/lib/stores/personal-store";
 import { useRemoteSections } from "@/lib/stores/section-store";
 import { sectionPath } from "@/lib/timetable/paths";
 import {
-  defaultGroupFor,
   extraKey,
   groupFor,
+  withModuleGroup,
   isCustomized,
   modulesOf,
   type Extra,
-  type ModuleInfo,
+  type GroupKind,
   type Personal,
 } from "@/lib/timetable/personal";
 import type { CatalogueProgramme, Session } from "@/lib/timetable/types";
@@ -73,18 +73,18 @@ export function PersonalEditor({
         : [...current.hidden, module],
     }));
 
-  const setModuleGroup = (module: ModuleInfo, group: string) =>
-    update((current) => ({
-      ...current,
-      groups: Object.fromEntries([
-        ...Object.entries(current.groups).filter(
-          ([name]) => name !== module.name,
-        ),
-        ...(group === defaultGroupFor(module, mainGroup, tpGroup)
-          ? []
-          : [[module.name, group]]),
-      ]),
-    }));
+  const fallbackOf = (kind: GroupKind) =>
+    kind === "tp" ? tpGroup : mainGroup;
+
+  const setModuleGroup = (module: string, kind: GroupKind, group: string) =>
+    update((current) =>
+      withModuleGroup(
+        current,
+        module,
+        kind,
+        group === fallbackOf(kind) ? null : group,
+      ),
+    );
 
   const replaceExtras = (change: (extras: Extra[]) => Extra[]) =>
     update((current) => ({ ...current, extras: change(current.extras) }));
@@ -156,11 +156,16 @@ export function PersonalEditor({
               key={module.name}
               module={module}
               included={!personal.hidden.includes(module.name)}
-              group={groupFor(module, personal, mainGroup, tpGroup)}
+              groups={{
+                td: groupFor(module, personal, "td", mainGroup),
+                tp: groupFor(module, personal, "tp", tpGroup),
+              }}
               onIncludedChange={(included) =>
                 setIncluded(module.name, included)
               }
-              onGroupChange={(group) => setModuleGroup(module, group)}
+              onGroupChange={(kind, group) =>
+                setModuleGroup(module.name, kind, group)
+              }
             />
           ))}
         </ul>

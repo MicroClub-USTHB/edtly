@@ -2,27 +2,34 @@
 
 import { useTranslations } from "next-intl";
 import { Switch } from "@/components/ui/switch";
-import type { ModuleInfo } from "@/lib/timetable/personal";
+import {
+  groupsOfKind,
+  type GroupKind,
+  type ModuleInfo,
+} from "@/lib/timetable/personal";
 import { cn } from "@/lib/utils";
 import { GroupChips } from "./group-chips";
 
 type ModuleRowProps = {
   module: ModuleInfo;
   included: boolean;
-  group: string | null;
+  groups: Record<GroupKind, string | null>;
   onIncludedChange: (included: boolean) => void;
-  onGroupChange: (group: string) => void;
+  onGroupChange: (kind: GroupKind, group: string) => void;
 };
+
+const KINDS: GroupKind[] = ["td", "tp"];
 
 export function ModuleRow({
   module,
   included,
-  group,
+  groups,
   onIncludedChange,
   onGroupChange,
 }: ModuleRowProps) {
   const t = useTranslations("Personal");
   const types = useTranslations("SessionTypes");
+  const kinds = KINDS.filter((kind) => groupsOfKind(module, kind).length > 1);
 
   return (
     <li className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2.5 border-b border-divider py-3 last:border-b-0 lg:grid-cols-[minmax(0,1fr)_auto_auto]">
@@ -42,15 +49,27 @@ export function ModuleRow({
         </span>
       </div>
 
-      {included && module.groups.length > 1 && (
-        <div className="col-span-2 row-start-2 lg:col-span-1 lg:col-start-2 lg:row-start-1">
-          <GroupChips
-            dense
-            label={t("moduleGroup", { module: module.name })}
-            groups={module.groups}
-            value={group}
-            onChange={onGroupChange}
-          />
+      {included && kinds.length > 0 && (
+        <div className="col-span-2 row-start-2 flex flex-col gap-2 lg:col-span-1 lg:col-start-2 lg:row-start-1">
+          {kinds.map((kind) => (
+            <div key={kind} className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="w-6 shrink-0 text-meta font-medium text-foreground-secondary"
+              >
+                {types(kind)}
+              </span>
+              <GroupChips
+                dense
+                label={t(kind === "tp" ? "moduleTpGroup" : "moduleTdGroup", {
+                  module: module.name,
+                })}
+                groups={groupsOfKind(module, kind)}
+                value={groups[kind]}
+                onChange={(group) => onGroupChange(kind, group)}
+              />
+            </div>
+          ))}
         </div>
       )}
 

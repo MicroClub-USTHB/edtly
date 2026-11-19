@@ -12,13 +12,18 @@ export type Extra = SectionRef & { module: string; group: string | null };
 export type Personal = {
   hidden: string[];
   groups: Record<string, string>;
+  tpGroups: Record<string, string>;
   extras: Extra[];
 };
+
+export type GroupKind = "td" | "tp";
 
 export type ModuleInfo = {
   name: string;
   types: SessionType[];
   groups: string[];
+  tdGroups: string[];
+  tpGroups: string[];
 };
 
 export type RemoteSection = {
@@ -27,27 +32,44 @@ export type RemoteSection = {
   sessions: Session[];
 };
 
-export const EMPTY_PERSONAL: Personal = { hidden: [], groups: {}, extras: [] };
+export const EMPTY_PERSONAL: Personal = {
+  hidden: [],
+  groups: {},
+  tpGroups: {},
+  extras: [],
+};
+
+export const kindOf = (session: Session): GroupKind =>
+  session.type === "tp" ? "tp" : "td";
 
 const groupOrder = (a: string, b: string) =>
   a.localeCompare(b, undefined, { numeric: true });
 
+type ModuleEntry = {
+  types: Set<SessionType>;
+  groups: Record<GroupKind, Set<string>>;
+};
+
+const sorted = (groups: Iterable<string>) => [...groups].sort(groupOrder);
+
 export function modulesOf(sessions: Session[]): ModuleInfo[] {
-  const modules = new Map<string, { types: Set<SessionType>; groups: Set<string> }>();
+  const modules = new Map<string, ModuleEntry>();
   for (const session of sessions) {
     const entry = modules.get(session.module) ?? {
       types: new Set(),
-      groups: new Set(),
+      groups: { td: new Set(), tp: new Set() },
     };
     entry.types.add(session.type);
-    session.groups.forEach((group) => entry.groups.add(group));
+    session.groups.forEach((group) => entry.groups[kindOf(session)].add(group));
     modules.set(session.module, entry);
   }
   return [...modules]
     .map(([name, { types, groups }]) => ({
       name,
       types: SESSION_TYPES.filter((type) => types.has(type)),
-      groups: [...groups].sort(groupOrder),
+      groups: sorted(new Set([...groups.td, ...groups.tp])),
+      tdGroups: sorted(groups.td),
+      tpGroups: sorted(groups.tp),
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -58,27 +80,41 @@ export const extraKey = (extra: Extra) =>
 export const isCustomized = (personal: Personal) =>
   personal.hidden.length > 0 ||
   Object.keys(personal.groups).length > 0 ||
+  Object.keys(personal.tpGroups).length > 0 ||
   personal.extras.length > 0;
 
-function moduleOverride(module: ModuleInfo, personal: Personal) {
-  const override = personal.groups[module.name];
-  return override && module.groups.includes(override) ? override : null;
-}
+export const groupsOfKind = (module: ModuleInfo, kind: GroupKind) =>
+  kind === "tp" ? module.tpGroups : module.tdGroups;
 
-export const defaultGroupFor = (
-  module: ModuleInfo,
-  mainGroup: string | null,
-  tpGroup: string | null = mainGroup,
-) => (module.types.every((type) => type === "tp") ? tpGroup : mainGroup);
+const overridesOfKind = (personal: Personal, kind: GroupKind) =>
+  kind === "tp" ? personal.tpGroups : personal.groups;
 
-export const groupFor = (
+export function groupFor(
   module: ModuleInfo,
   personal: Personal,
-  mainGroup: string | null,
-  tpGroup: string | null = mainGroup,
-) =>
-  moduleOverride(module, personal) ??
-  defaultGroupFor(module, mainGroup, tpGroup);
+  kind: GroupKind,
+  fallback: string | null,
+) {
+  const override = overridesOfKind(personal, kind)[module.name];
+  return override && groupsOfKind(module, kind).includes(override)
+    ? override
+    : fallback;
+}
+
+export function withModuleGroup(
+  personal: Personal,
+  module: string,
+  kind: GroupKind,
+  group: string | null,
+): Personal {
+  const rest = Object.entries(overridesOfKind(personal, kind)).filter(
+    ([name]) => name !== module,
+  );
+  const next = Object.fromEntries(group ? [...rest, [module, group]] : rest);
+  return kind === "tp"
+    ? { ...personal, tpGroups: next }
+    : { ...personal, groups: next };
+}
 
 const attends = (session: Session, group: string | null) =>
   session.groups.length === 0 ||
@@ -92,22 +128,19 @@ export function personalSessions(
   tpGroup: string | null = mainGroup,
 ): Session[] {
   const hidden = new Set(personal.hidden);
-  const overrides = new Map(
-    modulesOf(base).flatMap((module) => {
-      const override = moduleOverride(module, personal);
-      return override ? [[module.name, override] as const] : [];
-    }),
+  const modules = new Map(
+    modulesOf(base).map((module) => [module.name, module] as const),
   );
 
-  const own = base.filter(
-    (session) =>
-      !hidden.has(session.module) &&
-      attends(
-        session,
-        overrides.get(session.module) ??
-          groupOfType(session, mainGroup, tpGroup),
-      ),
-  );
+  const own = base.filter((session) => {
+    if (hidden.has(session.module)) return false;
+    const fallback = groupOfType(session, mainGroup, tpGroup);
+    const info = modules.get(session.module);
+    return attends(
+      session,
+      info ? groupFor(info, personal, kindOf(session), fallback) : fallback,
+    );
+  });
 
   const extras = personal.extras.flatMap((extra) => {
     const source = remote.get(sectionPath(extra));
