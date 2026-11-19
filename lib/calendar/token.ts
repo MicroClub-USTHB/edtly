@@ -47,6 +47,7 @@ const wireSchema = z.object({
   t: name.optional(),
   h: z.array(name).max(100).optional(),
   m: z.record(name, name).optional(),
+  p: z.record(name, name).optional(),
   x: z
     .array(z.tuple([path, name, name.nullable()]))
     .max(30)
@@ -138,9 +139,10 @@ export function encodeFeed({
   personal,
   overrides = [],
 }: FeedSpec) {
-  const moduleGroups = Object.entries(personal.groups).sort(([a], [b]) =>
-    byCodePoint(a, b),
-  );
+  const sortedGroups = (groups: Record<string, string>) =>
+    Object.entries(groups).sort(([a], [b]) => byCodePoint(a, b));
+  const moduleGroups = sortedGroups(personal.groups);
+  const moduleTpGroups = sortedGroups(personal.tpGroups);
   const wire: Wire = {
     l: locale,
     s: toPath(section),
@@ -151,6 +153,9 @@ export function encodeFeed({
       : {}),
     ...(moduleGroups.length > 0
       ? { m: Object.fromEntries(moduleGroups) }
+      : {}),
+    ...(moduleGroups.length > 0 || moduleTpGroups.length > 0
+      ? { p: Object.fromEntries(moduleTpGroups) }
       : {}),
     ...(personal.extras.length > 0
       ? {
@@ -190,7 +195,7 @@ export function decodeFeed(token: string): FeedSpec | null {
   const result = wireSchema.safeParse(raw);
   if (!result.success) return null;
 
-  const { l, s, g, t, h, m, x, o } = result.data;
+  const { l, s, g, t, h, m, p, x, o } = result.data;
   return {
     locale: l,
     section: toRef(s),
@@ -199,6 +204,7 @@ export function decodeFeed(token: string): FeedSpec | null {
     personal: {
       hidden: h ?? [],
       groups: m ?? {},
+      tpGroups: p ?? m ?? {},
       extras: (x ?? []).map(([extraPath, module, group]) => ({
         ...toRef(extraPath),
         module,

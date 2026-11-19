@@ -183,6 +183,8 @@
     "hidden": "Masqué",
     "follow": "Suivre {module}",
     "moduleGroup": "Groupe de TD et TP pour {module}",
+    "moduleTdGroup": "Groupe de TD pour {module}",
+    "moduleTpGroup": "Groupe de TP pour {module}",
     "extras": "Modules en dette",
     "extrasHint": "Ajoutez un module d'une autre année ou d'une autre spécialité.",
     "add": "Ajouter un module",

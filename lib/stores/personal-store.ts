@@ -42,24 +42,28 @@ function toExtra(value: unknown): Extra | null {
   };
 }
 
+const toGroupMap = (value: unknown): Record<string, string> =>
+  typeof value === "object" && value !== null
+    ? Object.fromEntries(
+        Object.entries(value).filter(
+          (entry): entry is [string, string] => isString(entry[1]),
+        ),
+      )
+    : {};
+
 function toPersonal(value: unknown): Personal | null {
   if (typeof value !== "object" || value === null) return null;
   const record = value as Record<string, unknown>;
   const hidden = Array.isArray(record.hidden)
     ? record.hidden.filter(isString)
     : [];
-  const groups =
-    typeof record.groups === "object" && record.groups !== null
-      ? Object.fromEntries(
-          Object.entries(record.groups).filter(
-            (entry): entry is [string, string] => isString(entry[1]),
-          ),
-        )
-      : {};
+  const groups = toGroupMap(record.groups);
+  const tpGroups =
+    "tpGroups" in record ? toGroupMap(record.tpGroups) : groups;
   const extras = Array.isArray(record.extras)
     ? record.extras.map(toExtra).filter((extra) => extra !== null)
     : [];
-  const personal = { hidden, groups, extras };
+  const personal = { hidden, groups, tpGroups, extras };
   return isCustomized(personal) ? personal : null;
 }
 

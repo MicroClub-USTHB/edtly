@@ -83,6 +83,7 @@ describe("feed token", () => {
       personal: {
         hidden: ["SEM300", "Histoire d'Algérie"],
         groups: { POO: "G2" },
+        tpGroups: { POO: "G3" },
         extras: [
           {
             system: "lmd",
@@ -113,6 +114,13 @@ describe("feed token", () => {
     });
   });
 
+  test("reads module groups from older links as both TD and TP", () => {
+    const legacy = btoa(
+      JSON.stringify({ l: "fr", s: "lmd/l2/isil/a", g: "G1", m: { POO: "G2" } }),
+    ).replace(/=+$/, "");
+    expect(decodeFeed(legacy)?.personal.tpGroups).toEqual({ POO: "G2" });
+  });
+
   test("carries a TP group that differs from the TD group", () => {
     const value = spec({ tpGroup: "G3" });
     expect(decodeFeed(encodeFeed(value))?.tpGroup).toBe("G3");
@@ -124,6 +132,7 @@ describe("feed token", () => {
       personal: {
         hidden: ["B", "A"],
         groups: { Y: "G2", X: "G1" },
+        tpGroups: {},
         extras: [],
       },
     });
@@ -131,6 +140,7 @@ describe("feed token", () => {
       personal: {
         hidden: ["A", "B"],
         groups: { X: "G1", Y: "G2" },
+        tpGroups: {},
         extras: [],
       },
     });
@@ -277,6 +287,7 @@ describe("calendar feed", () => {
         personal: {
           hidden: ["SEM300"],
           groups: {},
+          tpGroups: {},
           extras: [
             {
               system: "lmd",

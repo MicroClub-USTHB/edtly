@@ -183,6 +183,8 @@
     "hidden": "Hidden",
     "follow": "Follow {module}",
     "moduleGroup": "TD and TP group for {module}",
+    "moduleTdGroup": "TD group for {module}",
+    "moduleTpGroup": "TP group for {module}",
     "extras": "Retake modules",
     "extrasHint": "Add a module from another year or speciality.",
     "add": "Add a module",

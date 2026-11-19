@@ -55,16 +55,39 @@ const extra = {
 describe("modules", () => {
   test("lists each module once with its types and groups", () => {
     expect(modulesOf(base)).toEqual([
-      { name: "ALGO2", types: ["cours", "td"], groups: ["G1", "G2"] },
-      { name: "ARCH1", types: ["td"], groups: ["G1", "G2"] },
-      { name: "POO", types: ["cours"], groups: [] },
+      {
+        name: "ALGO2",
+        types: ["cours", "td"],
+        groups: ["G1", "G2"],
+        tdGroups: ["G1", "G2"],
+        tpGroups: [],
+      },
+      {
+        name: "ARCH1",
+        types: ["td"],
+        groups: ["G1", "G2"],
+        tdGroups: ["G1", "G2"],
+        tpGroups: [],
+      },
+      { name: "POO", types: ["cours"], groups: [], tdGroups: [], tpGroups: [] },
     ]);
   });
 
   test("ignores a module group that does not exist", () => {
     const [algo] = modulesOf(base);
-    expect(groupFor(algo, { ...EMPTY_PERSONAL, groups: { ALGO2: "G9" } }, "G1")).toBe("G1");
-    expect(groupFor(algo, { ...EMPTY_PERSONAL, groups: { ALGO2: "G2" } }, "G1")).toBe("G2");
+    expect(groupFor(algo, { ...EMPTY_PERSONAL, groups: { ALGO2: "G9" } }, "td", "G1")).toBe("G1");
+    expect(groupFor(algo, { ...EMPTY_PERSONAL, groups: { ALGO2: "G2" } }, "td", "G1")).toBe("G2");
+  });
+
+  test("splits each module's groups between TD and TP", () => {
+    const [algo] = modulesOf([
+      session({ groups: ["G1"] }),
+      session({ type: "tp", groups: ["G3"] }),
+    ]);
+    expect(algo.tdGroups).toEqual(["G1"]);
+    expect(algo.tpGroups).toEqual(["G3"]);
+    expect(groupFor(algo, { ...EMPTY_PERSONAL, tpGroups: { ALGO2: "G1" } }, "tp", "G2")).toBe("G2");
+    expect(groupFor(algo, { ...EMPTY_PERSONAL, tpGroups: { ALGO2: "G3" } }, "tp", "G2")).toBe("G3");
   });
 });
 
@@ -83,15 +106,24 @@ describe("my timetable", () => {
     ).toEqual(["ALGO2:tp:G2", "ALGO2:td:G1", "ARCH1:td:G1"]);
   });
 
-  test("a module group applies to both its TD and its TP", () => {
-    const withTp = [...base, session({ type: "tp", groups: ["G2"], day: "sun" })];
-    const personal = { ...EMPTY_PERSONAL, groups: { ALGO2: "G2" } };
-    const mine = personalSessions(withTp, personal, "G1", remote, "G1");
-    expect(
-      mine
+  test("a module's TD and TP groups are chosen separately", () => {
+    const withTp = [
+      ...base,
+      session({ type: "tp", groups: ["G1"], day: "sat" }),
+      session({ type: "tp", groups: ["G3"], day: "sun" }),
+    ];
+    const pick = (personal: typeof EMPTY_PERSONAL) =>
+      personalSessions(withTp, personal, "G1", remote, "G1")
         .filter(({ module, type }) => module === "ALGO2" && type !== "cours")
-        .map(({ type, groups }) => `${type}:${groups.join("")}`),
-    ).toEqual(["tp:G2", "td:G2"]);
+        .map(({ type, groups }) => `${type}:${groups.join("")}`);
+    expect(pick({ ...EMPTY_PERSONAL, groups: { ALGO2: "G2" } })).toEqual([
+      "tp:G1",
+      "td:G2",
+    ]);
+    expect(pick({ ...EMPTY_PERSONAL, tpGroups: { ALGO2: "G3" } })).toEqual([
+      "tp:G3",
+      "td:G1",
+    ]);
   });
 
   test("defaults to the section lectures and the main group", () => {
