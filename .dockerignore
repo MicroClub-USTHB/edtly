@@ -1,0 +1,16 @@
+.git
+.github
+.claude
+.agents
+.vscode
+node_modules
+.next
+out
+coverage
+tests
+*.md
+!README.md
+Dockerfile
+.dockerignore
+.env*
+.DS_Store

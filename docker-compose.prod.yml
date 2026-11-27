@@ -1,0 +1,29 @@
+# Production stack: pulled from the CI-built GHCR image (never built on the server).
+# Deployed with dokploy as a Compose app using this file. Edtly has no database,
+# no secrets and no runtime configuration: the timetable data and the public site URL
+# are baked into the image at build time (see Dockerfile and .github/workflows/ci.yml).
+
+services:
+  web:
+    # IMAGE_TAG defaults to `latest`; pin a CI tag such as `sha-1a2b3c4` to deploy or roll back to an exact build.
+    image: ghcr.io/microclub-usthb/edtly:${IMAGE_TAG:-latest}
+    pull_policy: always
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+    expose:
+      - '3000'
+    mem_limit: 256m
+    cpus: 0.5
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/en',{redirect:'manual',signal:AbortSignal.timeout(4000)}).then(r=>process.exit(r.status<500?0:1),()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

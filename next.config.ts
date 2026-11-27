@@ -10,6 +10,8 @@ const appVersion =
   Date.now().toString(36);
 
 const nextConfig: NextConfig = {
+  // The Docker image sets NEXT_OUTPUT=standalone; Vercel builds are unchanged.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   env: {
     APP_VERSION: appVersion,
     APP_RELEASE: packageJson.version,

@@ -1,5 +1,7 @@
 # Edtly
 
+Live at **[edtly.microclub.info](https://edtly.microclub.info)**.
+
 Unofficial timetable viewer for students of the USTHB Faculty of Informatics (LMD and Ingénieur). Data comes from the PDFs published on [finfo.usthb.dz](https://finfo.usthb.dz/etudes/emploi-du-temps).
 
 ## Scripts
@@ -66,4 +68,11 @@ The calendar token also carries the overrides (hashed session keys, at most 40),
 
 ## Deployment
 
-On Vercel, the `bun.lock` file selects Bun for the install. Do not set `bunVersion` in `vercel.json`. Set `NEXT_PUBLIC_SITE_URL` to the production URL; it is used for canonical links, the sitemap and Open Graph.
+Production runs as a Docker image on the Micro Club dokploy server at `https://edtly.microclub.info`. CI builds the image and pushes it to GHCR on every push to `main`; dokploy pulls it. See [`DEPLOY.md`](DEPLOY.md) for the pipeline, the one-time setup and rollbacks.
+
+```bash
+docker build -t edtly .            # from the repository root
+docker run --rm -p 3000:3000 edtly
+```
+
+The Vercel deployment keeps working: the `bun.lock` file selects Bun for the install, and `bunVersion` must not be set in `vercel.json`. Set `NEXT_PUBLIC_SITE_URL` to the production URL; it is used for canonical links, the sitemap and Open Graph (the Docker build sets it to `https://edtly.microclub.info`).
