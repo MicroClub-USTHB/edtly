@@ -4,6 +4,8 @@ Live at **[edtly.microclub.info](https://edtly.microclub.info)**.
 
 Unofficial timetable viewer for students of the USTHB Faculty of Informatics (LMD and Ingénieur). Data comes from the PDFs published on [finfo.usthb.dz](https://finfo.usthb.dz/etudes/emploi-du-temps).
 
+![Edtly: the week view, the My timetable filter, next week and the light theme](docs/assets/edtly-demo.gif)
+
 ## Scripts
 
 ```bash
